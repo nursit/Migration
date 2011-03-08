@@ -13,23 +13,25 @@
 		#ACTION_FORMULAIRE{#ENV{action}}
 
 		#SET{name,direction}#SET{obli,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-		<li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
-			<p>Comment voulez-vous transférer vos données ?</p>[
-			<span class='erreur_message'>(#GET{erreurs})</span>
-			]
-			#SET{val,depuis}
-			<div class="choix">
-				<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
-				<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
-				<p><:migration:explications_direction_depuis:></p>
-			</div>
-			#SET{val,vers}
-			<div class="choix">
-				<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
-				<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
-				<p><:migration:explications_direction_vers:></p>
-			</div>
-		</li>
+		<ul>
+			<li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<p>Comment voulez-vous transférer vos données ?</p>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]
+				#SET{val,depuis}
+				<div class="choix">
+					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
+					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
+					<p><:migration:explications_direction_depuis:></p>
+				</div>
+				#SET{val,vers}
+				<div class="choix">
+					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
+					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
+					<p><:migration:explications_direction_vers:></p>
+				</div>
+			</li>
+		</ul>
 
 		<!--extra-->
 	  <p class='boutons'>
