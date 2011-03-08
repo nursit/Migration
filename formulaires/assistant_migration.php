@@ -15,6 +15,8 @@ function formulaires_assistant_migration_charger_dist(){
 		'editable' => autoriser('webmestre'),
 		'direction' => '',
 		'_depuis_status' => '',
+		'url_cible' => '',
+		'migration_key' => '',
 	);
 
 	if (_request('direction')=='depuis'){
@@ -73,6 +75,7 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			if (!_request($obli))
 				$erreurs[$obli] = _T('info_obligatoire');
 		if (!count($erreurs)){
+			initialiser_migration_vers(_request('url_cible'),_request('migration_key'));
 			$migration_envoi = charger_fonction('migration_envoi','action');
 			$res = $migration_envoi('connect',$GLOBALS['meta']['adresse_site']);
 			$erreurs['message_erreur'] = ($res?'Connexion OK':'Echec Connexion');
