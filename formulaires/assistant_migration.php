@@ -68,6 +68,14 @@ function formulaires_assistant_migration_verifier_3_dist(){
 		if ($s AND $s['status']!=='ended')
 			$erreurs['waiting'] = ' ';
 	}
+	else {
+		foreach(array('url_cible','migration_key') as $obli)
+			if (!_request($obli))
+				$erreurs[$obli] = _T('info_obligatoire');
+		if (!count($erreurs)){
+			
+		}
+	}
 
 	return $erreurs;
 }

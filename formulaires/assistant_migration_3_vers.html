@@ -1,0 +1,39 @@
+#SET{fl,migration}
+<div class="formulaire_spip formulaire_assistant formulaire_#FORM">
+	<h3 class="titrem"><img src='#CHEMIN{prive/themes/spip/images/migration-24.png}' class="cadre-icone" width="24" height="24"
+					/><:migration:titre_etape_migration_vers:></h3>
+	<span class='image_loading'>&nbsp;</span>
+	<h4 style='padding:10px;'>Etape #ENV{_etape}/#ENV{_etapes}</h4>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+
+		<p style="padding:10px;"><:migration:explication_connexion_vers:></p>
+		<ul>
+			#SET{name,url_cible}#SET{obli,'obligatoire'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+			<li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<input type="text" class="text" name="#GET{name}" value="#ENV*{#GET{name}}" id="#GET{name}"/>
+			</li>
+			#SET{name,migration_key}#SET{obli,'obligatoire'}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+			<li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+				<label for="#GET{name}">[(#GET{fl}|concat{':label_',#GET{name}}|_T)]</label>[
+				<span class='erreur_message'>(#GET{erreurs})</span>
+				]<input type="text" class="text" name="#GET{name}" value="#ENV*{#GET{name}}" id="#GET{name}"/>
+			</li>
+		</ul>
+
+		<!--extra-->
+		<p class='boutons'>
+			<input type='submit' class='submit none' value='<:migration:bouton_continuer:>' />
+			<input type='submit' class='submit' name='_retour_etape_2' value='<:migration:bouton_revenir:>' />
+			<input type='submit' class='submit' value='<:migration:bouton_commencer_migration:>' />
+		</p>
+	</div></form>
+	]
+</div>
