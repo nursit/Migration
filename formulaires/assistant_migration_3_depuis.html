@@ -1,0 +1,51 @@
+#SET{fl,migration}
+<div class="formulaire_spip formulaire_assistant formulaire_#FORM">
+	<h3 class="titrem"><img src='#CHEMIN{prive/themes/spip/images/migration-24.png}' class="cadre-icone" width="24" height="24"
+					/><:migration:titre_etape_migration_depuis:></h3>
+	<span class='image_loading'>&nbsp;</span>
+	<h4 style='padding:10px;'>Etape #ENV{_etape}/#ENV{_etapes}</h4>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+
+		<div style="padding:10px;">
+			<p>Pour faire migrer les données depuis l'autre site, lancez y l'assistant de migration en séléctionnant la migration "Vers un autre site SPIP", et indiquez les 2 informations suivantes&nbsp;:</p>
+			<ul class="spip">
+				<li class="spip">URL du site cible : <kbd>#URL_SITE_SPIP</kbd></li>
+				<li class="spip">Clé de migration : <tt>[(#ENV{_depuis_status}|table_valeur{key})]</tt></li>
+			</ul>
+			<h4><:migration:titre_migration_status:></h4>
+			<img src="#CHEMIN{images/loader.gif}" width="63" height="13" />
+			<div id="progress_status">
+				[(#ENV{_depuis_status}|migration_afficher_status)]
+			</div>
+		</div>
+
+
+		<!--extra-->
+	  <p class='boutons'>
+			<input type='submit' class='submit' name='cancel' value='<:bouton_annuler:>' />
+		</p>
+	</div></form>
+	]
+</div>
+<script type="text/javascript">/*<![CDATA[*/
+if (window.jQuery)
+jQuery(function(){
+	function update_migration_status(){
+		$.ajax({
+			url: "[(#URL_ACTION_AUTEUR{migration_depuis_status,status}|replace{'&amp;','&'})]",
+			data: {key:'[(#ENV{_depuis_status}|table_valeur{key})]'},
+			type: 'POST',
+			success: function(data){
+				$("#progress_status").html(data);
+			}
+		});
+	}
+	setInterval(update_migration_status,2000);
+});
+/*]]>*/</script>
