@@ -1,0 +1,36 @@
+#SET{fl,migration}
+<div class="ajax formulaire_spip formulaire_assistant formulaire_#FORM">
+	<h3 class="titrem"><img src='#CHEMIN{prive/themes/spip/images/migration-24.png}' class="cadre-icone" width="24" height="24"
+					/><:migration:titre_etape_intoduction:></h3>
+	<span class='image_loading'>&nbsp;</span>
+	<h4 style='padding:10px;'>Etape #ENV{_etape}/#ENV{_etapes}</h4>
+	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+	[(#ENV{editable})
+	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+	]
+
+		<div style="padding:10px;">
+			<p>Vous pouvez utiliser l'assistant de migration
+			pour transferer les données de votre site SPIP
+			vers une autre installation de SPIP. Vous pouvez par exemple transférer :</p>
+			<ul class="spip">
+				<li class="spip">la base de données</li>
+				<li class="spip">les documents joints</li>
+			</ul>
+		</div>
+
+		<!--extra-->
+		[(#AUTORISER{webmestre}|non)
+		Vous devez avoir les droits de webmestre sur le site pour utiliser l'assistant de migration.
+		]
+	[(#ENV{editable})
+	  <p class='boutons'>
+			<input type='submit' class='submit' value='<:migration:bouton_continuer:>' />
+		</p>
+	</div></form>
+	]
+</div>

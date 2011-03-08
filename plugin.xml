@@ -1,0 +1,24 @@
+<plugin>
+	<nom>Migration du Site</nom>
+	<auteur>[Cedric->nursit.net]</auteur>
+	<icon>prive/themes/spip/images/migration-32.png</icon>
+	<version>0.1.0</version>
+	<etat>dev</etat>
+	<description>Assistant de migration d'un site SPIP</description>
+	<prefix>migration</prefix>
+	<categorie>outil</categorie>
+
+	<pipeline>
+		<nom>formulaire_charger</nom>
+		<inclure>cvtm_pipelines.php</inclure>
+	</pipeline>
+	<pipeline>
+		<nom>formulaire_verifier</nom>
+		<inclure>cvtm_pipelines.php</inclure>
+	</pipeline>
+	<pipeline>
+		<nom>styliser</nom>
+		<inclure>cvtm_pipelines.php</inclure>
+	</pipeline>
+
+</plugin>
