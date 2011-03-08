@@ -72,6 +72,9 @@ function migration_afficher_status($status){
 		case 'init':
 			$s = 'En attente de connexion du site distant';
 			break;
+		case 'connect':
+			$s = 'Connexion depuis '.$status['source'];
+			break;
 		default:
 			$s = $status['status'];
 			break;
