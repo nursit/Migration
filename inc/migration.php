@@ -16,7 +16,9 @@ function lire_migration_status($direction){
 	if (!in_array($direction,array('depuis','vers')))
 		return false;
 	$meta = 'migration_'.$direction.'_status';
-	if (!isset($GLOBALS['meta'][$meta]))
+	$file = _DIR_TMP.$meta.".txt";
+	lire_fichier($file,$s);
+	if (!$s)
 		return false;
 
 	// verifier le timestamp
@@ -25,7 +27,7 @@ function lire_migration_status($direction){
 		OR !isset($s['key'])
     OR ($direction=='depuis' AND !isset($s['timestamp']))
 	  OR ($direction=='depuis' AND $s['timestamp']<time()-_MIGRATION_KEY_PERSISTENCE)){
-		effacer_meta($meta);
+		spip_unlink($file);
 		return false;
 	}
 
@@ -38,13 +40,14 @@ function ecrire_migration_status($direction, $raz = false){
 	if (!in_array($direction,array('depuis','vers')))
 		return false;
 	$meta = 'migration_'.$direction.'_status';
+	$file = _DIR_TMP.$meta.".txt";
 	if ($raz===true) {
-		effacer_meta($meta);
+		spip_unlink($file);
 		return false;
 	}
 	elseif(is_array($raz)){
 		$s = $raz;
-		ecrire_meta($meta,serialize($s));
+		ecrire_fichier($file,serialize($s));
 	}
 	elseif (!$s = lire_migration_status($meta)){
 		include_spip('inc/acces');
@@ -53,7 +56,7 @@ function ecrire_migration_status($direction, $raz = false){
 			'timestamp'=>time(),
 			'key'=> substr(md5(creer_uniqid()),0,8),
 		);
-		ecrire_meta($meta,serialize($s));
+		ecrire_fichier($file,serialize($s));
 	}
 	return $s;
 }

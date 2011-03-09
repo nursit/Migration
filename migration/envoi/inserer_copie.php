@@ -22,11 +22,11 @@ function migration_envoi_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
 	$res = $migration_envoi('inserer_copie',$data);
-	if ($res===false OR !is_numeric($res)){
+	if ($res===false OR (!is_bool($res) AND !is_numeric($res))){
 		// echec : stoppons la copie
 		$s = lire_migration_vers_status();
 		$s['statut'] = 'abort';
-		$s['debug'] = $res;
+		$s['debug'] = $GLOBALS['debug_migration'];
 		ecrire_migration_status('vers',$s);
 		return false;
 	}

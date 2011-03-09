@@ -38,7 +38,8 @@ function action_migration_envoi_dist($action, $data){
 
 	$result = trim($result);
 	spip_log("envoi : action $action resultat ".$result,'migration');
-	
+
+	$GLOBALS['debug_migration'] = $result;
 	if ($result==='OK')
 		return true;
 	elseif ($result==='FAIL')
