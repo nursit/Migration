@@ -21,5 +21,14 @@ function migration_envoi_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init) {
 	$data = array('file'=>$file,'size'=>$size,'md5'=>$md5,'dir_dest'=>$dir_dest, 'init'=>$init);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
-	return $migration_envoi('stat_file_dest',$data);
+	$res = $migration_envoi('stat_file_dest',$data);
+	if (is_string($res)){
+		// echec : stoppons la copie
+		$s = lire_migration_vers_status();
+		$s['statut'] = 'abort';
+		$s['debug'] = $GLOBALS['debug_migration'];
+		ecrire_migration_status('vers',$s);
+		return false;
+	}
+	return $res;
 }

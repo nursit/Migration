@@ -709,7 +709,11 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
  * @return bool
  */
 function base_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init){
-	if (file_exists($f=$dir_dest.$file) AND $init){
+	// verifier les repertoires !
+	if (!base_verifier_repertoire($d=dirname($f=$dir_dest.$file))){
+		return "Echec creation repertoire $d";
+	}
+	if (file_exists($f) AND $init){
 		if (filesize($f)==$size AND md5_file($f)==$md5)
 			return false; // rien a faire : le fichier est deja la et identique
 		spip_unlink($f);
@@ -725,11 +729,22 @@ function base_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init){
  * @return bool
  */
 function base_fichier_ecrire_dist($file,$d,$dir_dest){
-	if ($h = fopen($dir_dest.$file,'ab')){
+	if ($h = fopen($f=$dir_dest.$file,'ab')){
 		fwrite($h,$d);
 		fclose($h);
-		return @filesize($dir_dest.$file);
+		return @filesize($f.$file);
 	}
 	return false;
+}
+
+function base_verifier_repertoire($dir){
+	if (!@is_dir($dir)){
+		if (!base_verifier_repertoire($d=dirname($dir)))
+			return false;
+		// creer le repertoire
+		sous_repertoire($d,basename($dir));
+		return @is_dir($dir);
+	}
+	return true;
 }
 ?>

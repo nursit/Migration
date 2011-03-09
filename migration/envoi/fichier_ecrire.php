@@ -15,7 +15,7 @@ include_spip('inc/migration');
  * @param string $dir_dest
  * @return bool
  */
-function migration_fichier_ecrire_dist($file,$d,$dir_dest) {
+function migration_envoi_fichier_ecrire_dist($file,$d,$dir_dest) {
 	$data = array('file'=>$file,'d'=>$d,'dir_dest'=>$dir_dest);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
