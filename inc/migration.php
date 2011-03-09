@@ -22,7 +22,7 @@ function lire_migration_status($direction){
 		return false;
 
 	// verifier le timestamp
-	if (!$s = unserialize($GLOBALS['meta'][$meta])
+	if (!$s = unserialize($s)
 		OR !isset($s['status'])
 		OR !isset($s['key'])
     OR ($direction=='depuis' AND !isset($s['timestamp']))
@@ -49,7 +49,7 @@ function ecrire_migration_status($direction, $raz = false){
 		$s = $raz;
 		ecrire_fichier($file,serialize($s));
 	}
-	elseif (!$s = lire_migration_status($meta)){
+	elseif (!$s = lire_migration_status($direction)){
 		include_spip('inc/acces');
 		$s = array(
 			'status'=>'init',
