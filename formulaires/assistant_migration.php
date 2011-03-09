@@ -81,11 +81,35 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			if (!$res){
 				$erreurs['message_erreur'] = _T('migration:erreur_echec_connexion_init');
 			}
-			else {
-				$erreurs['message_ok'] = _T('migration:message_connexion_ok');
-			}
 		}
 	}
 
 	return $erreurs;
 }
+
+
+function formulaires_assistant_migration_traiter_dist(){
+	$s = lire_migration_vers_status();
+	include_spip('base/dump');
+	$status_file = base_dump_meta_name(substr(md5($s['target']),0,8));
+
+	// ici on prend toutes les tables sauf celles exclues par defaut
+	// (tables de cache en pratique)
+	$exclude = lister_tables_noexport();
+	list($tables,) = base_liste_table_for_dump($exclude);
+	$tables = base_lister_toutes_tables('',$tables,$exclude);
+
+	include_spip('inc/migrer_vers');
+	$res = migrer_vers_init($status_file, $tables);
+
+	if ($res===true) {
+		// on lance l'action sauvegarder qui va realiser la sauvegarde
+		// et finira par une redirection vers la page sauvegarde_fin
+		include_spip('inc/actions');
+		$redirect = generer_action_auteur('migrer_vers', $status_file);
+		return array('message_ok'=>_T('migration:message_connexion_ok'),'redirect'=>$redirect);
+	}
+	else
+		return array('message_erreur'=>$res);
+}
+

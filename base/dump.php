@@ -416,7 +416,7 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	$where = isset($options['where'])?$options['where']:array();
 	$fonction_base_inserer = isset($options['fonction_base_inserer'])?$options['fonction_base_inserer']:'inserer_copie';
 	$desc_tables_dest = isset($options['desc_tables_dest'])?$options['desc_tables_dest']:array();
-	$racine_fonctions = (isset($options['racine_fonctions'])?$options['racine_fonctions']:'base');
+	$racine_fonctions = (isset($options['racine_fonctions_dest'])?$options['racine_fonctions_dest']:'base');
 
 	spip_log( "Copier ".count($tables)." tables de '$serveur_source' vers '$serveur_dest'",'dump.'._LOG_INFO_IMPORTANTE);
 
