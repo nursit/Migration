@@ -368,6 +368,9 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 		creer_ou_upgrader_table($table, $desc, 'auto', $upgrade,$serveur_dest);
 		$desc_dest = sql_showtable($table,false,$serveur_dest);
 	}
+	if (!$desc_dest){
+		spip_log( "Erreur creation '$table' sur serveur '$serveur_dest'".var_export($desc,1),'dump.'._LOG_ERREUR);
+	}
 
 	return $desc_dest;
 }
