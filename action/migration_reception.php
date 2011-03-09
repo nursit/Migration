@@ -50,10 +50,10 @@ function action_migration_reception_dist(){
 	}
 	else {
 		spip_log("OK action ".$data['action'],'migration');
-		if (is_string($res))
-			echo $res;
-		else
+		if ($res===true OR !strlen($res))
 			echo 'OK';
+		else
+			echo $res;
 		exit;
 	}
 }

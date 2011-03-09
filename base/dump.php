@@ -717,8 +717,9 @@ function base_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init){
 		return "Echec creation repertoire $d";
 	}
 	if (file_exists($f) AND $init){
-		if (($s=filesize($f))==$size AND md5_file($f)==$md5)
-			return $s; // rien a faire : le fichier est deja la et identique, on renvoit sa taille
+		if (filesize($f)==$size AND md5_file($f)==$md5)
+			return $size; // rien a faire : le fichier est deja la et identique, on renvoit sa taille
+		// sinon on supprime le morceau existant
 		spip_unlink($f);
 	}
 	return false;
