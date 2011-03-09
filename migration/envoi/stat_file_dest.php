@@ -22,7 +22,7 @@ function migration_envoi_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init) {
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
 	$res = $migration_envoi('stat_file_dest',$data);
-	if (is_string($res)){
+	if (is_string($res) AND !is_numeric($res)){
 		// echec : stoppons la copie
 		$s = lire_migration_vers_status();
 		$s['statut'] = 'abort';

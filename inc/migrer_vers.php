@@ -49,7 +49,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
 		switch ($status['etape']){
 			case 'init':
-				$status['etape'] = 'fichiers';
+				$status['etape'] = 'base';
 				ecrire_fichier($status_file, serialize($status));
 				break;
 			case 'base':
