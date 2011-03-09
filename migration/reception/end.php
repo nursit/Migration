@@ -22,6 +22,12 @@ function migration_reception_end_dist($status, $data){
 	// ce n'est pas une secu, meme visuelle, car un man in the middle qui a trouvé la clé
 	// pourrait envoyer cette info.
 
+	// reparer des tables manquantes, au cas ou ?
+	#include_spip('base/serial');
+	#include_spip('base/aux');
+	#include_spip('base/create');
+	#creer_base();
+
 	$status['status'] = 'end';
 	update_migration_depuis($status);
 	return true;
