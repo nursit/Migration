@@ -14,7 +14,7 @@ include_spip('inc/migration');
  *
  * @return bool
  */
-function migration_connect_dist($status, $data){
+function migration_reception_connect_dist($status, $data){
 
 	// inutile de checker une data :
 	// si on est arrive jusque la c'est que la connexion marche
