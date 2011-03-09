@@ -70,13 +70,15 @@ function migration_afficher_status($status){
 	$s = "?";
 	switch($status['status']){
 		case 'init':
-			$s = 'En attente de connexion du site distant';
-			break;
-		case 'connect':
-			$s = 'Connexion depuis '.$status['source'];
+			$s = _T('migration:status_waiting');
 			break;
 		default:
-			$s = $status['status'];
+			if (isset($status['source']))
+				$s = _T('migration:status_connected',array('source'=>$status['source']));
+			$s .= '<br />';
+			$s .= "[".$status['status']."]";
+			if (isset($status['progress']))
+				$s.= '<br />'.implode('<br />',$status['progress']);
 			break;
 	}
 	return $s . ' ' . time();

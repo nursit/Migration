@@ -277,20 +277,24 @@ function base_vider_tables_destination_copie($tables, $exlure_tables = array(), 
 
 	spip_log('Vider '.count($tables) . " tables sur serveur '$serveur' : " . join(', ', $tables),'base.'._LOG_INFO_IMPORTANTE);
 	foreach($tables as $table){
-		// sur le serveur principal, il ne faut pas supprimer l'auteur loge !
-		if (($table!='spip_auteurs') OR $serveur!=''){
-			// regarder si il y a au moins un champ impt='non'
-			$desc = $trouver_table($table);
-			if (isset($desc['field']['impt']))
-				sql_delete($table, "impt='oui'", $serveur);
-			else
-				sql_delete($table, "", $serveur);
+		if (!in_array($table,$exlure_tables)){
+			// sur le serveur principal, il ne faut pas supprimer l'auteur loge !
+			if (($table!='spip_auteurs') OR $serveur!=''){
+				// regarder si il y a au moins un champ impt='non'
+				$desc = $trouver_table($table);
+				if (isset($desc['field']['impt']))
+					sql_delete($table, "impt='oui'", $serveur);
+				else
+					sql_delete($table, "", $serveur);
+			}
 		}
 	}
 
 	// sur le serveur principal, il ne faut pas supprimer l'auteur loge !
 	// Bidouille pour garder l'acces admin actuel pendant toute la restauration
-	if ($serveur=='') {
+	if ($serveur==''
+	  AND in_array('spip_auteurs',$tables)
+	  AND !in_array('spip_auteurs',$exlure_tables)) {
 		spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
 		sql_delete("spip_auteurs", "id_auteur=0",$serveur);
 		// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...

@@ -21,5 +21,9 @@ include_spip('inc/migration');
  */
 function migration_reception_detruire_copieur_si_besoin($status, $data) {
 	include_spip('base/dump');
-	return base_detruire_copieur_si_besoin('');
+	$status['status'] = 'clean';
+
+	$res = base_detruire_copieur_si_besoin('');
+	update_migration_depuis($status);
+	return $res;
 }

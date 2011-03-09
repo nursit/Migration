@@ -21,5 +21,11 @@ include_spip('inc/migration');
  */
 function migration_reception_preparer_table_dest($status, $data) {
 	include_spip('base/dump');
-	return base_preparer_table_dest($data['table'],$data['desc'],'',$data['init']);
+
+	$status['status'] = 'preparer';
+	$status['progress'][$data['table']] .= "Init";
+
+	$res = base_preparer_table_dest($data['table'],$data['desc'],'',$data['init']);
+	update_migration_depuis($status);
+	return $res;
 }
