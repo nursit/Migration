@@ -64,9 +64,12 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
-					$status['etape'] = 'fichiers';
-					ecrire_fichier($status_file, serialize($status));
-					$res = false;
+					$s = lire_migration_vers_status();
+					if ($s['statut'] != 'abort') {
+						$status['etape'] = 'fichiers';
+						ecrire_fichier($status_file, serialize($status));
+						$res = false;
+					}
 				}
 				break;
 			case 'fichiers':
