@@ -17,7 +17,7 @@ include_spip('inc/migration');
  * @param string $serveur_dest
  * @return int/bool
  */
-function migration_reception_inserer_copie($status, $data){
+function migration_reception_inserer_copie_dist($status, $data){
 	include_spip('base/dump');
 
 	$status['status'] = 'copier';

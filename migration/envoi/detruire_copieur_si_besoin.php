@@ -19,7 +19,7 @@ include_spip('inc/migration');
  *
  * @param string $serveur
  */
-function migration_envoi_detruire_copieur_si_besoin($serveur='') {
+function migration_envoi_detruire_copieur_si_besoin_dist($serveur='') {
 	$data = array('serveur'=>$serveur);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');

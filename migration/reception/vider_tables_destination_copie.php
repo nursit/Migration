@@ -20,11 +20,7 @@ function migration_reception_vider_tables_destination_copie($status, $data){
 
 	$status['status'] = 'vider';
 
-	$status['progress']['vider'] = "X ";
-	foreach($data['tables'] as $table){
-		if (!in_array($table,$data['exlure_tables']))
-			$status['progress']['vider'] .= "$table ";
-	}
+	$status['progress']['vider'] = "X Suppression des tables";
 	base_vider_tables_destination_copie($data['tables'],$data['exlure_tables'],'');
 	update_migration_depuis($status);
 	return true;

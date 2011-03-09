@@ -19,7 +19,7 @@ include_spip('inc/migration');
  *
  * @param string $serveur
  */
-function migration_reception_detruire_copieur_si_besoin($status, $data) {
+function migration_reception_detruire_copieur_si_besoin_dist($status, $data) {
 	include_spip('base/dump');
 	$status['status'] = 'clean';
 

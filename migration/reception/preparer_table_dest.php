@@ -19,7 +19,7 @@ include_spip('inc/migration');
  * @param bool $init
  * @return array
  */
-function migration_reception_preparer_table_dest($status, $data) {
+function migration_reception_preparer_table_dest_dist($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'preparer';

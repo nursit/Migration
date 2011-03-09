@@ -9,12 +9,12 @@
 include_spip('inc/migration');
 
 /**
- * ouvrir la connection depuis le site distant
- * pour verifier que ca fonctionne
+ * fermer la connection depuis le site distant
+ * quand on a fini
  *
  * @return bool
  */
-function migration_reception_connect_dist($status, $data){
+function migration_reception_end_dist($status, $data){
 
 	// inutile de checker une data :
 	// si on est arrive jusque la c'est que la connexion marche

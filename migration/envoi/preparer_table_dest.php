@@ -19,7 +19,7 @@ include_spip('inc/migration');
  * @param bool $init
  * @return array
  */
-function migration_envoi_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
+function migration_envoi_preparer_table_dest_dist($table, $desc, $serveur_dest, $init=false) {
 	$data = array('table'=>$table,'desc'=>$desc,'serveur'=>$serveur_dest, 'init'=>$init);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');

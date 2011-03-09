@@ -17,7 +17,7 @@ include_spip('inc/migration');
  * @param string $serveur_dest
  * @return int/bool
  */
-function migration_envoi_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
+function migration_envoi_inserer_copie_dist($table,$rows,$desc_dest,$serveur_dest){
 	$data = array('table'=>$table,'rows'=>$rows,'desc_dest'=>$desc_dest,'serveur'=>$serveur_dest);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
