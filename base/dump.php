@@ -690,7 +690,7 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 			}
 			else {
 				if ($callback_progression)
-					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>=0)?"[Echec]":""));
+					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>0)?"[Echec]":""));
 			}
 		}
 	}
@@ -732,7 +732,7 @@ function base_fichier_ecrire_dist($file,$d,$dir_dest){
 	if ($h = fopen($f=$dir_dest.$file,'ab')){
 		fwrite($h,$d);
 		fclose($h);
-		return @filesize($f.$file);
+		return @filesize($f);
 	}
 	return false;
 }
