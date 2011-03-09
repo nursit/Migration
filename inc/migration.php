@@ -75,6 +75,9 @@ function migration_afficher_status($status){
 		case 'init':
 			$s = _T('migration:status_waiting');
 			break;
+		case 'end':
+			$s = redirige_formulaire(generer_url_ecrire('accueil'));
+			break;
 		default:
 			if (isset($status['source']))
 				$s = _T('migration:status_connected',array('source'=>$status['source']));
@@ -84,7 +87,7 @@ function migration_afficher_status($status){
 			$s .= "[".$status['status']."]";
 			break;
 	}
-	return $s . ' ' . time();
+	return $s;
 }
 
 

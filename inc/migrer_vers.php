@@ -133,6 +133,10 @@ function migrer_vers_end($status_file, $action=''){
 	if (!$status = migrer_vers_lire_status($status_file))
 		return;
 
+	// signifier la fin au site distant
+	$end = charger_fonction('end','migration/envoi');
+	$end();
+
 	$status['etape'] = 'fini';
 	ecrire_fichier($status_file, serialize($status));
 }

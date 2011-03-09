@@ -16,7 +16,7 @@ include_spip('inc/migration');
  *
  * @return void
  */
-function action_migration_envoi_dist($action, $data){
+function action_migration_envoi_dist($action, $data=''){
 
 	if (!$s = lire_migration_vers_status()){
 		return migration_envoi_fail('pas de migration initialisee');
