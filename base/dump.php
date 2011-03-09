@@ -407,6 +407,9 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
  *     Peut etre personalisee pour filtrer, renumeroter....
  *   @param array $desc_tables_dest
  *     description des tables de destination a utiliser de preference a la description de la table source
+ *   @param int data_pool
+ *     nombre de lignes de la table a envoyer d'un coup en insertion dans la table cible (par defaut 1)
+ *     permet des envois groupes pour plus de rapidite, notamment si l'insertion est distante
  *
  * @return <type>
  */
@@ -420,6 +423,7 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	$fonction_base_inserer = isset($options['fonction_base_inserer'])?$options['fonction_base_inserer']:'inserer_copie';
 	$desc_tables_dest = isset($options['desc_tables_dest'])?$options['desc_tables_dest']:array();
 	$racine_fonctions = (isset($options['racine_fonctions_dest'])?$options['racine_fonctions_dest']:'base');
+	$data_pool = (isset($options['data_pool'])?$options['data_pool']:1);
 
 	spip_log( "Copier ".count($tables)." tables de '$serveur_source' vers '$serveur_dest'",'dump.'._LOG_INFO_IMPORTANTE);
 
@@ -486,14 +490,22 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 					// on copie par lot de 400
 					$res = sql_select('*',$table,isset($where[$table])?$where[$table]:'','','',"$n,400",'',$serveur_source);
 					while ($row = sql_fetch($res,$serveur_source)){
+						$rows = array($row);
+						// lire un groupe de donnees si demande en option
+						// (permet un envoi par lot vers la destination)
+						if ($data_pool>1){
+							$i = $data_pool-1;
+							while ($i-- AND $row = sql_fetch($res,$serveur_source))
+								$rows[]= $row;
+						}
 						// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 						// mais si ca renvoie false c'est une erreur fatale => abandon
-						if ($inserer_copie($table,array($row),$desc_dest,$serveur_dest)===false) {
+						if ($inserer_copie($table,$rows,$desc_dest,$serveur_dest)===false) {
 							// forcer la sortie, charge a l'appelant de gerer l'echec
 							// copie finie
 							return true;
 						}
-						$status['tables_copiees'][$table]++;
+						$status['tables_copiees'][$table]+=count($rows);
 						if ($max_time AND time()>$max_time)
 							break;
 					}

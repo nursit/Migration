@@ -44,6 +44,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				'no_erase_dest' => lister_tables_noerase(),
 				'where' => $status['where']?$status['where']:array(),
 				'racine_fonctions_dest' =>'migration/envoi',
+				'data_pool' => 10,
 			);
 			$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 		}
