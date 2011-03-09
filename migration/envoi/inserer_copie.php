@@ -21,5 +21,14 @@ function migration_envoi_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 	$data = array('table'=>$table,'rows'=>$rows,'desc_dest'=>$desc_dest,'serveur'=>$serveur_dest);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
-	return $migration_envoi('inserer_copie',$data);
+	$res = $migration_envoi('inserer_copie',$data);
+	if ($res===false OR !is_numeric($res)){
+		// echec : stoppons la copie
+		$s = lire_migration_vers_status();
+		$s['statut'] = 'abort';
+		$s['debug'] = $res;
+		ecrire_migration_status('vers',$s);
+		return false;
+	}
+	return $res;
 }

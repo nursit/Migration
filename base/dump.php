@@ -201,19 +201,22 @@ function lister_tables_noerase(){
 function base_liste_table_for_dump($exclude_tables = array()){
 	$tables_for_dump = array();
 	$tables_pointees = array();
+	$tables = array();
 	$tables_principales = $GLOBALS['tables_principales'];
 	$tables_auxiliaires = $GLOBALS['tables_auxiliaires'];
 	$tables_jointures = $GLOBALS['tables_jointures'];
 
-	include_spip('base/objets');
-	$tables = lister_tables_objets_sql();
-	foreach($tables as $t=>$infos){
-		if ($infos['principale'] AND !isset($tables_principales[$t]))
-			$tables_principales[$t] = true;
-		if (!$infos['principale'] AND !isset($tables_auxiliaires[$t]))
-			$tables_auxiliaires[$t] = true;
-		if (count($infos['tables_jointures']))
-			$tables_jointures[$t] = array_merge(isset($tables_jointures[$t])?$tables_jointures[$t]:array(),$infos['tables_jointures']);
+	if (include_spip('base/objets')
+		AND function_exists('lister_tables_objets_sql')){
+		$tables = lister_tables_objets_sql();
+		foreach($tables as $t=>$infos){
+			if ($infos['principale'] AND !isset($tables_principales[$t]))
+				$tables_principales[$t] = true;
+			if (!$infos['principale'] AND !isset($tables_auxiliaires[$t]))
+				$tables_auxiliaires[$t] = true;
+			if (count($infos['tables_jointures']))
+				$tables_jointures[$t] = array_merge(isset($tables_jointures[$t])?$tables_jointures[$t]:array(),$infos['tables_jointures']);
+		}
 	}
 
 	// on construit un index des tables de liens
@@ -484,7 +487,12 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 					$res = sql_select('*',$table,isset($where[$table])?$where[$table]:'','','',"$n,400",'',$serveur_source);
 					while ($row = sql_fetch($res,$serveur_source)){
 						// si l'enregistrement est deja en base, ca fera un echec ou un doublon
-						$inserer_copie($table,array($row),$desc_dest,$serveur_dest);
+						// mais si ca renvoie false c'est une erreur fatale => abandon
+						if ($inserer_copie($table,array($row),$desc_dest,$serveur_dest)===false) {
+							// forcer la sortie, charge a l'appelant de gerer l'echec
+							// copie finie
+							return true;
+						}
 						$status['tables_copiees'][$table]++;
 						if ($max_time AND time()>$max_time)
 							break;
@@ -538,7 +546,7 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 	$ins = 0;
 	foreach($rows as $row)
 		// si l'enregistrement est deja en base, ca fera un echec ou un doublon
-		$ins += (sql_insertq($table,$row,$desc_dest,$serveur_dest)?1:0)
+		$ins += (sql_insertq($table,$row,$desc_dest,$serveur_dest)?1:0);
 	return $ins;
 }
 ?>

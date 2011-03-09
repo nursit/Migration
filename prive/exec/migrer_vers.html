@@ -1,1 +1,22 @@
 <h1>Migration finie !</h1>
+
+<?php
+include_spip('inc/migration');
+$s = lire_migration_vers_status();
+
+if ($s['statut'] = 'abort') {
+?>
+<p>Une erreur est survenue lors de la migration. La dernière réponse du serveur distant a été&nbsp;:</p>
+<?php
+	echo $s['debug'];
+}
+else {
+?>
+
+
+
+<?php
+}
+?>
+
+

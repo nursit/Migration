@@ -39,7 +39,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
 		if (_request('step')) {
 			$options = array(
-				'callback_progression' => 'migration_vers_afficher_progres',
+				'callback_progression' => 'migrer_vers_afficher_progres',
 				'max_time' => $max_time,
 				'no_erase_dest' => lister_tables_noerase(),
 				'where' => $status['where']?$status['where']:array(),
@@ -68,7 +68,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
  * @param array $where
  * @return bool/string
  */
-function migration_vers_init($status_file, $tables=null, $where=array(),$action='migration_vers'){
+function migrer_vers_init($status_file, $tables=null, $where=array(),$action='migration_vers'){
 	$status_file = _DIR_TMP.basename($status_file).".txt";
 
 	if (lire_fichier($status_file, $status)
@@ -96,7 +96,7 @@ function migration_vers_init($status_file, $tables=null, $where=array(),$action=
  * @param <type> $total
  * @param <type> $table
  */
-function migration_vers_afficher_progres($courant,$total,$table) {
+function migrer_vers_afficher_progres($courant,$total,$table) {
 	static $etape = 1;
 	if (unique($table)) {
 		if ($total<0 OR !is_numeric($total))
@@ -129,24 +129,8 @@ function migrer_vers_relance($redirect){
  * @return <type>
  */
 function migrer_vers_end($status_file, $action=''){
-	if ($status = migrer_vers_lire_status($status_file))
+	if (!$status = migrer_vers_lire_status($status_file))
 		return;
-
-	switch($action) {
-		#case 'restaurer':
-			// supprimer la structure qui etait stockee dans le dump
-		#	sql_delete('spip_meta',"nom='dump_structure_temp'");
-		#	break;
-		case 'sauvegarder':
-			// stocker dans le dump la structure de la base source
-			$structure = array();
-			foreach($status['tables_copiees'] as $t=>$n)
-				$structure[$t] = sql_showtable($t,true);
-			dump_serveur($status['connect']);
-			spip_connect('dump');
-			sql_insertq('spip_meta',array('nom'=>'dump_structure_temp','valeur'=>serialize($structure),'impt'=>'non'),array(),'dump');
-			break;
-	}
 
 	$status['etape'] = 'fini';
 	ecrire_fichier($status_file, serialize($status));
