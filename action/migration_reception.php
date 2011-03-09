@@ -45,12 +45,15 @@ function action_migration_reception_dist(){
 
 	$res = $action($s, $data['data']);
 
-	if (!$res){
+	if ($res===false){
 		migration_reponse_fail("echec action ".$data['action']);
 	}
 	else {
 		spip_log("OK action ".$data['action'],'migration');
-		echo 'OK';
+		if (is_string($res))
+			echo $res;
+		else
+			echo 'OK';
 		exit;
 	}
 }

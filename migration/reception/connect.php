@@ -27,8 +27,3 @@ function migration_connect_dist($status, $data){
 	update_migration_depuis($status);
 	return true;
 }
-
-function migration_envoi_fail($raison){
-	spip_log($raison,'migration');
-	return false;
-}

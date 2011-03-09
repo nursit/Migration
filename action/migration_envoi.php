@@ -36,11 +36,14 @@ function action_migration_envoi_dist($action, $data){
 	$boundary = substr(md5(rand().'spip'), 0, 8);
 	$result = recuperer_page($s['target'],false,false,null,array('action'=>'migration_reception','data'=>$data),$boundary);
 
+	$result = trim($result);
 	spip_log('envoi : resultat '.$result,'migration');
-	if (trim($result)=='OK')
+	if ($result==='OK')
 		return true;
-	else
+	elseif ($result==='FAIL')
 		return false;
+	else
+		return $result;
 }
 
 function migration_envoi_fail($raison){
