@@ -22,7 +22,7 @@ function migration_reception_inserer_copie($status, $data){
 
 	$status['status'] = 'copier';
 	$status['compteurs']['table'][$data['table']] += count($data['rows']);
-	$status['progress'][$data['table']] .= "Table ".$data['table']." : ".$status['compteurs']['table'][$data['table']];
+	$status['progress'][$data['table']] = "Table ".$data['table']." : ".$status['compteurs']['table'][$data['table']];
 
 	$res = base_inserer_copie($data['table'],$data['rows'],$data['desc_dest'],'');
 	update_migration_depuis($status);
