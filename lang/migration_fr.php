@@ -15,7 +15,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_migration_status' => 'Avancement&nbsp;:',
 	'titre_etape_migration_depuis' => 'Migration depuis un autre site',
 	'titre_etape_migration_vers' => 'Connexion à l\'autre site',
-	'titre_migration_en_cours' => 'Migration des tables en cours',
+	'titre_migration_en_cours_base' => 'Migration des tables en cours',
+	'titre_migration_en_cours_fichiers' => 'Migration des fichiers en cours',
 
 	'label_direction_depuis' => 'Depuis un autre site SPIP',
 	'label_url_cible' => 'URL du site cible',

@@ -28,7 +28,17 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		include_spip('inc/minipres');
 		@ini_set("zlib.output_compression","0"); // pour permettre l'affichage au fur et a mesure
 
-		$titre = _T('migration:titre_migration_en_cours') . " (".count($status['tables']).") ";
+		switch ($status['etape']){
+			case 'init':
+			case 'base':
+			case 'basecopie':
+				$titre = _T('migration:titre_migration_en_cours_base') . " (".count($status['tables']).") ";
+				break;
+			case 'fichiers':
+			case 'fichierscopie':
+				$titre = _T('migration:titre_migration_en_cours_fichiers') . " (".count($status['files']).") ";
+				break;
+		}
 		$balise_img = chercher_filtre('balise_img');
 		$titre .= $balise_img(chemin_image('searching.gif'));
 		echo ( install_debut_html($titre));
@@ -37,16 +47,42 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		echo "<div style='text-align: left'>\n";
 
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
-		if (_request('step')) {
-			$options = array(
-				'callback_progression' => 'migrer_vers_afficher_progres',
-				'max_time' => $max_time,
-				'no_erase_dest' => lister_tables_noerase(),
-				'where' => $status['where']?$status['where']:array(),
-				'racine_fonctions_dest' =>'migration/envoi',
-				'data_pool' => 20,
-			);
-			$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
+		switch ($status['etape']){
+			case 'init':
+				$status['etape'] = 'fichiers';
+				ecrire_fichier($status_file, serialize($status));
+				break;
+			case 'base':
+			case 'basecopie':
+				$options = array(
+					'callback_progression' => 'migrer_vers_afficher_progres',
+					'max_time' => $max_time,
+					'no_erase_dest' => lister_tables_noerase(),
+					'where' => $status['where']?$status['where']:array(),
+					'racine_fonctions_dest' =>'migration/envoi',
+					'data_pool' => 20,
+				);
+				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
+				if ($res) {
+					$status['etape'] = 'fichiers';
+					ecrire_fichier($status_file, serialize($status));
+					$res = false;
+				}
+				break;
+			case 'fichiers':
+			case 'fichierscopie':
+				$options = array(
+					'callback_progression' => 'migrer_vers_afficher_progres',
+					'max_time' => $max_time,
+					'racine_fonctions_dest' =>'migration/envoi',
+					'data_pool' => 100*1024,
+				);
+				$res = base_copier_files($status_file, $status['files'],_DIR_IMG,_DIR_IMG, $options);
+				if ($res) {
+					$status['etape'] = 'finition';
+					ecrire_fichier($status_file, serialize($status));
+				}
+				break;
 		}
 
 		echo ( "</div>\n");
@@ -69,7 +105,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
  * @param array $where
  * @return bool/string
  */
-function migrer_vers_init($status_file, $tables=null, $where=array(),$action='migration_vers'){
+function migrer_vers_init($status_file, $tables=null, $files = null,$where=array(),$action='migration_vers'){
 	$status_file = _DIR_TMP.basename($status_file).".txt";
 
 	if (lire_fichier($status_file, $status)
@@ -80,7 +116,10 @@ function migrer_vers_init($status_file, $tables=null, $where=array(),$action='mi
 
 	if (!$tables)
 		list($tables,) = base_liste_table_for_dump(lister_tables_noexport());
-	$status = array('tables'=>$tables,'where'=>$where);
+	if (!$files){
+		$files = preg_files(_DIR_IMG,'.');
+	}
+	$status = array('tables'=>$tables,'files'=>$files,'where'=>$where);
 
 	$status['etape'] = 'init';
 	if (!ecrire_fichier($status_file, serialize($status)))

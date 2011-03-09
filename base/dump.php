@@ -442,7 +442,7 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	if (!lire_fichier($status_file, $status)
 		OR !$status = unserialize($status))
 		$status = array();
-	$status['etape'] = 'copie';
+	$status['etape'] = 'basecopie';
 
 	// puis relister les tables a importer
 	// et les vider si besoin, au moment du premier passage ici
@@ -563,5 +563,173 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 		// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 		$ins += (sql_insertq($table,$row,$desc_dest,$serveur_dest)?1:0);
 	return $ins;
+}
+
+
+/**
+ * Partie concernant les fichiers
+ */
+
+
+/**
+ * Copier de dossier a dossier
+ *
+ * @param string $status_file
+ *   nom avec chemin complet du fichier ou est stocke le status courant
+ * @param array $files
+ *   liste des fichiers a copier
+ * @param string $dir_source
+ * @param string $dir_dest
+ * @param array $options
+ *   parametres optionnels sous forme de tableau :
+ *   @param string $callback_progression
+ *     fonction a appeler pour afficher la progression, avec les arguments (compteur,total,table)
+ *   @param int $max_time
+ *     limite de temps au dela de laquelle sortir de la fonction proprement (de la forme time()+15)
+ *   @param bool $drop_source
+ *     vider les tables sources apres copie
+ *   @param string $racine_fonctions_dest
+ *     racine utilisee pour charger_fonction() des operations elementaires sur la base de destination.
+ *     Permet de deleguer vers une autre voie de communication.
+ *     Par defaut on utilise 'base', ce qui route vers les fonctions de ce fichier. Concerne :
+ *     - vider_tables_destination_copie
+ *     - preparer_table_dest
+ *     - detruire_copieur_si_besoin
+ *     - inserer_copie
+ *   @param array fonction_fichier_ecrire
+ *     fonction de copie du fichier par morceaux. Par defaut "fichier_ecrire" qui fait fwrite
+ *     Attention, la fonction appelee est prefixee par $racine_fonctions_dest via un charger_fonction()
+ *     Peut etre personalisee ....
+ *
+ * @return <type>
+ */
+function base_copier_files($status_file, $files, $dir_source, $dir_dest, $options=array()){
+
+	$callback_progression = isset($options['callback_progression'])?$options['callback_progression']:'';
+	$max_time = isset($options['max_time'])?$options['max_time']:0;
+	$drop_source = isset($options['drop_source'])?$options['drop_source']:false;
+	$fonction_fichier_ecrire = isset($options['fonction_fichier_ecrire'])?$options['fonction_fichier_copier']:'fichier_ecrire';
+	$racine_fonctions = (isset($options['racine_fonctions_dest'])?$options['racine_fonctions_dest']:'base');
+	$data_pool = (isset($options['data_pool'])?$options['data_pool']:100*1024);
+
+	spip_log( "Copier ".count($files)." fichiers de '$dir_source' vers '$dir_dest'",'dump.'._LOG_INFO_IMPORTANTE);
+
+	if (!$fichier_ecrire = charger_fonction($fonction_fichier_ecrire,$racine_fonctions, true)) {
+		spip_log( "Fonction '{$racine_fonctions}_$fonction_fichier_ecrire' inconnue. Abandon",'dump.'._LOG_INFO_IMPORTANTE);
+		return true; // echec mais on a fini, donc true
+	}
+	if (!$stat_file_dest = charger_fonction('stat_file_dest',$racine_fonctions, true)) {
+		spip_log( "Fonction '{$racine_fonctions}_stat_file_dest' inconnue. Abandon",'dump.'._LOG_INFO_IMPORTANTE);
+		return true; // echec mais on a fini, donc true
+	}
+
+	if (!lire_fichier($status_file, $status)
+		OR !$status = unserialize($status))
+		$status = array();
+	$status['etape'] = 'fichierscopie';
+
+	spip_log( "Fichiers a copier :".implode(", ",$files),'dump.'._LOG_INFO);
+
+	foreach ($files as $file){
+		$file = substr($file,strlen($dir_source));
+		// verifier que le fichier existe dans la source
+		if (file_exists($dir_source.$file)){
+			// $status['fichiers_copies'][$file] contient l'avancement
+			// de la copie pour la $table : 0 a N et -N quand elle est finie (-1 si vide et finie...)
+			if (!isset($status['fichiers_copies'][$file]))
+				$status['fichiers_copies'][$file] = 0;
+
+			if (is_numeric($status['fichiers_copies'][$file])
+				AND $status['fichiers_copies'][$file]>=0
+				AND $stat_file_dest(
+								$file,
+								filesize($dir_source.$file),
+								md5_file($dir_source.$file),
+								$dir_dest,
+								$status['fichiers_copies'][$file] == 0)){
+				if ($callback_progression)
+					$callback_progression($status['fichiers_copies'][$table],0,$table);
+				while (true) {
+					$n = intval($status['fichiers_copies'][$file]);
+					// on copie par lot de $data_pool octets
+					if ($h = fopen($dir_source.$file,'rb')){
+						if ($n)
+							fseek($h,$n);
+						while ($d=fread($h, $data_pool)){
+							// si l'enregistrement est deja en base, ca fera un echec ou un doublon
+							// mais si ca renvoie false c'est une erreur fatale => abandon
+							if ($fichier_ecrire($file,$d,$dir_dest)===false) {
+								// forcer la sortie, charge a l'appelant de gerer l'echec
+								// copie finie
+								return true;
+							}
+							$status['fichiers_copies'][$file]+=strlen($d);
+							if ($max_time AND time()>$max_time)
+								break;
+						}
+						fclose($h);
+					}
+					if ($n == $status['fichiers_copies'][$file])
+						break;
+					spip_log( "cp $file ".$status['fichiers_copies'][$file],'dump.'._LOG_INFO_IMPORTANTE);
+					if ($callback_progression)
+						$callback_progression($status['fichiers_copies'][$file],0,$file);
+					ecrire_fichier($status_file,serialize($status));
+					if ($max_time AND time()>$max_time)
+						return false; // on a pas fini, mais le temps imparti est ecoule
+				}
+				if ($drop_source) {
+					spip_unlink($dir_source.$file);
+					spip_log( "rm $file sur source '$dir_source'",'dump.'._LOG_INFO_IMPORTANTE);
+				}
+				$status['fichiers_copies'][$file]=($status['fichiers_copies'][$file]?-$status['fichiers_copies'][$file]:"zero");
+				ecrire_fichier($status_file,serialize($status));
+				spip_log( "fichiers_copies ".implode(',',$status['fichiers_copies']),'dump.'._LOG_INFO);
+				if ($callback_progression)
+					$callback_progression($status['fichiers_copies'][$file],$status['fichiers_copies'][$file],$table);
+			}
+			else {
+				if ($callback_progression)
+					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>=0)?"[Echec]":""));
+			}
+		}
+	}
+
+	// OK, copie complete
+	return true;
+}
+
+/**
+ * Verifier si le fichier de destination est deja la et OK
+ * @param string $file
+ * @param string $size
+ * @param string $md5
+ * @param string $dir_dest
+ * @param bool $init
+ * @return bool
+ */
+function base_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init){
+	if (file_exists($f=$dir_dest.$file) AND $init){
+		if (filesize($f)==$size AND md5_file($f)==$md5)
+			return false; // rien a faire : le fichier est deja la et identique
+		spip_unlink($f);
+	}
+	return true;
+}
+
+/**
+ * Ecrire un morceau du fichier de destination
+ * @param string $file
+ * @param string $d
+ * @param string $dir_dest
+ * @return bool
+ */
+function base_fichier_ecrire_dist($file,$d,$dir_dest){
+	if ($h = fopen($dir_dest.$file,'ab')){
+		fwrite($h,$d);
+		fclose($h);
+		return @filesize($dir_dest.$file);
+	}
+	return false;
 }
 ?>
