@@ -37,7 +37,8 @@ function action_migration_envoi_dist($action, $data){
 	$result = recuperer_page($s['target'],false,false,null,array('action'=>'migration_reception','data'=>$data),$boundary);
 
 	$result = trim($result);
-	spip_log('envoi : resultat '.$result,'migration');
+	spip_log("envoi : action $action resultat ".$result,'migration');
+	
 	if ($result==='OK')
 		return true;
 	elseif ($result==='FAIL')

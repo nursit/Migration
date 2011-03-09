@@ -39,7 +39,7 @@ function action_migration_reception_dist(){
 		migration_reponse_fail('aucune action demandee');
 	}
 
-	if (!$action = charger_fonction($data['action'],'migration',true)) {
+	if (!$action = charger_fonction($data['action'],'migration/reception',true)) {
 		migration_reponse_fail("action inconnue : ".$data['action']);
 	}
 

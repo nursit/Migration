@@ -78,7 +78,7 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			initialiser_migration_vers(_request('url_cible'),_request('migration_key'));
 			$connect = charger_fonction('connect','migration/envoi');
 			$res = $connect($GLOBALS['meta']['adresse_site']);
-			$erreurs['message_erreur'] = ($res?'Connexion OK':'Echec Connexion');
+			$erreurs['message_erreur'] = ($res?'Connexion OK':'Impossible de se connecter au site distant. Veuillez verifier l\'URL du site et la clé de migration.');
 		}
 	}
 
