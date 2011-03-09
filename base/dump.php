@@ -641,7 +641,7 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 
 			if (is_numeric($status['fichiers_copies'][$file])
 				AND $status['fichiers_copies'][$file]>=0
-				AND $stat_file_dest(
+				AND !$size = $stat_file_dest(
 								$file,
 								filesize($dir_source.$file),
 								md5_file($dir_source.$file),
@@ -689,8 +689,11 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 					$callback_progression($status['fichiers_copies'][$file],$status['fichiers_copies'][$file],$table);
 			}
 			else {
+				// si le fichier est deja OK, noter sa taille comme realisee
+				if (intval($size) AND !$status['fichiers_copies'][$file])
+					$status['fichiers_copies'][$file] = -intval($size);
 				if ($callback_progression)
-					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>0)?"[Echec]":""));
+					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>=0)?"[Echec]":""));
 			}
 		}
 	}
@@ -714,11 +717,11 @@ function base_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init){
 		return "Echec creation repertoire $d";
 	}
 	if (file_exists($f) AND $init){
-		if (filesize($f)==$size AND md5_file($f)==$md5)
-			return false; // rien a faire : le fichier est deja la et identique
+		if (($s=filesize($f))==$size AND md5_file($f)==$md5)
+			return $s; // rien a faire : le fichier est deja la et identique, on renvoit sa taille
 		spip_unlink($f);
 	}
-	return true;
+	return false;
 }
 
 /**
