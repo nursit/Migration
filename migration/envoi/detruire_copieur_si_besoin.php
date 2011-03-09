@@ -23,5 +23,6 @@ function migration_envoi_detruire_copieur_si_besoin($serveur='') {
 	$data = array('serveur'=>$serveur);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
-	return $migration_envoi('detruire_copieur_si_besoin',$data);
+	$migration_envoi('detruire_copieur_si_besoin',$data);
+	return true;
 }

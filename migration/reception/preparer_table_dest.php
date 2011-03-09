@@ -23,7 +23,7 @@ function migration_reception_preparer_table_dest($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'preparer';
-	$status['progress'][$data['table']] .= "Init";
+	$status['progress'][$data['table']] = "Table ".$data['table']." : Init";
 
 	$res = base_preparer_table_dest($data['table'],$data['desc'],'',$data['init']);
 	update_migration_depuis($status);

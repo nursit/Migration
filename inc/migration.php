@@ -78,10 +78,10 @@ function migration_afficher_status($status){
 		default:
 			if (isset($status['source']))
 				$s = _T('migration:status_connected',array('source'=>$status['source']));
-			$s .= '<br />';
-			$s .= "[".$status['status']."]";
 			if (isset($status['progress']))
 				$s.= '<br />'.implode('<br />',$status['progress']);
+			$s .= '<br />';
+			$s .= "[".$status['status']."]";
 			break;
 	}
 	return $s . ' ' . time();
