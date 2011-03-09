@@ -38,8 +38,8 @@ if (window.jQuery)
 jQuery(function(){
 	function update_migration_status(){
 		$.ajax({
-			url: "[(#URL_SITE_SPIP|parametre_url{action,migration_depuis_status,'&'})]",
-			data: {key:'[(#ENV{_depuis_status}|table_valeur{key})]'},
+			url: "#URL_SITE_SPIP/",
+			data: {action:'migration_depuis_status',key:'[(#ENV{_depuis_status}|table_valeur{key})]'},
 			type: 'POST',
 			success: function(data){
 				$("#progress_status").html(data);
