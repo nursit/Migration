@@ -47,7 +47,7 @@ function action_migrer_vers_dist($arg=null){
 	if ($migrer_vers($status_file,$redirect)) {
 		migrer_vers_end($status_file,'migrer_vers');
 		include_spip('inc/headers');
-		echo redirige_formulaire(generer_url_ecrire("migrer_vers",'status='.$status_file,'',true, true));
+		echo redirige_formulaire(generer_url_ecrire("migrer_vers_fin",'status='.$status_file,'',true, true));
 	}
 
 }

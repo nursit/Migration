@@ -77,7 +77,7 @@ function migration_afficher_status($status){
 			break;
 		case 'end':
 		case 'basereverted':
-			$s = redirige_formulaire(generer_url_ecrire('accueil'));
+			$s = redirige_formulaire(generer_url_ecrire('migrer_depuis_fin'));
 			break;
 		default:
 			if (isset($status['source']))

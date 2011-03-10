@@ -20,6 +20,7 @@ function migration_reception_end_dist($status, $data){
 	spip_log('fin de migration. Resultat:'.$data,'migration');
 	$status['status'] = 'end';
 	if ($data=='abort'){
+		$status['status'] = 'aborted';
 		if (migration_restore_base_si_possible())
 			$status['status'] = 'basereverted';
 	}

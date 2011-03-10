@@ -1,0 +1,15 @@
+<h1>Migration finie !</h1>
+
+#SET{status,#REM|lire_migration_depuis_status}
+
+[(#GET{status}|table_valeur{status}|=={aborted}|oui)
+<p>Une erreur est survenue lors de la migration.</p>
+]
+[(#GET{status}|table_valeur{status}|=={basereverted}|oui)
+<p>Une erreur est survenue lors de la migration. Votre base de données a été rétablie dans son état avant la tentative de migration.</p>
+]
+[(#GET{status}|table_valeur{status}|=={end}|oui)
+<p>La migration a été achevée avec succés.</p>
+]
+
+
