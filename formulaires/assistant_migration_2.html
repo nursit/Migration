@@ -20,15 +20,33 @@
 				]
 				#SET{val,depuis}
 				<div class="choix">
-					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
+					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"]
+					onchange="if (jQuery(this).attr('checked')) jQuery(this).parents('form').find('.editer_quoi').hide('fast');"
+					/>
 					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
 					<p><:migration:explications_direction_depuis:></p>
 				</div>
 				#SET{val,vers}
 				<div class="choix">
-					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"] />
+					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"]
+					onchange="if (jQuery(this).attr('checked')) jQuery(this).parents('form').find('.editer_quoi').show('fast');"
+					/>
 					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
 					<p><:migration:explications_direction_vers:></p>
+					<div class="editer_quoi"[(#ENV{#GET{name}}|=={#GET{val}}|non)style="display:none"]>
+						#SET{name,quoi}#SET{obli,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
+						[<span class='erreur_message'>(#GET{erreurs})</span>]
+						#SET{val,base}
+						<div class="choix">
+							<input type="checkbox" class="checkbox" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#GET{val}|in_any{#ENV{#GET{name}}}|oui)checked="checked"] />
+							<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
+						</div>
+						#SET{val,fichiers}
+						<div class="choix">
+							<input type="checkbox" class="checkbox" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#GET{val}|in_any{#ENV{#GET{name}}}|oui)checked="checked"] />
+							<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
+						</div>
+					</div>
 				</div>
 			</li>
 		</ul>

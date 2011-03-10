@@ -26,9 +26,13 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'explications_direction_vers' => 'Transférer des données de ce site vers un autre site SPIP. Le site SPIP distant doit être accessible par Internet depuis ce site.',
 	'explication_connexion_vers' => 'Sur le site de destination, lancez l\'assistant de migration et sélectionnez la migration <i>Depuis un autre site SPIP</i>.
 	Renseignez ci-dessous l\'URL et la clé de migration qui vous sont indiquées.',
+	'label_quoi_base' => 'Envoyer la base de données',
+	'label_quoi_fichiers' => 'Envoyer les documents de <i>IMG/</i>',
 
 	'erreur_echec_connexion_init' => 'Impossible de se connecter au site distant. Veuillez verifier l\'URL du site et la clé de migration.',
 	'erreur_droits_webmestre' => 'Vous devez avoir les droits de webmestre sur le site pour utiliser l\'assistant de migration.',
+	'erreur_direction_obligatoire' => 'Choisissez dans quelle direction vous souhaitez transférer vos données',
+	'erreur_choisissez_quoi' => 'Indiquez ce que vous voulez transférer vers l\'autre site',
 	'message_connexion_ok' => 'Connexion OK',
 
 	'status_waiting' => 'En attente de connexion du site distant',

@@ -46,10 +46,11 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		echo http_script("window.setTimeout('location.href=\"".$redirect."\";',".($timeout*1000).")");
 		echo "<div style='text-align: left'>\n";
 
+		$s = lire_migration_vers_status();
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
 		switch ($status['etape']){
 			case 'init':
-				$status['etape'] = 'base';
+				$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
 				ecrire_fichier($status_file, serialize($status));
 				break;
 			case 'base':
@@ -64,11 +65,9 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
-					$s = lire_migration_vers_status();
 					if ($s['status'] != 'abort') {
-						$status['etape'] = 'fichiers';
+						$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
 						ecrire_fichier($status_file, serialize($status));
-						$res = false;
 					}
 				}
 				break;
@@ -87,6 +86,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				}
 				break;
 		}
+		$res = ($status['etape'] == 'finition');
 
 		echo ( "</div>\n");
 
@@ -100,6 +100,16 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 	}
 }
 
+function migrer_vers_etape_suivante($etape,$quoi){
+	$done = false;
+	$etapes = array('init','base','basecopie','fichiers','fichierscopie');
+	foreach($etapes as $e){
+		if ($e==$etape) $done = true;
+		if ($done AND in_array($e,$quoi))
+			return $e;
+	}
+	return 'finition';
+}
 
 /**
  * Initialiser une migration vers

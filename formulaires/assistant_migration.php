@@ -17,6 +17,7 @@ function formulaires_assistant_migration_charger_dist(){
 		'_depuis_status' => '',
 		'url_cible' => '',
 		'migration_key' => '',
+		'quoi' => array('base','docs'),
 	);
 
 	if (_request('direction')=='depuis'){
@@ -33,7 +34,7 @@ function formulaires_assistant_migration_verifier_1_dist(){
 
 	$erreurs = array();
 	if (!autoriser('webmestre')){
-		$erreurs['message_erreur'] = 'Vous devez être webmestre pour migrer depuis ou vers un autre site SPIP';
+		$erreurs['message_erreur'] = _T('migration:erreur_droits_webmestre');
 	}
 	// si on fait annuler a un moment :
 	// on revient a l'etape 1 en reinitialisant tout
@@ -51,12 +52,19 @@ function formulaires_assistant_migration_verifier_2_dist(){
 	$erreurs = array();
 	if (!$direction=_request('direction')
 	  OR !in_array($direction,array('depuis','vers'))){
-		$erreurs['message_erreur'] = 'Choisissez dans quelle direction vous souhaitez transférer vos données';
+		$erreurs['message_erreur'] = _T('migration:erreur_direction_obligatoire');
 	}
 	// initialiser la cle de migration si on importe depuis un autre site
 	elseif ($direction=='depuis') {
 		initialiser_migration_depuis();
 		migration_backup_base_si_possible();
+	}
+	elseif ($direction=='vers') {
+		if (!$quoi=_request('quoi')
+		  OR !is_array($quoi)
+			OR (!in_array('base',$quoi) AND !in_array('fichiers',$quoi))){
+			$erreurs['quoi'] = _T('migration:erreur_choisissez_quoi');
+		}
 	}
 
 	return $erreurs;
@@ -76,7 +84,7 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			if (!_request($obli))
 				$erreurs[$obli] = _T('info_obligatoire');
 		if (!count($erreurs)){
-			initialiser_migration_vers(_request('url_cible'),_request('migration_key'));
+			initialiser_migration_vers(_request('url_cible'),_request('migration_key'),_request('quoi'));
 			$connect = charger_fonction('connect','migration/envoi');
 			$res = $connect($GLOBALS['meta']['adresse_site']);
 			if (!$res){

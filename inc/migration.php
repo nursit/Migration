@@ -66,7 +66,16 @@ function update_migration_depuis($status){
 	$status['timestamp'] = time();
 	ecrire_migration_status('depuis',$status);
 }
-function initialiser_migration_vers($url,$key){ecrire_migration_status('vers',array('status'=>'init','target'=>$url,'key'=>$key));}
+function initialiser_migration_vers($url,$key,$quoi=array('base','docs')){
+	ecrire_migration_status('vers',
+		array(
+			'status'=>'init',
+			'target'=>$url,
+			'key'=>$key,
+			'quoi'=>$quoi
+		)
+	);
+}
 
 
 function migration_afficher_status($status){
