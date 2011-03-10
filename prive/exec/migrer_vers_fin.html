@@ -1,8 +1,41 @@
-<h1>Migration finie !</h1>
-
 #SET{status,#REM|lire_migration_vers_status}
 
 [(#GET{status}|table_valeur{status}|=={abort}|oui)
-<p>Une erreur est survenue lors de la migration. La dernière réponse du serveur distant a été&nbsp;:</p>
-[(#GET**{status}|table_valeur{debug})]
+<h1>Echec de la migration</h1>
+<div class="error">
+	<p>Une erreur est survenue lors de la migration. La dernière réponse du serveur distant a été&nbsp;:</p>
+	[(#GET**{status}|table_valeur{debug})]
+</div>
 ]
+[(#GET{status}|table_valeur{status}|=={abort}|non)
+<h1>Migration finie !</h1>
+<div class="succes">
+	<p>La migration a été achevée avec succés.</p>
+</div>
+]
+<style type="text/css">
+.error,.success,.notice {
+	border:2px solid;
+	color:#333;
+	font-weight: normal;
+	padding:5px;
+	padding-left:40px;
+	min-height:24px;
+	margin-bottom:1em;
+}
+.success{
+	border-color: #C6D880;
+	background-color:#E6EFC2;
+	color : #264409;
+}
+.error {
+	border-color: #FBC2C4;
+	background-color:#FBE3E4;
+	color : #8A1F11;
+}
+.notice {
+	border-color: #FFD324;
+	background-color:#FFF6BF;
+	color : #514721;
+}
+</style>
