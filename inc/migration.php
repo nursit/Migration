@@ -168,10 +168,11 @@ function migration_backup_base_si_possible(){
 		if ($db =$GLOBALS['connexions'][0]['db']
 			AND is_file($f = _DIR_DB . $db . '.sqlite')) {
 			$s = lire_migration_depuis_status();
-			@copy($f,$g="$f.migration.backup");
-			if (@file_exists($g)){
+			@copy($f,_DIR_DB. ($g=$db.".sqlite.migration.backup"));
+			if (@file_exists(_DIR_DB.$g)){
 				$s['backup'] = $g;
 				ecrire_migration_status('depuis',$s);
+				spip_log("base $f copiee dans $g avant migration",'migration');
 				return true;
 			}
 		}
@@ -180,6 +181,7 @@ function migration_backup_base_si_possible(){
 }
 
 function migration_restore_base_si_possible(){
+	spip_log("tentative de restauration de la base",'migration');
 	// si jamais la base est sqlite, et qu'on a un backup
 	// le restaurer
 	include_spip('base/abstract_sql');
@@ -188,9 +190,11 @@ function migration_restore_base_si_possible(){
 		if ($db =$GLOBALS['connexions'][0]['db']
 			AND is_file($f = _DIR_DB . $db . '.sqlite')) {
 			$s = lire_migration_depuis_status();
+			spip_log("base SQLITE, le status indique backup=".$s['backup'],'migration');
 			if ($g = $s['backup']
-				AND @file_exists($g)){
-				@copy($g,$f);
+				AND @file_exists(_DIR_DB.$g)){
+				spip_log("base $g restauree dans $f suite a l'echec de la migration",'migration');
+				@copy(_DIR_DB.$g,$f);
 				return true;
 			}
 		}
