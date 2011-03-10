@@ -104,6 +104,7 @@ function migration_afficher_status_tables($tables){
 	return $s;
 }
 function migration_afficher_status_files($files){
+	include_spip('inc/filtres');
 	$s = "";
 	foreach($files as $f=>$size){
 		$s .= "Fichier $f&nbsp;: ".taille_en_octets($size)."<br />";
