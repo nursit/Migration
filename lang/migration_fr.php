@@ -28,6 +28,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	Renseignez ci-dessous l\'URL et la clé de migration qui vous sont indiquées.',
 
 	'erreur_echec_connexion_init' => 'Impossible de se connecter au site distant. Veuillez verifier l\'URL du site et la clé de migration.',
+	'erreur_droits_webmestre' => 'Vous devez avoir les droits de webmestre sur le site pour utiliser l\'assistant de migration.',
 	'message_connexion_ok' => 'Connexion OK',
 
 	'status_waiting' => 'En attente de connexion du site distant',

@@ -21,12 +21,12 @@
 				<li class="spip">la base de données</li>
 				<li class="spip">les documents joints</li>
 			</ul>
-		</div>
 
 		<!--extra-->
 		[(#AUTORISER{webmestre}|non)
-		Vous devez avoir les droits de webmestre sur le site pour utiliser l'assistant de migration.
+		<p><strong><:migration:erreur_droits_webmestre:></strong></p>
 		]
+		</div>
 	[(#ENV{editable})
 	  <p class='boutons'>
 			<input type='submit' class='submit' value='<:migration:bouton_continuer:>' />
