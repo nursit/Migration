@@ -28,7 +28,7 @@ function migration_reception_inserer_copie_dist($status, $data){
 		foreach($row as $k=>$v)
 			if (!isset($data['desc_dest']['field'][$k])){
 				unset($data['rows'][$r][$k]);
-				$status['ignore'][$data['table']][$k];
+				$status['ignore'][$data['table']][$k]=$k;
 			}
 	}
 
