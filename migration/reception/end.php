@@ -17,6 +17,7 @@ include_spip('inc/migration');
 function migration_reception_end_dist($status, $data){
 
 
+	spip_log('fin de migration. Resultat:'.$data,'migration');
 	$status['status'] = 'end';
 	if ($data=='abort'){
 		if (migration_restore_base_si_possible())

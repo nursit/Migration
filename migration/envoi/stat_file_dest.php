@@ -25,7 +25,7 @@ function migration_envoi_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init) {
 	if (is_string($res) AND !is_numeric($res)){
 		// echec : stoppons la copie
 		$s = lire_migration_vers_status();
-		$s['statut'] = 'abort';
+		$s['status'] = 'abort';
 		$s['debug'] = $GLOBALS['debug_migration'];
 		ecrire_migration_status('vers',$s);
 		return false;

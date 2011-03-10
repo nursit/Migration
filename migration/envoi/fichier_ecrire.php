@@ -23,7 +23,7 @@ function migration_envoi_fichier_ecrire_dist($file,$d,$dir_dest) {
 	if ($res===false OR (!is_bool($res) AND !is_numeric($res))){
 		// echec : stoppons la copie
 		$s = lire_migration_vers_status();
-		$s['statut'] = 'abort';
+		$s['status'] = 'abort';
 		$s['debug'] = $GLOBALS['debug_migration'];
 		ecrire_migration_status('vers',$s);
 		return false;

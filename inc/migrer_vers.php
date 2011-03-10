@@ -65,7 +65,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
 					$s = lire_migration_vers_status();
-					if ($s['statut'] != 'abort') {
+					if ($s['status'] != 'abort') {
 						$status['etape'] = 'fichiers';
 						ecrire_fichier($status_file, serialize($status));
 						$res = false;
@@ -175,9 +175,10 @@ function migrer_vers_end($status_file, $action=''){
 	if (!$status = migrer_vers_lire_status($status_file))
 		return;
 
+	$s = lire_migration_vers_status();
 	// signifier la fin au site distant
 	$end = charger_fonction('end','migration/envoi');
-	$end($status['statut']);
+	$end($s['status']);
 
 	$status['etape'] = 'fini';
 	ecrire_fichier($status_file, serialize($status));
