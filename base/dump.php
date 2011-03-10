@@ -365,7 +365,19 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 	if (!$desc_dest) {
 		spip_log( "creation '$table' sur serveur '$serveur_dest'",'dump.'._LOG_INFO_IMPORTANTE);
 		include_spip('base/create');
-		creer_ou_upgrader_table($table, $desc, 'auto', $upgrade,$serveur_dest);
+		// on fait la detection d'autoinc ici car creer_ou_upgrader_table ne sait pas forcement le faire
+		// (depend de la version de SPIP)
+		if (isset($GLOBALS['tables_principales'][$table]))
+			$autoinc = true;
+		elseif (isset($GLOBALS['tables_auxiliaires'][$table]))
+			$autoinc = false;
+		else {
+			// essayer de faire au mieux !
+			$autoinc = (isset($desc['key']['PRIMARY KEY'])
+							AND strpos($desc['key']['PRIMARY KEY'],',')===false
+							AND strpos($desc['field'][$desc['key']['PRIMARY KEY']],'default')===false);
+		}
+		creer_ou_upgrader_table($table, $desc, $autoinc, $upgrade,$serveur_dest);
 		$desc_dest = sql_showtable($table,false,$serveur_dest);
 	}
 	if (!$desc_dest){
