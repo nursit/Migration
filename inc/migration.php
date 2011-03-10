@@ -96,6 +96,12 @@ function migration_afficher_status($status){
 	return $s;
 }
 
+/**
+ * Afficher le statut d'avancement de la copie des tables
+ * 
+ * @param array $tables
+ * @return string
+ */
 function migration_afficher_status_tables($tables){
 	$s = "";
 	foreach($tables as $t=>$n){
@@ -103,6 +109,13 @@ function migration_afficher_status_tables($tables){
 	}
 	return $s;
 }
+
+/**
+ * Afficher le statut d'avancement de la copie des fichiers
+ *
+ * @param array $files
+ * @return string
+ */
 function migration_afficher_status_files($files){
 	include_spip('inc/filtres');
 	$s = "";
@@ -112,7 +125,15 @@ function migration_afficher_status_files($files){
 	return $s;
 }
 
-// http://doc.spip.org/@calculer_cle_action
+/**
+ * Signer un contenu avec une cle
+ * Comme la cle n'est valable que 5min, cela laisse peu de temps pour la casser
+ * et un sha1 suffit
+ * 
+ * @param string $action
+ * @param string $key
+ * @return string
+ */
 function migration_signer_data($action, $key) {
 	if (function_exists('sha1'))
 		return sha1($action . $key);
@@ -180,6 +201,12 @@ function migration_xor($message, $key){
 	return $message;
 }
 
+/**
+ * Si le site local est sqlite, faisons une copie de la base
+ * avant la migration, ca peut toujours servir
+ * 
+ * @return bool
+ */
 function migration_backup_base_si_possible(){
 	// si jamais la base est sqlite, faire une copie de backup
 	// au cas ou le transfert foire
@@ -201,6 +228,12 @@ function migration_backup_base_si_possible(){
 	return false;
 }
 
+/**
+ * Si la migration a echouee, peut on revenir a une base que l'on avait sauvegarde ?
+ * (cas sqlite uniquement)
+ * 
+ * @return bool
+ */
 function migration_restore_base_si_possible(){
 	spip_log("tentative de restauration de la base",'migration');
 	// si jamais la base est sqlite, et qu'on a un backup
@@ -221,4 +254,25 @@ function migration_restore_base_si_possible(){
 		}
 	}
 	return false;
+}
+
+/**
+ * Verifier que le fichier est d'un type autorise dans IMG/
+ * ie dans la table des documents
+ * Les fichiers non autorises ne seront pas transferes
+ *
+ * @param string $file
+ * @return bool
+ */
+function migration_type_fichier_autorise($file){
+	// pas de bras, pas de chocolat
+	if (!preg_match(',\.([a-z0-9]+)$,', $file, $rext))
+		return false;
+
+	$extension = $rext[1];
+
+	if (!sql_fetsel("extension", "spip_types_documents", "extension=" . sql_quote($extension)))
+		return false;
+
+	return $extension;
 }

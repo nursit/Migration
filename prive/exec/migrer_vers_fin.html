@@ -13,9 +13,16 @@
 [
 <div class="notice">
 <p>Le serveur distant a ignoré les champs suivants :</p>
-(#GET{status}|table_valeur{distant}|table_valeur{ignore}|affiche_champs_ignores)
+(#GET{status}|table_valeur{distant}|table_valeur{ignore}|table_valeur{tables}|migration_affiche_champs_ignores)
 </div>
 ]
+[
+<div class="notice">
+<p>Le serveur distant a ignoré les fichiers suivants :</p>
+(#GET{status}|table_valeur{distant}|table_valeur{ignore}|table_valeur{files}|migration_affiche_fichiers_ignores)
+</div>
+]
+
 [(#GET{status}|table_valeur{status}|=={abort}|non)
 <div class="success">
 	<p>La migration a été achevée avec succés.</p>

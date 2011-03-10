@@ -22,9 +22,20 @@ function migration_reception_fichier_ecrire_dist($status, $data) {
 
 	$status['status'] = 'cp';
 
-	$res = base_fichier_ecrire_dist($data['file'],$data['d'],_DIR_IMG);
-	if ($res)
-		$status['progress']['files'][$data['file']] = $res;
+	if (migration_type_fichier_autorise($data['file'])){
+		$res = base_fichier_ecrire_dist($data['file'],$data['d'],_DIR_IMG);
+		if ($res)
+			$status['progress']['files'][$data['file']] = $res;
+	}
+	else {
+		// on ne devrait pas arriver la car le fichier a ete refuse au moment du stat
+		// on peut presumer que c'est une tentative de passage en force.
+		// Est-ce qu'on ignore juste, ou est-ce qu'on abandonne tout ?
+		$res = 'FAIL';
+		// notons le fichier comme ignore
+		$status['ignore']['files'][$data['file']]=$data['file'];
+	}
+
 	update_migration_depuis($status);
 	return $res;
 }
