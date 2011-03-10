@@ -24,7 +24,7 @@ function migration_reception_fichier_ecrire_dist($status, $data) {
 
 	$res = base_fichier_ecrire_dist($data['file'],$data['d'],_DIR_IMG);
 	if ($res)
-		$status['progress'][$data['file']] = "Fichier ".$data['file']." : ".$res;
+		$status['progress']['files'][$data['file']] = $res;
 	update_migration_depuis($status);
 	return $res;
 }

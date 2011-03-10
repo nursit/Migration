@@ -82,8 +82,13 @@ function migration_afficher_status($status){
 		default:
 			if (isset($status['source']))
 				$s = _T('migration:status_connected',array('source'=>"<strong>".$status['source']."</strong>"));
-			if (isset($status['progress']))
+			if (isset($status['progress'])){
+				if (isset($status['progress']['tables']))
+					$status['progress']['tables'] = migration_afficher_status_tables($status['progress']['tables']);
+				if (isset($status['progress']['files']))
+					$status['progress']['files'] = migration_afficher_status_files($status['progress']['files']);
 				$s.= '<br />'.implode('<br />',$status['progress']);
+			}
 			$s .= '<br />';
 			$s .= "[".$status['status']."]";
 			break;
@@ -91,6 +96,20 @@ function migration_afficher_status($status){
 	return $s;
 }
 
+function migration_afficher_status_tables($tables){
+	$s = "";
+	foreach($tables as $t=>$n){
+		$s .= "Table $t&nbsp;: $n lignes<br />";
+	}
+	return $s;
+}
+function migration_afficher_status_files($files){
+	$s = "";
+	foreach($files as $f=>$size){
+		$s .= "Fichier $f&nbsp;: ".taille_en_octets($size)."<br />";
+	}
+	return $s;
+}
 
 // http://doc.spip.org/@calculer_cle_action
 function migration_signer_data($action, $key) {

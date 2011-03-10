@@ -22,7 +22,7 @@ function migration_reception_inserer_copie_dist($status, $data){
 
 	$status['status'] = 'copier';
 	$status['compteurs']['table'][$data['table']] += count($data['rows']);
-	$status['progress'][$data['table']] = "Table ".$data['table']." : ".$status['compteurs']['table'][$data['table']];
+	$status['progress']['tables'][$data['table']] = $status['compteurs']['table'][$data['table']];
 
 	foreach($data['rows'] as $r=>$row){
 		foreach($row as $k=>$v)

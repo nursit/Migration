@@ -21,11 +21,11 @@ function migration_reception_stat_file_dest_dist($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'statfile';
-	$status['progress'][$data['file']] = "Fichier ".$data['file']." : Init";
+	$status['progress']['files'][$data['file']] = 0;
 
 	$res = base_stat_file_dest_dist($data['file'],$data['size'],$data['md5'],_DIR_IMG,$data['init']);
 	if (intval($res))
-		$status['progress'][$data['file']] = "Fichier ".$data['file']." : ".$res;
+		$status['progress']['files'][$data['file']] = $res;
 	update_migration_depuis($status);
 
 	return $res;
