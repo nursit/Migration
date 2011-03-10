@@ -19,10 +19,10 @@
 				<li class="spip">Clé de migration : <tt>[(#ENV{_depuis_status}|table_valeur{key})]</tt></li>
 			</ul>
 			<h4><:migration:titre_migration_status:></h4>
-			<img src="#CHEMIN{images/loader.gif}" width="63" height="13" />
 			<div id="progress_status">
 				[(#ENV{_depuis_status}|migration_afficher_status)]
 			</div>
+			<img src="#CHEMIN{images/loader.gif}" width="63" height="13" />
 		</div>
 
 
