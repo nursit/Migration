@@ -12,8 +12,22 @@ include_spip('inc/actions');
 function action_migration_depuis_status_dist(){
 	#$securiser_action = charger_fonction('securiser_action','inc');
 	#$securiser_action();
-	
-	if (!$s = lire_migration_depuis_status())
+
+	$s = lire_migration_depuis_status();
+	// verifier qu'un verrou n'etait pas sur le fichier
+	// et qu'on arrive pas a le lire en attendant un peu
+	if (!$s){
+		usleep(333);
+		$s = lire_migration_depuis_status();
+	}
+	// verifier qu'un verrou n'etait pas sur le fichier
+	// et qu'on arrive pas a le lire en attendant un peu
+	if (!$s){
+		usleep(333);
+		$s = lire_migration_depuis_status();
+	}
+
+	if (!$s)
 		ajax_retour("Echec : le site distant n'a pas réussi à se connecter, la migration a été abandonnée.");
 	else{
 		if ($s['key']!=_request('key')){
