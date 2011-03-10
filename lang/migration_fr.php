@@ -45,6 +45,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'erreur_droits_webmestre' => 'Vous devez avoir les droits de webmestre sur le site pour utiliser l\'assistant de migration.',
 	'erreur_direction_obligatoire' => 'Choisissez dans quelle direction vous souhaitez transférer vos données',
 	'erreur_choisissez_quoi' => 'Indiquez ce que vous voulez transférer vers l\'autre site',
+	'erreur_migration_vers_deja_en_cours' => 'Il y a déjà une migration vers un autre site en cours !',
 	'message_connexion_ok' => 'Connexion OK',
 
 	'status_waiting' => 'En attente de connexion du site distant',
