@@ -17,7 +17,7 @@ function formulaires_assistant_migration_charger_dist(){
 		'_depuis_status' => '',
 		'url_cible' => '',
 		'migration_key' => '',
-		'quoi' => array('base','docs'),
+		'quoi' => array('base','fichiers'),
 	);
 
 	if (_request('direction')=='depuis'){
