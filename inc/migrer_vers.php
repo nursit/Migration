@@ -178,7 +178,8 @@ function migrer_vers_end($status_file, $action=''){
 	$s = lire_migration_vers_status();
 	// signifier la fin au site distant
 	$end = charger_fonction('end','migration/envoi');
-	$status['distant'] = $end($s['status']);
+	$s['distant'] = $end($s['status']);
+	ecrire_migration_status('vers',$s);
 
 	$status['etape'] = 'fini';
 	ecrire_fichier($status_file, serialize($status));
