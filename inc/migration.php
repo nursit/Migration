@@ -76,6 +76,7 @@ function migration_afficher_status($status){
 			$s = _T('migration:status_waiting');
 			break;
 		case 'end':
+		case 'basereverted':
 			$s = redirige_formulaire(generer_url_ecrire('accueil'));
 			break;
 		default:
