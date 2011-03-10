@@ -172,9 +172,11 @@ function migration_backup_base_si_possible(){
 			if (@file_exists($g)){
 				$s['backup'] = $g;
 				ecrire_migration_status('depuis',$s);
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 function migration_restore_base_si_possible(){
@@ -189,7 +191,9 @@ function migration_restore_base_si_possible(){
 			if ($g = $s['backup']
 				AND @file_exists($g)){
 				@copy($g,$f);
+				return true;
 			}
 		}
 	}
+	return false;
 }

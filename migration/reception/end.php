@@ -17,11 +17,12 @@ include_spip('inc/migration');
 function migration_reception_end_dist($status, $data){
 
 
+	$status['status'] = 'end';
 	if ($data=='abort'){
-		migration_restore_base_si_possible();
+		if (migration_restore_base_si_possible())
+			$status['status'] = 'basereverted';
 	}
 
-	$status['status'] = 'end';
 	update_migration_depuis($status);
 	return true;
 }
