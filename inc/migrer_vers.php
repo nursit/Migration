@@ -193,7 +193,7 @@ function migrer_vers_end($status_file, $action=''){
 	ecrire_migration_status('vers',$s);
 
 	$status['etape'] = 'fini';
-	ecrire_fichier($status_file, serialize($status));
+	ecrire_fichier(_DIR_TMP.basename($status_file).".txt", serialize($status));
 }
 
 
