@@ -26,5 +26,6 @@ function migration_reception_end_dist($status, $data){
 	}
 
 	update_migration_depuis($status);
-	return true;
+	// on renvoit le bilan pour affichage sur le site source
+	return $status;
 }

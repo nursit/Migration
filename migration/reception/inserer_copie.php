@@ -24,6 +24,14 @@ function migration_reception_inserer_copie_dist($status, $data){
 	$status['compteurs']['table'][$data['table']] += count($data['rows']);
 	$status['progress'][$data['table']] = "Table ".$data['table']." : ".$status['compteurs']['table'][$data['table']];
 
+	foreach($data['rows'] as $row){
+		foreach($row as $k=>$v)
+			if (!isset($data['desc_dest']['field'][$k])){
+				unset($data['rows'][$k]);
+				$status['ignore'][$data['table']][$k];
+			}
+	}
+
 	$res = base_inserer_copie($data['table'],$data['rows'],$data['desc_dest'],'');
 	update_migration_depuis($status);
 	return $res;
