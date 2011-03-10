@@ -24,8 +24,10 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'resultat_derniere_reponse_distante'=>'La dernière réponse du serveur distant a été&nbsp;:',
 	'resultat_succes_migration_depuis' => 'La migration <b>depuis</b> le site distant a été achevée avec succés.',
 	'resultat_succes_migration_vers' => 'La migration <b>vers</b> le site distant a été achevée avec succés.',
-	'resultat_champs_ignores' => 'Le serveur distant a ignoré les champs suivants&nbsp;:',
-	'resultat_fichiers_ignores' => 'Le serveur distant a refusé les fichiers suivants&nbsp;:',
+	'resultat_champs_ignores_distant' => 'Le serveur distant a ignoré les champs suivants&nbsp;:',
+	'resultat_fichiers_ignores_distant' => 'Le serveur distant a refusé les fichiers suivants&nbsp;:',
+	'resultat_champs_ignores' => 'Les champs suivants ont été ignorés&nbsp;:',
+	'resultat_fichiers_ignores' => 'Les fichiers suivants ont été refusés&nbsp;:',
 	'resultat_backup_retabli' => 'Votre base de données a été rétablie dans son état avant la tentative de migration.',
 
 	'label_direction_depuis' => 'Depuis un autre site SPIP',

@@ -17,8 +17,40 @@
 ]
 [(#GET{status}|table_valeur{status}|=={end}|oui)
 <h1><:migration:titre_fin_migration:></h1>
+]
+[<div class="notice">
+<p><:migration:resultat_champs_ignores:></p>
+(#GET{status}|table_valeur{ignore}|table_valeur{tables}|migration_affiche_champs_ignores)
+</div>
+]
+[
+<div class="notice">
+<p><:migration:resultat_fichiers_ignores:></p>
+(#GET{status}|table_valeur{ignore}|table_valeur{files}|migration_affiche_fichiers_ignores)
+</div>
+]
+
+[(#GET{status}|table_valeur{status}|=={end}|oui)
 <div class="success">
 	<p><:migration:resultat_succes_migration_depuis:></p>
+	[(#GET{status}|table_valeur{progress}|table_valeur{tables}|oui)
+		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{progress}|table_valeur{tables}|count)] <:migration:tables_transferees:></:migration:tables_transferees:></h4>
+		[
+		<a href="#" onclick="$(this).next().toggle('fast')"><:migration:voir_le_detail:></a>
+		<div style="display:none">
+		(#GET{status}|table_valeur{progress}|table_valeur{tables}|migration_afficher_status_tables)
+		</div>
+		]
+	]
+	[(#GET{status}|table_valeur{progress}|table_valeur{files}|oui)
+		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{progress}|table_valeur{files}|count)] <:migration:fichiers_transferes:></h4>
+		[
+		<a href="#" onclick="$(this).next().toggle('fast')"><:migration:voir_le_detail:></a>
+		<div style="display:none">
+		(#GET{status}|table_valeur{progress}|table_valeur{files}|migration_afficher_status_files)
+		</div>
+		]
+	]
 </div>
 ]
 <style type="text/css">
