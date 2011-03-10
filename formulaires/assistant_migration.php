@@ -56,6 +56,7 @@ function formulaires_assistant_migration_verifier_2_dist(){
 	// initialiser la cle de migration si on importe depuis un autre site
 	elseif ($direction=='depuis') {
 		initialiser_migration_depuis();
+		migration_backup_base_si_possible();
 	}
 
 	return $erreurs;

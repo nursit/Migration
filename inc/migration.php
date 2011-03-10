@@ -158,3 +158,38 @@ function migration_xor($message, $key){
 
 	return $message;
 }
+
+function migration_backup_base_si_possible(){
+	// si jamais la base est sqlite, faire une copie de backup
+	// au cas ou le transfert foire
+	include_spip('base/abstract_sql');
+	sql_version();
+	if (strncmp($GLOBALS['connexions'][0]['type'],'sqlite',6)==0){
+		if ($db =$GLOBALS['connexions'][0]['db']
+			AND is_file($f = _DIR_DB . $db . '.sqlite')) {
+			$s = lire_migration_depuis_status();
+			@copy($f,$g="$f.migration.backup");
+			if (@file_exists($g)){
+				$s['backup'] = $g;
+				ecrire_migration_status('depuis',$s);
+			}
+		}
+	}
+}
+
+function migration_restore_base_si_possible(){
+	// si jamais la base est sqlite, et qu'on a un backup
+	// le restaurer
+	include_spip('base/abstract_sql');
+	sql_version();
+	if (strncmp($GLOBALS['connexions'][0]['type'],'sqlite',6)==0){
+		if ($db =$GLOBALS['connexions'][0]['db']
+			AND is_file($f = _DIR_DB . $db . '.sqlite')) {
+			$s = lire_migration_depuis_status();
+			if ($g = $s['backup']
+				AND @file_exists($g)){
+				@copy($g,$f);
+			}
+		}
+	}
+}

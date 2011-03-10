@@ -14,9 +14,9 @@ include_spip('inc/migration');
  *
  * @return bool
  */
-function migration_envoi_end_dist(){
+function migration_envoi_end_dist($status){
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
-	$res = $migration_envoi('end');
+	$res = $migration_envoi('end',$status);
 	return $res;
 }

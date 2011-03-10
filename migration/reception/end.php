@@ -16,17 +16,10 @@ include_spip('inc/migration');
  */
 function migration_reception_end_dist($status, $data){
 
-	// inutile de checker une data :
-	// si on est arrive jusque la c'est que la connexion marche
-	// mais pour l'IHM, on attend l'url du site source comme data
-	// ce n'est pas une secu, meme visuelle, car un man in the middle qui a trouvé la clé
-	// pourrait envoyer cette info.
 
-	// reparer des tables manquantes, au cas ou ?
-	#include_spip('base/serial');
-	#include_spip('base/aux');
-	#include_spip('base/create');
-	#creer_base();
+	if ($data=='abort'){
+		migration_restore_base_si_possible();
+	}
 
 	$status['status'] = 'end';
 	update_migration_depuis($status);
