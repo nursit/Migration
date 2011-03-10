@@ -1,21 +1,24 @@
 #SET{status,#REM|lire_migration_depuis_status}
 
 [(#GET{status}|table_valeur{status}|=={aborted}|oui)
-<h1>Echec de la migration</h1>
+<h1><:migration:titre_echec_migration:></h1>
 <div class="error">
-	<p>Une erreur est survenue lors de la migration.</p>
+	<p><:migration:resultat_erreur_migration:></p>
 </div>
 ]
 [(#GET{status}|table_valeur{status}|=={basereverted}|oui)
-<h1>Echec de la migration</h1>
+<h1><:migration:titre_echec_migration:></h1>
 <div class="error">
-	<p>Une erreur est survenue lors de la migration. Votre base de données a été rétablie dans son état avant la tentative de migration.</p>
+	<p>
+		<:migration:resultat_erreur_migration:>
+		<:migration:resultat_backup_retabli:>
+	</p>
 </div>
 ]
 [(#GET{status}|table_valeur{status}|=={end}|oui)
-<h1>Migration finie</h1>
+<h1><:migration:titre_fin_migration:></h1>
 <div class="success">
-	<p>La migration a été achevée avec succés.</p>
+	<p><:migration:resultat_succes_migration_depuis:></p>
 </div>
 ]
 <style type="text/css">

@@ -17,6 +17,16 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_etape_migration_vers' => 'Connexion à l\'autre site',
 	'titre_migration_en_cours_base' => 'Migration des tables en cours',
 	'titre_migration_en_cours_fichiers' => 'Migration des fichiers en cours',
+	'titre_echec_migration' => 'Echec de la migration',
+	'titre_fin_migration'=>'Migration terminée !',
+
+	'resultat_erreur_migration' => 'Une erreur est survenue lors de la migration.',
+	'resultat_derniere_reponse_distante'=>'La dernière réponse du serveur distant a été&nbsp;:',
+	'resultat_succes_migration_depuis' => 'La migration <b>depuis</b> le site distant a été achevée avec succés.',
+	'resultat_succes_migration_vers' => 'La migration <b>vers</b> le site distant a été achevée avec succés.',
+	'resultat_champs_ignores' => 'Le serveur distant a ignoré les champs suivants&nbsp;:',
+	'resultat_fichiers_ignores' => 'Le serveur distant a refusé les fichiers suivants&nbsp;:',
+	'resultat_backup_retabli' => 'Votre base de données a été rétablie dans son état avant la tentative de migration.',
 
 	'label_direction_depuis' => 'Depuis un autre site SPIP',
 	'label_url_cible' => 'URL du site cible',
@@ -37,6 +47,15 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 
 	'status_waiting' => 'En attente de connexion du site distant',
 	'status_connected' => 'Connexion depuis @source@',
+	'status_nom_table' => 'Table @table@&nbsp;: ',
+	'status_nom_fichier' => 'Fichier @fichier@&nbsp;: ',
+	'status_nom_fichier_refuse' => 'Fichier <i>@fichier@</i>&nbsp;: <strong>refusé</strong>',
+	'status_nb_lignes' => '@nb@ ligne(s)',
+
+	'tables_transferees' => 'Tables transférées',
+	'fichiers_transferes' => 'Fichiers transférés',
+
+	'voir_le_detail' => 'Voir le détail',
 
 );
 

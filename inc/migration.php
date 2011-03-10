@@ -112,11 +112,11 @@ function migration_afficher_status($status){
  * @return string
  */
 function migration_afficher_status_tables($tables){
-	$s = "";
+	$s = array();
 	foreach($tables as $t=>$n){
-		$s .= "Table $t&nbsp;: $n lignes<br />";
+		$s[] = _T('migration:status_nom_table',array('table'=>$t))._T('migration:status_nb_lignes',array('nb'=>$n));
 	}
-	return $s;
+	return implode('<br />',$s);
 }
 
 /**
@@ -127,11 +127,14 @@ function migration_afficher_status_tables($tables){
  */
 function migration_afficher_status_files($files){
 	include_spip('inc/filtres');
-	$s = "";
+	$s = array();
 	foreach($files as $f=>$size){
-		$s .= "Fichier $f&nbsp;: ".taille_en_octets($size)."<br />";
+		if (is_numeric($size))
+			$s[] = _T('migration:status_nom_fichier',array('fichier'=>$f)).taille_en_octets($size);
+		else
+			$s[] = _T('migration:status_nom_fichier_refuse',array('fichier'=>$f));
 	}
-	return $s;
+	return implode('<br />',$s);
 }
 
 /**

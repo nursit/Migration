@@ -46,6 +46,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		echo http_script("window.setTimeout('location.href=\"".$redirect."\";',".($timeout*1000).")");
 		echo "<div style='text-align: left'>\n";
 
+		include_spip('inc/migration');
 		$s = lire_migration_vers_status();
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
 		switch ($status['etape']){

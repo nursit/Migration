@@ -1,44 +1,47 @@
 #SET{status,#REM|lire_migration_vers_status}
 
 [(#GET{status}|table_valeur{status}|=={abort}|oui)
-<h1>Echec de la migration</h1>
+<h1><:migration:titre_echec_migration:></h1>
 <div class="error">
-	<p>Une erreur est survenue lors de la migration. La dernière réponse du serveur distant a été&nbsp;:</p>
+	<p>
+		<:migration:resultat_erreur_migration:>
+		<:migration:resultat_derniere_reponse_distante:>
+	</p>
 	[(#GET**{status}|table_valeur{debug})]
 </div>
 ]
 [(#GET{status}|table_valeur{status}|=={abort}|non)
-<h1>Migration finie !</h1>
+<h1><:migration:titre_fin_migration:></h1>
 ]
 [
 <div class="notice">
-<p>Le serveur distant a ignoré les champs suivants :</p>
+<p><:migration:resultat_champs_ignores:></p>
 (#GET{status}|table_valeur{distant}|table_valeur{ignore}|table_valeur{tables}|migration_affiche_champs_ignores)
 </div>
 ]
 [
 <div class="notice">
-<p>Le serveur distant a ignoré les fichiers suivants :</p>
+<p><:migration:resultat_fichiers_ignores:></p>
 (#GET{status}|table_valeur{distant}|table_valeur{ignore}|table_valeur{files}|migration_affiche_fichiers_ignores)
 </div>
 ]
 
 [(#GET{status}|table_valeur{status}|=={abort}|non)
 <div class="success">
-	<p>La migration a été achevée avec succés.</p>
+	<p><:migration:resultat_succes_migration_vers:></p>
 	[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{tables}|oui)
-		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{tables}|count)] Tables transférées</h4>
+		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{tables}|count)] <:migration:tables_transferees:></:migration:tables_transferees:></h4>
 		[
-		<a href="#" onclick="$(this).next().toggle('fast')">Voir le détail</a>
+		<a href="#" onclick="$(this).next().toggle('fast')"><:migration:voir_le_detail:></a>
 		<div style="display:none">
 		(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{tables}|migration_afficher_status_tables)
 		</div>
 		]
 	]
 	[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{files}|oui)
-		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{files}|count)] Fichiers transférés</h4>
+		<h4 style="margin-bottom:5px">[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{files}|count)] <:migration:fichiers_transferes:></h4>
 		[
-		<a href="#" onclick="$(this).next().toggle('fast')">Voir le détail</a>
+		<a href="#" onclick="$(this).next().toggle('fast')"><:migration:voir_le_detail:></a>
 		<div style="display:none">
 		(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{files}|migration_afficher_status_files)
 		</div>
