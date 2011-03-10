@@ -40,12 +40,10 @@ function action_migration_envoi_dist($action, $data=''){
 	spip_log("envoi : action $action resultat ".$result,'migration');
 
 	$GLOBALS['debug_migration'] = $result;
-	if ($result==='OK')
-		return true;
-	elseif ($result==='FAIL')
+	if ($result==='FAIL')
 		return false;
 	else
-		return $result;
+		return unserialize($result);
 }
 
 function migration_envoi_fail($raison){

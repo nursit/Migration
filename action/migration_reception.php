@@ -45,17 +45,11 @@ function action_migration_reception_dist(){
 
 	$res = $action($s, $data['data']);
 
-	if ($res===false){
-		migration_reponse_fail("echec action ".$data['action']);
-	}
-	else {
-		spip_log("OK action ".$data['action'],'migration');
-		if ($res===true OR !strlen($res))
-			echo 'OK';
-		else
-			echo $res;
-		exit;
-	}
+	// toujours serializer le retour
+	$res = serialize($res);
+	spip_log("action ".$data['action'].' resultat:'.$res,'migration');
+	echo $res;
+	exit;
 }
 
 function migration_reponse_fail($raison){
