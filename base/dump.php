@@ -354,6 +354,23 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 			// faire un simple upgrade a la place
 			// pour ajouter les champs manquants
 			$upgrade = true;
+			if ($table=='spip_auteurs'){
+				spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
+				sql_delete("spip_auteurs", "id_auteur=0",$serveur);
+				// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
+				sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_statut']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_statut']['id_auteur']),array(),$serveur);
+				sql_delete("spip_auteurs", "id_auteur!=0",$serveur);
+			}
+			if ($table=='spip_meta'){
+				if (isset($desc_dest['field']['impt'])){
+					sql_delete($table, "impt='oui'", $serveur);
+					// virer les version base qui vont venir avec l'import
+					sql_delete($table, "nom like '%_base_version'");
+					sql_delete($table, "nom='version_installee'");
+				}
+				else
+					sql_delete($table, "", $serveur);
+			}
 		}
 		else {
 			sql_drop_table($table, '', $serveur_dest);
