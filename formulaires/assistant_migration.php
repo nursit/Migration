@@ -38,7 +38,7 @@ function verifier_auth_depuis(){
 	if (!isset($GLOBALS['spip_version_branche']))
 		return false;
 	$v = explode('.',$GLOBALS['spip_version_branche']);
-	if ($v[0]>2 OR ($v==2 AND $v[1]>0))
+	if ($v[0]>2 OR ($v[0]==2 AND $v[1]>0))
 		$_auth_depuis = true;
 	return $_auth_depuis;
 }
