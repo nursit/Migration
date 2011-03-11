@@ -10,7 +10,7 @@
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 		[(#REM) declarer les hidden qui declencheront le service du formulaire
 		parametre : url d'action ]
-		#ACTION_FORMULAIRE{#ENV{action}}
+		#ACTION_FORMULAIRE{#ENV{action},#FORM}
 
 		#SET{name,direction}#SET{obli,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
 		<ul>

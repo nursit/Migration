@@ -1,3 +1,4 @@
+[(#ENV{_etape}|=={1}|?{' '})
 #SET{fl,migration}
 <div class="formulaire_spip formulaire_assistant formulaire_#FORM">
 	<h3 class="titrem"><img src='#CHEMIN{prive/themes/spip/images/migration-24.png}' class="cadre-icone" width="24" height="24"
@@ -10,7 +11,7 @@
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 		[(#REM) declarer les hidden qui declencheront le service du formulaire
 		parametre : url d'action ]
-		#ACTION_FORMULAIRE{#ENV{action}}
+		#ACTION_FORMULAIRE{#ENV{action},#FORM}
 	]
 
 		<div style="padding:10px;">
@@ -34,3 +35,6 @@
 	</div></form>
 	]
 </div>
+][(#ENV{_etape}|=={1}|?{'',' '})
+	<INCLURE{fond=formulaires/assistant_migration_#ENV{_etape}}{env}>
+]

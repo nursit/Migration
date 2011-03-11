@@ -10,7 +10,7 @@
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 		[(#REM) declarer les hidden qui declencheront le service du formulaire
 		parametre : url d'action ]
-		#ACTION_FORMULAIRE{#ENV{action}}
+		#ACTION_FORMULAIRE{#ENV{action},#FORM}
 
 		<div style="padding:10px;">
 			<p>Pour faire migrer les données depuis l'autre site, lancez y l'assistant de migration en séléctionnant la migration "Vers un autre site SPIP", et indiquez les 2 informations suivantes&nbsp;:</p>
