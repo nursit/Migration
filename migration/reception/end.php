@@ -42,6 +42,10 @@ function migration_reception_end_dist($status, $data){
 	}
 
 	update_migration_depuis($status);
+
+	// supprimer le cache des metas pour forcer la mise a jour
+	spip_unlink(_FILE_META);
+
 	// on renvoit le bilan pour affichage sur le site source
 	return $status;
 }
