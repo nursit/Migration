@@ -2,7 +2,7 @@
 	<nom>Migration du Site</nom>
 	<auteur>[Cedric->http://nursit.net]</auteur>
 	<icon>prive/themes/spip/images/migration-32.png</icon>
-	<version>0.7.1</version>
+	<version>0.7.2</version>
 	<etat>test</etat>
 	<description>Assistant de migration d'un site SPIP</description>
 	<prefix>migration</prefix>

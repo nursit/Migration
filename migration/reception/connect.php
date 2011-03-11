@@ -23,7 +23,7 @@ function migration_reception_connect_dist($status, $data){
 	// pourrait envoyer cette info.
 
 	$status['status'] = 'connect';
-	$status['source'] = $data;
+	$status['source'] = $data['url_site_source'];
 	update_migration_depuis($status);
 	return true;
 }
