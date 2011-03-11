@@ -43,8 +43,22 @@ function migration_reception_end_dist($status, $data){
 
 	update_migration_depuis($status);
 
-	// supprimer le cache des metas pour forcer la mise a jour
-	spip_unlink(_FILE_META);
+	// supprimer les cache pour forcer la mise a jour du site
+	include_spip('inc/invalideur');
+	spip_log("purger le site","migration");
+	supprime_invalideurs();
+	@spip_unlink(_CACHE_RUBRIQUES);
+	@spip_unlink(_CACHE_PIPELINES);
+	@spip_unlink(_CACHE_PLUGINS_PATH);
+	@spip_unlink(_CACHE_PLUGINS_OPT);
+	@spip_unlink(_CACHE_PLUGINS_FCT);
+	@spip_unlink(_CACHE_PLUGINS_VERIF);
+	@spip_unlink(_CACHE_CHEMIN);
+	#purger_repertoire(_DIR_CACHE,array('subdir'=>true));
+	#purger_repertoire(_DIR_AIDE);
+	purger_repertoire(_DIR_VAR.'cache-css');
+	purger_repertoire(_DIR_VAR.'cache-js');
+	@spip_unlink(_FILE_META);
 
 	// on renvoit le bilan pour affichage sur le site source
 	return $status;
