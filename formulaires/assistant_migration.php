@@ -18,6 +18,7 @@ function formulaires_assistant_migration_charger_dist(){
 		'url_cible' => '',
 		'migration_key' => '',
 		'quoi' => array('base','fichiers'),
+		'_auth_depuis' => verifier_auth_depuis()?' ':'',
 	);
 
 	if (_request('direction')=='depuis'){
@@ -28,6 +29,18 @@ function formulaires_assistant_migration_charger_dist(){
 	}
 
 	return $valeurs;
+}
+
+function verifier_auth_depuis(){
+	// verifier la version de SPIP pour autoriser la migration depuis un autre
+	// reserve a SPIP>= 2.1.x
+	$_auth_depuis = false;
+	if (!isset($GLOBALS['spip_version_branche']))
+		return false;
+	$v = explode('.',$GLOBALS['spip_version_branche']);
+	if ($v[0]>2 OR ($v==2 AND $v[1]>0))
+		$_auth_depuis = true;
+	return $_auth_depuis;
 }
 
 function formulaires_assistant_migration_verifier_1_dist(){
@@ -56,8 +69,14 @@ function formulaires_assistant_migration_verifier_2_dist(){
 	}
 	// initialiser la cle de migration si on importe depuis un autre site
 	elseif ($direction=='depuis') {
-		initialiser_migration_depuis();
-		migration_backup_base_si_possible();
+		if (verifier_auth_depuis()){
+			initialiser_migration_depuis();
+			migration_backup_base_si_possible();
+		}
+		else {
+			// hack ?
+			$erreurs['message_erreur'] = _T('migration:erreur_direction_depuis_interdite');
+		}
 	}
 	elseif ($direction=='vers') {
 		if (!$quoi=_request('quoi')
