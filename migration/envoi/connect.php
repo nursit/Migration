@@ -17,6 +17,13 @@ include_spip('inc/migration');
 function migration_envoi_connect_dist($url_site_source){
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
-	$res = $migration_envoi('connect',array('url_site_source'=>$url_site_source));
+	$res = $migration_envoi('connect',
+			array(
+				'url_site_source'=>$url_site_source,
+				'spip_version_branche'=>$GLOBALS['spip_version_branche'],
+				'spip_version_code'=>$GLOBALS['spip_version_code'],
+				'spip_version_base'=>$GLOBALS['spip_version_base'],
+			)
+	);
 	return $res;
 }

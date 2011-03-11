@@ -38,6 +38,10 @@ function action_migration_reception_dist(){
 	if (!isset($data['action'])){
 		migration_reponse_fail('aucune action demandee');
 	}
+	if ($s['status']=='init' AND $data['action']!=='connect'){
+		migration_reponse_fail('action demandee '.$data['action'].' avant action connect reussie');
+	}
+
 
 	if (!$action = charger_fonction($data['action'],'migration/reception',true)) {
 		migration_reponse_fail("action inconnue : ".$data['action']);

@@ -22,6 +22,13 @@ function migration_reception_connect_dist($status, $data){
 	// ce n'est pas une secu, meme visuelle, car un man in the middle qui a trouvé la clé
 	// pourrait envoyer cette info.
 
+	// verifier que la version du site distant est acceptable
+	// si la version de la base distante est superieure a la version actuelle
+	// on ne saura pas gerer
+	if (!isset($data['spip_version_base']) OR $data['spip_version_base']>$GLOBALS['spip_version_base']){
+		return 'migration:erreur_echec_connexion_version';
+	}
+
 	$status['status'] = 'connect';
 	$status['source'] = $data['url_site_source'];
 	update_migration_depuis($status);

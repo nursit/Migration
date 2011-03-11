@@ -106,8 +106,8 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			initialiser_migration_vers(_request('url_cible'),_request('migration_key'),_request('quoi'));
 			$connect = charger_fonction('connect','migration/envoi');
 			$res = $connect($GLOBALS['meta']['adresse_site']);
-			if (!$res){
-				$erreurs['message_erreur'] = _T('migration:erreur_echec_connexion_init');
+			if ($res!==true){
+				$erreurs['message_erreur'] = _T(is_string($res)?$res:'migration:erreur_echec_connexion_init');
 			}
 		}
 	}

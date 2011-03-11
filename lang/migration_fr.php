@@ -42,6 +42,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'label_quoi_fichiers' => 'Envoyer les documents de <i>IMG/</i>',
 
 	'erreur_echec_connexion_init' => 'Impossible de se connecter au site distant. Veuillez verifier l\'URL du site et la clé de migration.',
+	'erreur_echec_connexion_version' => 'La version de ce site est trop récente pour migrer <b>vers</b> le site cible',
 	'erreur_droits_webmestre' => 'Vous devez avoir les droits de webmestre sur le site pour utiliser l\'assistant de migration.',
 	'erreur_direction_obligatoire' => 'Choisissez dans quelle direction vous souhaitez transférer vos données',
 	'erreur_choisissez_quoi' => 'Indiquez ce que vous voulez transférer vers l\'autre site',
