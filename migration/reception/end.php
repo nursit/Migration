@@ -18,6 +18,7 @@ function migration_reception_end_dist($status, $data){
 
 
 	spip_log('fin de migration. Resultat:'.$data,'migration');
+	spip_log('end, plugin:'.sql_getfetsel('valeur','spip_meta',"nom='plugin'"),'migration');
 	$status['status'] = 'end';
 	if ($data['status']=='abort'){
 		$status['status'] = 'aborted';
