@@ -586,6 +586,9 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
  * @return int/bool
  */
 function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
+	if ($table=='spip_meta'){
+		spip_log('base_inserer_copie:'.var_export($rows,1),'insert');
+	}
 	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 	return sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
 }
