@@ -286,11 +286,11 @@ function base_vider_tables_destination_copie($tables, $exlure_tables = array(), 
 				// regarder si il y a au moins un champ impt='non'
 				$desc = $trouver_table($table,$serveur);
 				if (isset($desc['field']['impt'])){
-					spip_log("sql_delete($table, \"impt='oui'\", $serveur);",'dbg');
+					spip_log("sql_delete($table, \"impt='oui'\", $serveur);",'dbg'._LOG_INFO_IMPORTANTE);
 					sql_delete($table, "impt='oui'", $serveur);
 				}
 				else{
-					spip_log("sql_delete($table, \"\", $serveur);",'dbg');
+					spip_log("sql_delete($table, \"\", $serveur);",'dbg'._LOG_INFO_IMPORTANTE);
 					sql_delete($table, "", $serveur);
 				}
 			}
@@ -365,7 +365,7 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 				// virer les version base qui vont venir avec l'import
 				sql_delete($table, "nom like '%_base_version'",$serveur_dest);
 				sql_delete($table, "nom='version_installee'",$serveur_dest);
-				spip_log(serialize(sql_allfetsel('*','spip_meta')),'dbg');
+				spip_log(serialize(sql_allfetsel('*','spip_meta')),'dbg'._LOG_INFO_IMPORTANTE);
 			}
 		}
 		else {
