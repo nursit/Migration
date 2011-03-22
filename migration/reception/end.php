@@ -61,6 +61,7 @@ function migration_reception_end_dist($status, $data){
 	purger_repertoire(_DIR_VAR.'cache-js');
 	@spip_unlink(_FILE_META);
 
+	spip_log('end:end, plugin:'.sql_getfetsel('valeur','spip_meta',"nom='plugin'"),'migration');
 	// on renvoit le bilan pour affichage sur le site source
 	return $status;
 }
