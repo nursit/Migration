@@ -396,6 +396,9 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 	if (!$desc_dest){
 		spip_log( "Erreur creation '$table' sur serveur '$serveur_dest'".var_export($desc,1),'dump.'._LOG_ERREUR);
 	}
+	if ($table=='spip_meta'){
+		spip_log('contenu spip_meta:'.var_export(sql_allfetsel('nom,valeur','spip_meta'),1),'dump.'._LOG_ERREUR);
+	}
 
 	return $desc_dest;
 }
