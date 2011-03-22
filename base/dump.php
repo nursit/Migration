@@ -284,11 +284,15 @@ function base_vider_tables_destination_copie($tables, $exlure_tables = array(), 
 			// sur le serveur principal, il ne faut pas supprimer l'auteur loge !
 			if (($table!='spip_auteurs') OR $serveur!=''){
 				// regarder si il y a au moins un champ impt='non'
-				$desc = $trouver_table($table);
-				if (isset($desc['field']['impt']))
+				$desc = $trouver_table($table,$serveur);
+				if (isset($desc['field']['impt'])){
+					spip_log("sql_delete($table, \"impt='oui'\", $serveur);",'dbg');
 					sql_delete($table, "impt='oui'", $serveur);
-				else
+				}
+				else{
+					spip_log("sql_delete($table, \"\", $serveur);",'dbg');
 					sql_delete($table, "", $serveur);
+				}
 			}
 		}
 	}
@@ -298,15 +302,16 @@ function base_vider_tables_destination_copie($tables, $exlure_tables = array(), 
 	if ($serveur==''
 	  AND in_array('spip_auteurs',$tables)
 	  AND !in_array('spip_auteurs',$exlure_tables)) {
-		spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
-		sql_delete("spip_auteurs", "id_auteur=0",$serveur);
-		// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
-		sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_statut']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_statut']['id_auteur']),array(),$serveur);
+		// s'asurer qu'on a pas deja fait la manip !
+		if (sql_countsel("spip_auteurs", "id_auteur<>0")) {
+			spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
+			sql_delete("spip_auteurs", "id_auteur=0",$serveur);
+			// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
+			sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_statut']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_statut']['id_auteur']),array(),$serveur);
+		}
 		sql_delete("spip_auteurs", "id_auteur!=0",$serveur);
 	}
-
 }
-
 
 /**
  * Effacement de la bidouille ci-dessus
@@ -354,22 +359,13 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 			// faire un simple upgrade a la place
 			// pour ajouter les champs manquants
 			$upgrade = true;
-			if ($table=='spip_auteurs'){
-				spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
-				sql_delete("spip_auteurs", "id_auteur=0",$serveur);
-				// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
-				sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_statut']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_statut']['id_auteur']),array(),$serveur);
-				sql_delete("spip_auteurs", "id_auteur!=0",$serveur);
-			}
+			// coherence avec le drop sur les autres tables
+			base_vider_tables_destination_copie(array($table),array(),$serveur_dest);
 			if ($table=='spip_meta'){
-				if (isset($desc_dest['field']['impt'])){
-					sql_delete($table, "impt='oui'", $serveur);
-					// virer les version base qui vont venir avec l'import
-					sql_delete($table, "nom like '%_base_version'");
-					sql_delete($table, "nom='version_installee'");
-				}
-				else
-					sql_delete($table, "", $serveur);
+				// virer les version base qui vont venir avec l'import
+				sql_delete($table, "nom like '%_base_version'",$serveur_dest);
+				sql_delete($table, "nom='version_installee'",$serveur_dest);
+				spip_log(serialize(sql_allfetsel('*','spip_meta')),'dbg');
 			}
 		}
 		else {
