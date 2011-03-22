@@ -286,11 +286,9 @@ function base_vider_tables_destination_copie($tables, $exlure_tables = array(), 
 				// regarder si il y a au moins un champ impt='non'
 				$desc = $trouver_table($table,$serveur);
 				if (isset($desc['field']['impt'])){
-					spip_log("sql_delete($table, \"impt='oui'\", $serveur);",'dbg'._LOG_INFO_IMPORTANTE);
 					sql_delete($table, "impt='oui'", $serveur);
 				}
 				else{
-					spip_log("sql_delete($table, \"\", $serveur);",'dbg'._LOG_INFO_IMPORTANTE);
 					sql_delete($table, "", $serveur);
 				}
 			}
@@ -365,7 +363,6 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 				// virer les version base qui vont venir avec l'import
 				sql_delete($table, "nom like '%_base_version'",$serveur_dest);
 				sql_delete($table, "nom='version_installee'",$serveur_dest);
-				spip_log(serialize(sql_allfetsel('*','spip_meta')),'dbg'._LOG_INFO_IMPORTANTE);
 			}
 		}
 		else {
@@ -395,9 +392,6 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 	}
 	if (!$desc_dest){
 		spip_log( "Erreur creation '$table' sur serveur '$serveur_dest'".var_export($desc,1),'dump.'._LOG_ERREUR);
-	}
-	if ($table=='spip_meta'){
-		spip_log('contenu spip_meta:'.var_export(sql_allfetsel('nom,valeur','spip_meta'),1),'dump.'._LOG_ERREUR);
 	}
 
 	return $desc_dest;
@@ -586,9 +580,6 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
  * @return int/bool
  */
 function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
-	if ($table=='spip_meta'){
-		spip_log('base_inserer_copie:'.var_export($rows,1),'insert');
-	}
 	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 	return sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
 }

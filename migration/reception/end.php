@@ -18,7 +18,6 @@ function migration_reception_end_dist($status, $data){
 
 
 	spip_log('fin de migration. Resultat:'.$data,'migration');
-	spip_log('end, plugin:'.sql_getfetsel('valeur','spip_meta',"nom='plugin'"),'migration');
 	$status['status'] = 'end';
 	if ($data['status']=='abort'){
 		$status['status'] = 'aborted';
@@ -61,7 +60,6 @@ function migration_reception_end_dist($status, $data){
 	purger_repertoire(_DIR_VAR.'cache-js');
 	@spip_unlink(_FILE_META);
 
-	spip_log('end:end, plugin:'.sql_getfetsel('valeur','spip_meta',"nom='plugin'"),'migration');
 	// on renvoit le bilan pour affichage sur le site source
 	return $status;
 }
