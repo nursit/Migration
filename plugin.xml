@@ -27,7 +27,7 @@
 		<url>configurer_migration</url>
 	</bouton>
 	<bouton id='migration' parent='bando_administration'>
-		<icone>prive/themes/spip/images/migration-16.png</icone>
+		<icone>images/migration-16.png</icone>
 		<titre>migration:titre_assistant_migration</titre>
 		<url>configurer_migration</url>
 	</bouton>
