@@ -13,11 +13,10 @@
 		#ACTION_FORMULAIRE{#ENV{action},#FORM}
 
 		<div style="padding:10px;">
-			<p>Pour faire migrer les données depuis l'autre site, lancez y l'assistant de migration en séléctionnant la migration "Vers un autre site SPIP", et indiquez les 2 informations suivantes&nbsp;:</p>
-			<ul class="spip">
-				<li class="spip">URL du site cible : <kbd>#URL_SITE_SPIP/</kbd></li>
-				<li class="spip">Clé de migration : <tt>[(#ENV{_depuis_status}|table_valeur{key})]</tt></li>
-			</ul>
+			<p>Pour faire migrer les données depuis l'autre site, lancez y l'assistant de migration en séléctionnant la migration "Vers un autre site SPIP",
+				et indiquez y l'URL suivante&nbsp;:</p>
+			<p style="text-align:center;"><input style="color:#000;background:#ddd;padding:3px;border:0;width:300px;font-weight:bold;" readonly='readonly' value='#URL_SITE_SPIP/+[(#ENV{_depuis_status}|table_valeur{key})]' /></p>
+
 			<h4><:migration:titre_migration_status:></h4>
 			<div id="progress_status">
 				[(#ENV{_depuis_status}|migration_afficher_status)]

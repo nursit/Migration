@@ -99,11 +99,18 @@ function formulaires_assistant_migration_verifier_3_dist(){
 			$erreurs['waiting'] = ' ';
 	}
 	else {
-		foreach(array('url_cible','migration_key') as $obli)
+		foreach(array('url_cible') as $obli)
 			if (!_request($obli))
 				$erreurs[$obli] = _T('info_obligatoire');
+		if (strpos(_request('url_cible'),'+')===false)
+			$erreurs['url_cible'] = _T('migration:erreur_url_incorrecte');
 		if (!count($erreurs)){
-			initialiser_migration_vers(_request('url_cible'),_request('migration_key'),_request('quoi'));
+			$url_cible = _request('url_cible');
+			$url_cible = explode('+',$url_cible);
+			$migration_key = array_pop($url_cible);
+			$url_cible = implode('+',$url_cible);
+
+			initialiser_migration_vers($url_cible,$migration_key,_request('quoi'));
 			$connect = charger_fonction('connect','migration/envoi');
 			$res = $connect($GLOBALS['meta']['adresse_site']);
 			if ($res!==true){
