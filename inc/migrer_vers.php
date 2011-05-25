@@ -40,7 +40,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				break;
 			case 'squelettes':
 			case 'squelettescopie':
-				$titre = _T('migration:titre_migration_en_cours_squelettes') . " (".count($status['files']).") ";
+				$titre = _T('migration:titre_migration_en_cours_squelettes') . " (".count($status['squelettes']).") ";
 				break;
 		}
 		$balise_img = chercher_filtre('balise_img');
@@ -100,7 +100,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = true;
 				if ($dir_source = migration_determiner_dossier_squelette())
-					$res = base_copier_files($status_file, $status['files'],$dir_source,_DIR_RACINE."squelettes/", $options);
+					$res = base_copier_files($status_file, $status['squelettes'],$dir_source,_DIR_RACINE."squelettes/", $options);
 				if ($res) {
 					$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
 					ecrire_fichier($status_file, serialize($status));
@@ -153,7 +153,9 @@ function migrer_vers_init($status_file, $tables=null, $files = null,$where=array
 	if (!$files){
 		$files = preg_files(_DIR_IMG,'.');
 	}
-	$status = array('tables'=>$tables,'files'=>$files,'where'=>$where);
+	$dir_squel = migration_determiner_dossier_squelette();
+	$squelettes= preg_files($dir_squel,'.');
+	$status = array('tables'=>$tables,'files'=>$files,'squelettes'=>$squelettes,'where'=>$where);
 
 	$status['etape'] = 'init';
 	if (!ecrire_fichier($status_file, serialize($status)))

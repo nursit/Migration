@@ -66,7 +66,7 @@ function update_migration_depuis($status){
 	$status['timestamp'] = time();
 	ecrire_migration_status('depuis',$status);
 }
-function initialiser_migration_vers($url,$key,$quoi=array('base','docs')){
+function initialiser_migration_vers($url,$key,$quoi=array('base','fichiers','squelettes')){
 	ecrire_migration_status('vers',
 		array(
 			'status'=>'init',
