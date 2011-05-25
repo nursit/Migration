@@ -38,7 +38,7 @@ function migration_reception_stat_file_dest_dist($status, $data) {
 		// strict en dehors du dossier skel,
 		// un peu plus de types autorises dans le dossier skel
 		$strict = ($data['dir_dest']!='_DIR_SQUELETTES');
-		if (migration_type_fichier_autorise($data['file']),$strict){
+		if (migration_type_fichier_autorise($data['file'],$strict)){
 			$res = base_stat_file_dest_dist($data['file'],$data['size'],$data['md5'],$dir_dest,$data['init']);
 			if (intval($res))
 				$status['progress']['files'][$dir_dest.$data['file']] = $res;
