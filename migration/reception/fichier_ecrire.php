@@ -28,6 +28,7 @@ function migration_reception_fichier_ecrire_dist($status, $data) {
 		$res = 'FAIL';
 		// notons le fichier comme ignore
 		$status['ignore']['files'][$dir_dest.$data['file']]=$dir_dest.$data['file'];
+		spip_log('tentative de copie fichier '.$data['file'].' vers repertoire interdit '.$dir_dest,'migration');
 	}
 	else {
 		@define('_DIR_SQUELETTES',_DIR_RACINE."squelettes/");
@@ -47,6 +48,7 @@ function migration_reception_fichier_ecrire_dist($status, $data) {
 			$res = 'FAIL';
 			// notons le fichier comme ignore
 			$status['ignore']['files'][$dir_dest.$data['file']]=$dir_dest.$data['file'];
+			spip_log('tentative ecriture fichier '.$data['file'].' : type interdit dans '.$dir_dest,'migration');
 		}
 	}
 

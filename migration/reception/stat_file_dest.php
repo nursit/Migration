@@ -28,6 +28,7 @@ function migration_reception_stat_file_dest_dist($status, $data) {
 		$res = 'FAIL';
 		// notons le fichier comme ignore
 		$status['ignore']['files'][$dir_dest.$data['file']]=$dir_dest.$data['file'];
+		spip_log('tentative stat_file sur '.$data['file'].' dans repertoire interdit '.$dir_dest,'migration');
 	}
 	else {
 		@define('_DIR_SQUELETTES',_DIR_RACINE."squelettes/");
