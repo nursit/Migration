@@ -305,7 +305,7 @@ function migration_affiche_fichiers_ignores($ignores){
 		return '';
 	$res = array();
 	foreach($ignores as $file=>$dummy){
-		$res[] = _DIR_IMG . $file;
+		$res[] = $file;
 	}
 	return implode('<br />',$res);
 }
