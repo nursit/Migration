@@ -41,6 +41,14 @@ function migration_reception_end_dist($status, $data){
 		}
 	}
 
+	if (count($status['ignore'])
+	  AND defined('_MIGRATION_EMAIL_NOTIFY_IGNORE')
+	  AND $email = _MIGRATION_EMAIL_NOTIFY_IGNORE){
+		$sujet = "[Migration-ERR] ".$GLOBALS['meta']['adresse_site'];
+		$texte = var_export($status['ignore'],true);
+		job_queue_add('envoyer_mail','Erreur migration',array($email, $sujet, $texte),'inc/');
+	}
+
 	update_migration_depuis($status);
 
 	// si on a pas d'upgrade a suivre, vidons les cache
