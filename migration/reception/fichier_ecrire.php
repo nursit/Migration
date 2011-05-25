@@ -31,8 +31,8 @@ function migration_reception_fichier_ecrire_dist($status, $data) {
 	}
 	else {
 		@define('_DIR_SQUELETTES',_DIR_RACINE."squelettes/");
+		$dir_dest = constant($dir_dest);
 		if (migration_type_fichier_autorise($data['file'])){
-			$dir_dest = constant($dir_dest);
 			$res = base_fichier_ecrire_dist($data['file'],$data['d'],$dir_dest);
 			if ($res)
 				$status['progress']['files'][$dir_dest.$data['file']] = $res;

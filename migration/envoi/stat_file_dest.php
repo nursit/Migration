@@ -18,6 +18,8 @@ include_spip('inc/migration');
  * @return bool
  */
 function migration_envoi_stat_file_dest_dist($file,$size,$md5,$dir_dest,$init) {
+	if ($dir_dest==_DIR_IMG) $dir_dest='_DIR_IMG';
+	if ($dir_dest==_DIR_RACINE."squelettes/") $dir_dest='_DIR_SQUELETTES';
 	$data = array('file'=>$file,'size'=>$size,'md5'=>$md5,'dir_dest'=>$dir_dest, 'init'=>$init);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
