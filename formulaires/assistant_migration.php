@@ -17,8 +17,10 @@ function formulaires_assistant_migration_charger_dist(){
 		'_depuis_status' => '',
 		'url_cible' => '',
 		'migration_key' => '',
-		'quoi' => array('base','fichiers'),
+		'quoi' => array('base','fichiers','squelettes'),
 		'_auth_depuis' => verifier_auth_depuis()?' ':'',
+		'_dir_img' => joli_repertoire(_DIR_IMG),
+		'_dir_skel' => joli_repertoire(migration_determiner_dossier_squelette()),
 	);
 
 	if (_request('direction')=='depuis'){
@@ -81,7 +83,7 @@ function formulaires_assistant_migration_verifier_2_dist(){
 	elseif ($direction=='vers') {
 		if (!$quoi=_request('quoi')
 		  OR !is_array($quoi)
-			OR (!in_array('base',$quoi) AND !in_array('fichiers',$quoi))){
+			OR (!in_array('base',$quoi) AND !in_array('fichiers',$quoi) AND !in_array('squelettes',$quoi))){
 			$erreurs['quoi'] = _T('migration:erreur_choisissez_quoi');
 		}
 	}

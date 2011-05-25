@@ -38,6 +38,10 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 			case 'fichierscopie':
 				$titre = _T('migration:titre_migration_en_cours_fichiers') . " (".count($status['files']).") ";
 				break;
+			case 'squelettes':
+			case 'squelettescopie':
+				$titre = _T('migration:titre_migration_en_cours_squelettes') . " (".count($status['files']).") ";
+				break;
 		}
 		$balise_img = chercher_filtre('balise_img');
 		$titre .= $balise_img(chemin_image('searching.gif'));
@@ -82,7 +86,23 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = base_copier_files($status_file, $status['files'],_DIR_IMG,_DIR_IMG, $options);
 				if ($res) {
-					$status['etape'] = 'finition';
+					$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
+					ecrire_fichier($status_file, serialize($status));
+				}
+				break;
+			case 'squelettes':
+			case 'squelettescopie':
+				$options = array(
+					'callback_progression' => 'migrer_vers_afficher_progres',
+					'max_time' => $max_time,
+					'racine_fonctions_dest' =>'migration/envoi',
+					'data_pool' => 100*1024,
+				);
+				$res = true;
+				if ($dir_source = migration_determiner_dossier_squelette())
+					$res = base_copier_files($status_file, $status['files'],$dir_source,_DIR_RACINE."squelettes/", $options);
+				if ($res) {
+					$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
 					ecrire_fichier($status_file, serialize($status));
 				}
 				break;
@@ -103,7 +123,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 
 function migrer_vers_etape_suivante($etape,$quoi){
 	$done = false;
-	$etapes = array('init','base','basecopie','fichiers','fichierscopie');
+	$etapes = array('init','base','basecopie','fichiers','fichierscopie','squelettes','squelettescopie');
 	foreach($etapes as $e){
 		if ($done AND in_array($e,$quoi))
 			return $e;

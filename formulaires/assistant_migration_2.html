@@ -45,8 +45,15 @@
 						#SET{val,fichiers}
 						<div class="choix">
 							<input type="checkbox" class="checkbox" name="#GET{name}&#91;&#93;" id="#GET{name}_#GET{val}" value="#GET{val}"[(#GET{val}|in_any{#ENV{#GET{name}}}|oui)checked="checked"] />
-							<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
+							<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T{#ARRAY{dir,#ENV{_dir_img}}})]</label>
 						</div>
+						[(#ENV{_dir_skel}|oui)
+						#SET{val,squelettes}
+						<div class="choix">
+							<input type="checkbox" class="checkbox" name="#GET{name}&#91;&#93;" id="#GET{name}_#GET{val}" value="#GET{val}"[(#GET{val}|in_any{#ENV{#GET{name}}}|oui)checked="checked"] />
+							<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T{#ARRAY{dir,#ENV{_dir_skel}}})]</label>
+						</div>
+						]
 					</div>
 				</div>
 			</li>

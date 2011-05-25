@@ -645,7 +645,7 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 	if (!lire_fichier($status_file, $status)
 		OR !$status = unserialize($status))
 		$status = array();
-	$status['etape'] = 'fichierscopie';
+	$status['etape'] = isset($options['etape_suivante'])?$options['etape_suivante']:'fichierscopie';
 
 	spip_log( "Fichiers a copier :".implode(", ",$files),'dump.'._LOG_INFO);
 

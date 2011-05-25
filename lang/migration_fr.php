@@ -7,6 +7,12 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'bouton_revenir' => 'Revenir',
 	'bouton_commencer_migration' => 'Commencer la migration',
 
+	'texte_introduction_assistant' => 'Vous pouvez utiliser l\'assistant de migration
+			pour transferer les données de votre site SPIP
+			vers une autre installation de SPIP. Vous pouvez par exemple transférer :',
+	'texte_liste_base' => 'la base de données',
+	'texte_liste_documents' => 'les documents joints',
+	'texte_liste_squelettes' => 'les squelettes',
 
 	'titre_assistant_migration'=>'Assistant de migration',
 	'titre_etape_intoduction' => 'Introduction',
@@ -16,7 +22,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_etape_migration_depuis' => 'Migration depuis un autre site',
 	'titre_etape_migration_vers' => 'Connexion à l\'autre site',
 	'titre_migration_en_cours_base' => 'Migration des tables en cours',
-	'titre_migration_en_cours_fichiers' => 'Migration des fichiers en cours',
+	'titre_migration_en_cours_fichiers' => 'Migration des documents en cours',
+	'titre_migration_en_cours_squelettes' => 'Migration des squelettes en cours',
 	'titre_echec_migration' => 'Echec de la migration',
 	'titre_fin_migration'=>'Migration terminée !',
 
@@ -39,7 +46,8 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'explication_connexion_vers' => 'Sur le site de destination, lancez l\'assistant de migration et sélectionnez la migration <i>Depuis un autre site SPIP</i>.
 	Renseignez ci-dessous l\'URL et la clé de migration qui vous sont indiquées.',
 	'label_quoi_base' => 'Envoyer la base de données',
-	'label_quoi_fichiers' => 'Envoyer les documents de <i>IMG/</i>',
+	'label_quoi_fichiers' => 'Envoyer les documents de <tt>@dir@</tt>',
+	'label_quoi_squelettes' => 'Envoyer les squelettes de <tt>@dir@</tt>',
 
 	'erreur_echec_connexion_init' => 'Impossible de se connecter au site distant. Veuillez verifier l\'URL de migration fournie par le site distant.',
 	'erreur_echec_connexion_version' => 'La version de ce site est trop récente pour migrer <b>vers</b> le site cible',

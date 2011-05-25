@@ -16,6 +16,9 @@ include_spip('inc/migration');
  * @return bool
  */
 function migration_envoi_fichier_ecrire_dist($file,$d,$dir_dest) {
+	if ($dir_dest==_DIR_IMG) $dir_dest='_DIR_IMG';
+	if ($dir_dest==_DIR_RACINE."squelettes/") $dir_dest='_DIR_SQUELETTES';
+
 	$data = array('file'=>$file,'d'=>$d,'dir_dest'=>$dir_dest);
 
 	$migration_envoi = charger_fonction('migration_envoi','action');
