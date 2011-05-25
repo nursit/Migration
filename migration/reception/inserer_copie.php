@@ -26,7 +26,9 @@ function migration_reception_inserer_copie_dist($status, $data){
 
 	foreach($data['rows'] as $r=>$row){
 		foreach($row as $k=>$v)
-			if (!isset($data['desc_dest']['field'][$k])){
+			if (!isset($data['desc_dest']['field'][$k])
+			  // attention, dans la desc les champs peuvent se retrouver tous en minuscule
+			  AND !isset($data['desc_dest']['field'][strtolower($k)])){
 				unset($data['rows'][$r][$k]);
 				$status['ignore']['tables'][$data['table']][$k]=$k;
 			}
