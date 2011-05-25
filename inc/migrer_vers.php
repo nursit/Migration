@@ -105,9 +105,9 @@ function migrer_vers_etape_suivante($etape,$quoi){
 	$done = false;
 	$etapes = array('init','base','basecopie','fichiers','fichierscopie');
 	foreach($etapes as $e){
-		if ($e==$etape) $done = true;
 		if ($done AND in_array($e,$quoi))
 			return $e;
+		if ($e==$etape) $done = true;
 	}
 	return 'finition';
 }
