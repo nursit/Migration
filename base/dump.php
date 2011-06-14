@@ -560,6 +560,13 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 		}
 	}
 
+	// si le nombre de tables envoyees n'est pas egal au nombre de tables demandees
+	// abandonner
+	if (count($status['tables_copiees'])<count($tables)){
+		spip_log("Nombre de tables copiees incorrect : ".$status['tables_copiees']."/".count($tables),"dump."._LOG_ERREUR);
+		return "abort";
+	}
+
 	if ($detruire_copieur_si_besoin = charger_fonction('detruire_copieur_si_besoin',$racine_fonctions, true)) {
 		$detruire_copieur_si_besoin($serveur_dest);
 	}

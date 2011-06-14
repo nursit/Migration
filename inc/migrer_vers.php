@@ -72,6 +72,11 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
+					if ($res=="abort"){
+						$s = lire_migration_vers_status();
+						$s['status'] = 'abort';
+						ecrire_migration_status('vers',$s);
+					}
 					if ($s['status'] != 'abort') {
 						$status['etape'] = migrer_vers_etape_suivante($status['etape'],$s['quoi']);
 						ecrire_fichier($status_file, serialize($status));
@@ -109,7 +114,8 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				}
 				break;
 		}
-		$res = ($status['etape'] == 'finition');
+		// sortir si on a fini ou abandon demande
+		$res = ($status['etape'] == 'finition' OR $s['status']=='abort');
 
 		echo ( "</div>\n");
 
@@ -123,6 +129,13 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 	}
 }
 
+/**
+ * Determiner l'etape suivante en fonction de l'etape courante
+ * et des actions demandees
+ * @param string $etape
+ * @param array $quoi
+ * @return string
+ */
 function migrer_vers_etape_suivante($etape,$quoi){
 	$done = false;
 	$etapes = array('init','base','basecopie','fichiers','fichierscopie','squelettes','squelettescopie');
@@ -138,8 +151,10 @@ function migrer_vers_etape_suivante($etape,$quoi){
  * Initialiser une migration vers
  * @param string $status_file
  * @param array $tables
+ * @param array $files
  * @param array $where
- * @return bool/string
+ * @param string $action
+ * @return bool|string
  */
 function migrer_vers_init($status_file, $tables=null, $files = null,$where=array(),$action='migration_vers'){
 	$status_file = _DIR_TMP.basename($status_file).".txt";
