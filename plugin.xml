@@ -31,5 +31,5 @@
 		<titre>migration:titre_assistant_migration</titre>
 		<url>configurer_migration</url>
 	</bouton>
-
+	<utilise id="dump" version="[;]" />
 </plugin>
