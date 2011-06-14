@@ -630,7 +630,7 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
  *     Attention, la fonction appelee est prefixee par $racine_fonctions_dest via un charger_fonction()
  *     Peut etre personalisee ....
  *
- * @return <type>
+ * @return bool|string
  */
 function base_copier_files($status_file, $files, $dir_source, $dir_dest, $options=array()){
 
@@ -677,7 +677,7 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 								$dir_dest,
 								$status['fichiers_copies'][$file] == 0)){
 				if ($callback_progression)
-					$callback_progression($status['fichiers_copies'][$table],0,$table);
+					$callback_progression($status['fichiers_copies'][$file],0,$table);
 				while (true) {
 					$n = intval($status['fichiers_copies'][$file]);
 					// on copie par lot de $data_pool octets
