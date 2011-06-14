@@ -15,6 +15,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'texte_liste_squelettes' => 'les squelettes',
 
 	'titre_assistant_migration'=>'Assistant de migration',
+	'titre_debut_migration' => 'Début de la migration',
 	'titre_etape_intoduction' => 'Introduction',
 	'titre_etape_methode' => 'Méthode de migration',
 	'titre_comment_transferer' => 'Comment voulez-vous transférer vos données ?',

@@ -30,6 +30,8 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 
 		switch ($status['etape']){
 			case 'init':
+				$titre = _T('migration:titre_debut_migration');
+				break;
 			case 'base':
 			case 'basecopie':
 				$titre = _T('migration:titre_migration_en_cours_base') . " (".count($status['tables']).") ";
