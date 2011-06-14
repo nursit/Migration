@@ -185,9 +185,9 @@ function migrer_vers_init($status_file, $tables=null, $files = null,$where=array
 /**
  * Afficher l'avancement de la copie
  * @staticvar int $etape
- * @param <type> $courant
- * @param <type> $total
- * @param <type> $table
+ * @param int $courant
+ * @param int $total
+ * @param string $table
  */
 function migrer_vers_afficher_progres($courant,$total,$table) {
 	static $etape = 1;
@@ -219,7 +219,8 @@ function migrer_vers_relance($redirect){
 /**
  * Marquer la procedure de dump comme finie
  * @param string $status_file
- * @return <type>
+ * @param string $action
+ * @return void
  */
 function migrer_vers_end($status_file, $action=''){
 	if (!$status = migrer_vers_lire_status($status_file))
@@ -237,7 +238,12 @@ function migrer_vers_end($status_file, $action=''){
 	ecrire_fichier(_DIR_TMP.basename($status_file).".txt", serialize($status));
 }
 
-
+/**
+ * Lire le status de migration
+ *
+ * @param string $status_file
+ * @return mixed|string
+ */
 function migrer_vers_lire_status($status_file) {
 	$status_file = _DIR_TMP.basename($status_file).".txt";
 	if (!lire_fichier($status_file, $status)
