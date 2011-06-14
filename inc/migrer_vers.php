@@ -72,7 +72,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				);
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
-					if ($res=="abort"){
+					if ($res==="abort"){
 						$s = lire_migration_vers_status();
 						$s['status'] = 'abort';
 						ecrire_migration_status('vers',$s);
