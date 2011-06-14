@@ -10,6 +10,7 @@ include_spip('inc/migration');
 
 function formulaires_assistant_migration_charger_dist(){
 
+	$squelette = migration_determiner_dossier_squelette();
 	$valeurs = array(
 		'_etapes'=>3,
 		'editable' => autoriser('webmestre'),
@@ -20,7 +21,7 @@ function formulaires_assistant_migration_charger_dist(){
 		'quoi' => array('base','fichiers','squelettes'),
 		'_auth_depuis' => verifier_auth_depuis()?' ':'',
 		'_dir_img' => joli_repertoire(_DIR_IMG),
-		'_dir_skel' => joli_repertoire(migration_determiner_dossier_squelette()),
+		'_dir_skel' => $squelette?joli_repertoire($squelette):'',
 	);
 
 	if (_request('direction')=='depuis'){

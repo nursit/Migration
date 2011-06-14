@@ -154,7 +154,7 @@ function migrer_vers_init($status_file, $tables=null, $files = null,$where=array
 		$files = preg_files(_DIR_IMG,'.');
 	}
 	$dir_squel = migration_determiner_dossier_squelette();
-	$squelettes= preg_files($dir_squel,'.');
+	$squelettes= ($dir_squel?preg_files($dir_squel,'.'):'');
 	$status = array('tables'=>$tables,'files'=>$files,'squelettes'=>$squelettes,'where'=>$where);
 
 	$status['etape'] = 'init';
