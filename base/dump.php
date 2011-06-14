@@ -493,9 +493,12 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 		$tables[] = 'spip_meta';
 	}
 
+	$trouver_table = charger_fonction('trouver_table','base');
+
 	foreach ($tables as $table){
+		$desc_source = $trouver_table($table, $serveur_source, false);
 		// verifier que la table est presente dans la base source
-		if ($desc_source = sql_showtable($table,false,$serveur_source)){
+		if ($desc_source){
 			// $status['tables_copiees'][$table] contient l'avancement
 			// de la copie pour la $table : 0 a N et -N quand elle est finie (-1 si vide et finie...)
 			if (!isset($status['tables_copiees'][$table]))
