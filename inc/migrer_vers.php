@@ -54,6 +54,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 
 		include_spip('inc/migration');
 		$s = lire_migration_vers_status();
+
 		// au premier coup on ne fait rien sauf afficher l'ecran de sauvegarde
 		switch ($status['etape']){
 			case 'init':
@@ -115,14 +116,15 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				break;
 		}
 		// sortir si on a fini ou abandon demande
-		$res = ($status['etape'] == 'finition' OR $s['status']=='abort');
+		$res = (in_array($status['etape'],array('fini','finition')) OR $s['status']=='abort');
 
 		echo ( "</div>\n");
 
 		if (!$res AND $redirect)
 			echo migrer_vers_relance($redirect);
 		echo (install_fin_html());
-		ob_end_flush();
+		while (ob_get_level())
+			ob_end_flush();
 		flush();
 
 		return $res;
