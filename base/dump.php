@@ -561,6 +561,9 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 					$callback_progression(0,$status['tables_copiees'][$table],"$table".((is_numeric($status['tables_copiees'][$table]) AND $status['tables_copiees'][$table]>=0)?"[Echec]":""));
 			}
 		}
+		else {
+			spip_log("Impossible de lire la description de la table $table","dump."._LOG_ERREUR);
+		}
 	}
 
 	// si le nombre de tables envoyees n'est pas egal au nombre de tables demandees
