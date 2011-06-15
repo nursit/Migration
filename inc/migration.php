@@ -274,6 +274,7 @@ function migration_restore_base_si_possible(){
  * Les fichiers non autorises ne seront pas transferes
  *
  * @param string $file
+ * @param bool $strict
  * @return bool
  */
 function migration_type_fichier_autorise($file, $strict=true){
@@ -290,7 +291,7 @@ function migration_type_fichier_autorise($file, $strict=true){
 	// type supplementaire utilise dans les squelettes
 	if (!$strict
 	    AND in_array($extension,
-		      array('js')
+		      array('js','ttf','otf','eot','svg')
 		  ))
 		return $extension;
 
