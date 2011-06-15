@@ -233,7 +233,7 @@ function migrer_vers_end($status_file, $action=''){
 	$end = charger_fonction('end','migration/envoi');
 	// passer l'id_auteur qui a fait la migration,
 	// il faut s'assurer qu'il est bien webmestre a la fin de la migration ! 
-	$s['distant'] = $end($s['status'],$GLOBALS['visiteur_session']['id_auteur']);
+	$s['distant'] = $end($s['status'],$GLOBALS['visiteur_session']['id_auteur'],isset($status['errors'])?$status['errors']:array());
 	ecrire_migration_status('vers',$s);
 
 	$status['etape'] = 'fini';

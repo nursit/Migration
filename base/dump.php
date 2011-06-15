@@ -496,7 +496,11 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	$trouver_table = charger_fonction('trouver_table','base');
 
 	foreach ($tables as $table){
-		$desc_source = $trouver_table($table, $serveur_source, false);
+		// en principe, pas de spip_ dans le nom de table passe a trouver_table
+		#$desc_source = $trouver_table(preg_replace(",^spip_,","",$table), $serveur_source, false);
+		#if (!$desc_source)
+			$desc_source = $trouver_table($table, $serveur_source, false);
+
 		// verifier que la table est presente dans la base source
 		if ($desc_source){
 			// $status['tables_copiees'][$table] contient l'avancement
@@ -562,6 +566,8 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 			}
 		}
 		else {
+			$status['errors'][] = "Impossible de lire la description de la table $table";
+			ecrire_fichier($status_file,serialize($status));
 			spip_log("Impossible de lire la description de la table $table","dump."._LOG_ERREUR);
 		}
 	}
@@ -570,6 +576,8 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	// abandonner
 	if (count($status['tables_copiees'])<count($tables)){
 		spip_log("Nombre de tables copiees incorrect : ".count($status['tables_copiees'])."/".count($tables),"dump."._LOG_ERREUR);
+		$status['errors'][] = "Nombre de tables copiees incorrect : ".count($status['tables_copiees'])."/".count($tables);
+		ecrire_fichier($status_file,serialize($status));
 		return "abort";
 	}
 

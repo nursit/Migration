@@ -41,11 +41,15 @@ function migration_reception_end_dist($status, $data){
 		}
 	}
 
-	if (count($status['ignore'])
+	if ((count($status['ignore']) OR count($data['errors']))
 	  AND defined('_MIGRATION_EMAIL_NOTIFY_IGNORE')
 	  AND $email = _MIGRATION_EMAIL_NOTIFY_IGNORE){
 		$sujet = "[Migration-ERR] ".$GLOBALS['meta']['adresse_site'];
-		$texte = var_export($status['ignore'],true);
+		$texte = "";
+		if (count($status['ignore']))
+			$texte .= var_export($status['ignore'],true);
+		if (count($data['errors']))
+			$texte .= implode("\n",$data['errors']);
 		job_queue_add('envoyer_mail','Erreur migration',array($email, $sujet, $texte),'inc/');
 	}
 
