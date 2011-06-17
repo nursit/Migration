@@ -10,7 +10,12 @@ include_spip('inc/migration');
 
 function formulaires_assistant_migration_charger_dist(){
 
-	$squelette = migration_determiner_dossier_squelette();
+	if ($squelette = migration_determiner_dossier_squelette()) {
+		$squelette = explode(':',$squelette);
+		$squelette = array_map('joli_repertoire',$squelette);
+		$squelette = implode(':',$squelette);
+	}
+
 	$valeurs = array(
 		'_etapes'=>3,
 		'editable' => autoriser('webmestre'),

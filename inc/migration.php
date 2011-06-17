@@ -319,14 +319,24 @@ function migration_affiche_fichiers_ignores($ignores){
 	return implode('<br />',$res);
 }
 
+/**
+ * Determiner le ou les dossies squelettes valides :
+ * on explode, verifie leur existence, et les renvois valides,
+ * dans l'ordre de copie (inverse de l'ordre du path)
+ *
+ * @return string
+ */
 function migration_determiner_dossier_squelette(){
 	$skels = ((isset($GLOBALS['dossier_squelettes']) AND $GLOBALS['dossier_squelettes'])?$GLOBALS['dossier_squelettes']:_DIR_RACINE.'squelettes');
 	$skels = explode(':',$skels);
-	foreach($skels as $s){
+	$skels = array_reverse($skels);
+	foreach($skels as $k=>$s){
 		if (_DIR_RACINE AND strncmp($s,_DIR_RACINE,strlen(_DIR_RACINE))!==0)
 			$s = _DIR_RACINE . $s;
 		if (is_dir($s))
-			return rtrim($s,"/")."/";
+			$skels[$k] = rtrim($s,"/")."/";
+		else
+			unset($skels[$k]);
 	}
-	return '';
+	return count($skels)?implode(':',$skels):'';
 }

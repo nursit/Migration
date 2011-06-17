@@ -623,13 +623,13 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
  * @param string $dir_dest
  * @param array $options
  *   parametres optionnels sous forme de tableau :
- *   @param string $callback_progression
+ *   @ param string $callback_progression
  *     fonction a appeler pour afficher la progression, avec les arguments (compteur,total,table)
- *   @param int $max_time
+ *   @ param int $max_time
  *     limite de temps au dela de laquelle sortir de la fonction proprement (de la forme time()+15)
- *   @param bool $drop_source
+ *   @ param bool $drop_source
  *     vider les tables sources apres copie
- *   @param string $racine_fonctions_dest
+ *   @ param string $racine_fonctions_dest
  *     racine utilisee pour charger_fonction() des operations elementaires sur la base de destination.
  *     Permet de deleguer vers une autre voie de communication.
  *     Par defaut on utilise 'base', ce qui route vers les fonctions de ce fichier. Concerne :
@@ -637,7 +637,7 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
  *     - preparer_table_dest
  *     - detruire_copieur_si_besoin
  *     - inserer_copie
- *   @param array fonction_fichier_ecrire
+ *   @ param array fonction_fichier_ecrire
  *     fonction de copie du fichier par morceaux. Par defaut "fichier_ecrire" qui fait fwrite
  *     Attention, la fonction appelee est prefixee par $racine_fonctions_dest via un charger_fonction()
  *     Peut etre personalisee ....
@@ -671,29 +671,29 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 
 	spip_log( "Fichiers a copier :".implode(", ",$files),'dump.'._LOG_INFO);
 
-	foreach ($files as $file){
-		$file = substr($file,strlen($dir_source));
+	foreach ($files as $fullfile){
+		$file = substr($fullfile,strlen($dir_source));
 		// verifier que le fichier existe dans la source
-		if (file_exists($dir_source.$file)){
-			// $status['fichiers_copies'][$file] contient l'avancement
+		if (file_exists($fullfile)){
+			// $status['fichiers_copies'][$fullfile] contient l'avancement
 			// de la copie pour la $table : 0 a N et -N quand elle est finie (-1 si vide et finie...)
-			if (!isset($status['fichiers_copies'][$file]))
-				$status['fichiers_copies'][$file] = 0;
+			if (!isset($status['fichiers_copies'][$fullfile]))
+				$status['fichiers_copies'][$fullfile] = 0;
 
-			if (is_numeric($status['fichiers_copies'][$file])
-				AND $status['fichiers_copies'][$file]>=0
+			if (is_numeric($status['fichiers_copies'][$fullfile])
+				AND $status['fichiers_copies'][$fullfile]>=0
 				AND !$size = $stat_file_dest(
 								$file,
-								filesize($dir_source.$file),
-								md5_file($dir_source.$file),
+								filesize($fullfile),
+								md5_file($fullfile),
 								$dir_dest,
-								$status['fichiers_copies'][$file] == 0)){
+								$status['fichiers_copies'][$fullfile] == 0)){
 				if ($callback_progression)
-					$callback_progression($status['fichiers_copies'][$file],0,$table);
+					$callback_progression($status['fichiers_copies'][$fullfile],0,$fullfile);
 				while (true) {
-					$n = intval($status['fichiers_copies'][$file]);
+					$n = intval($status['fichiers_copies'][$fullfile]);
 					// on copie par lot de $data_pool octets
-					if ($h = fopen($dir_source.$file,'rb')){
+					if ($h = fopen($fullfile,'rb')){
 						if ($n)
 							fseek($h,$n);
 						while ($d=fread($h, $data_pool)){
@@ -704,37 +704,37 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 								// copie finie
 								return true;
 							}
-							$status['fichiers_copies'][$file]+=strlen($d);
+							$status['fichiers_copies'][$fullfile]+=strlen($d);
 							if ($max_time AND time()>$max_time)
 								break;
 						}
 						fclose($h);
 					}
-					if ($n == $status['fichiers_copies'][$file])
+					if ($n == $status['fichiers_copies'][$fullfile])
 						break;
-					spip_log( "cp $file ".$status['fichiers_copies'][$file],'dump.'._LOG_INFO_IMPORTANTE);
+					spip_log( "cp $fullfile ".$status['fichiers_copies'][$fullfile],'dump.'._LOG_INFO_IMPORTANTE);
 					if ($callback_progression)
-						$callback_progression($status['fichiers_copies'][$file],0,$file);
+						$callback_progression($status['fichiers_copies'][$fullfile],0,$fullfile);
 					ecrire_fichier($status_file,serialize($status));
 					if ($max_time AND time()>$max_time)
 						return false; // on a pas fini, mais le temps imparti est ecoule
 				}
 				if ($drop_source) {
-					spip_unlink($dir_source.$file);
-					spip_log( "rm $file sur source '$dir_source'",'dump.'._LOG_INFO_IMPORTANTE);
+					spip_unlink($fullfile);
+					spip_log( "rm $fullfile sur source '$dir_source'",'dump.'._LOG_INFO_IMPORTANTE);
 				}
-				$status['fichiers_copies'][$file]=($status['fichiers_copies'][$file]?-$status['fichiers_copies'][$file]:"zero");
+				$status['fichiers_copies'][$fullfile]=($status['fichiers_copies'][$fullfile]?-$status['fichiers_copies'][$fullfile]:"zero");
 				ecrire_fichier($status_file,serialize($status));
 				spip_log( "fichiers_copies ".implode(',',$status['fichiers_copies']),'dump.'._LOG_INFO);
 				if ($callback_progression)
-					$callback_progression($status['fichiers_copies'][$file],$status['fichiers_copies'][$file],$table);
+					$callback_progression($status['fichiers_copies'][$fullfile],$status['fichiers_copies'][$fullfile],$fullfile);
 			}
 			else {
 				// si le fichier est deja OK, noter sa taille comme realisee
-				if (intval($size) AND !$status['fichiers_copies'][$file])
-					$status['fichiers_copies'][$file] = -intval($size);
+				if (intval($size) AND !$status['fichiers_copies'][$fullfile])
+					$status['fichiers_copies'][$fullfile] = -intval($size);
 				if ($callback_progression)
-					$callback_progression(0,$status['fichiers_copies'][$file],"$file".((is_numeric($status['fichiers_copies'][$file]) AND $status['fichiers_copies'][$file]>=0)?"[Echec]":""));
+					$callback_progression(0,$status['fichiers_copies'][$fullfile],"$fullfile".((is_numeric($status['fichiers_copies'][$fullfile]) AND $status['fichiers_copies'][$fullfile]>=0)?"[Echec]":""));
 			}
 		}
 	}
