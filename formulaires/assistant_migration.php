@@ -13,7 +13,7 @@ function formulaires_assistant_migration_charger_dist(){
 	if ($squelette = migration_determiner_dossier_squelette()) {
 		$squelette = explode(':',$squelette);
 		$squelette = array_map('joli_repertoire',$squelette);
-		$squelette = implode(':',$squelette);
+		$squelette = implode(', ',$squelette);
 	}
 
 	$valeurs = array(
@@ -26,7 +26,7 @@ function formulaires_assistant_migration_charger_dist(){
 		'quoi' => array('base','fichiers','squelettes'),
 		'_auth_depuis' => verifier_auth_depuis()?' ':'',
 		'_dir_img' => joli_repertoire(_DIR_IMG),
-		'_dir_skel' => $squelette?joli_repertoire($squelette):'',
+		'_dir_skel' => $squelette,
 	);
 
 	if (_request('direction')=='depuis'){
