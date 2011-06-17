@@ -322,8 +322,11 @@ function migration_affiche_fichiers_ignores($ignores){
 function migration_determiner_dossier_squelette(){
 	$skels = ((isset($GLOBALS['dossier_squelettes']) AND $GLOBALS['dossier_squelettes'])?$GLOBALS['dossier_squelettes']:_DIR_RACINE.'squelettes');
 	$skels = explode(':',$skels);
-	foreach($skels as $s)
+	foreach($skels as $s){
+		if (_DIR_RACINE AND strncmp($s,_DIR_RACINE,strlen(_DIR_RACINE))!==0)
+			$s = _DIR_RACINE . $s;
 		if (is_dir($s))
 			return rtrim($s,"/")."/";
+	}
 	return '';
 }
