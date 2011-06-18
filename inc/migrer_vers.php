@@ -203,8 +203,11 @@ function migrer_vers_init($status_file, $tables=null, $files = null,$where=array
 function migrer_vers_afficher_progres($courant,$total,$table) {
 	static $etape = 1;
 	if (unique($table)) {
-		if ($total<0 OR !is_numeric($total))
-			echo "<br /><strong>".$etape. '. '."</strong>$table ";
+		if ($total<0 OR !is_numeric($total)){
+			#echo "<br /><strong>".$etape. '. '."</strong>$table ";
+			$etape++;
+			return;
+		}
 		else
 			echo "<br /><strong>".$etape. '. '."$table</strong> ".($courant?" <i>($courant)</i> ":"");
 		$etape++;

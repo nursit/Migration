@@ -273,14 +273,15 @@ function base_liste_table_for_dump($exclude_tables = array()){
  * ou la copie de base a base (mysql<->sqlite par exemple)
  *
  * @param array $tables
+ * @param array $exclure_tables
  * @param string $serveur
  */
-function base_vider_tables_destination_copie($tables, $exlure_tables = array(), $serveur=''){
+function base_vider_tables_destination_copie($tables, $exclure_tables = array(), $serveur=''){
 	$trouver_table = charger_fonction('trouver_table', 'base');
 
 	spip_log('Vider '.count($tables) . " tables sur serveur '$serveur' : " . join(', ', $tables),'base.'._LOG_INFO_IMPORTANTE);
 	foreach($tables as $table){
-		if (!in_array($table,$exlure_tables)){
+		if (!in_array($table,$exclure_tables)){
 			// sur le serveur principal, il ne faut pas supprimer l'auteur loge !
 			if (($table!='spip_auteurs') OR $serveur!=''){
 				// regarder si il y a au moins un champ impt='non'
@@ -408,17 +409,17 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
  * @param string $serveur_dest
  * @param array $options
  *   parametres optionnels sous forme de tableau :
- *   @param string $callback_progression
+ *   param string $callback_progression
  *     fonction a appeler pour afficher la progression, avec les arguments (compteur,total,table)
- *   @param int $max_time
+ *   param int $max_time
  *     limite de temps au dela de laquelle sortir de la fonction proprement (de la forme time()+15)
- *   @param bool $drop_source
+ *   param bool $drop_source
  *     vider les tables sources apres copie
- *   @param array $no_erase_dest
+ *   param array $no_erase_dest
  *     liste des tables a ne pas vider systematiquement (ne seront videes que si existent dans la base source)
- *   @param array $where
+ *   param array $where
  *     liste optionnelle de condition where de selection des donnees pour chaque table
- *   @param string $racine_fonctions_dest
+ *   param string $racine_fonctions_dest
  *     racine utilisee pour charger_fonction() des operations elementaires sur la base de destination.
  *     Permet de deleguer vers une autre voie de communication.
  *     Par defaut on utilise 'base', ce qui route vers les fonctions de ce fichier. Concerne :
@@ -426,17 +427,17 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
  *     - preparer_table_dest
  *     - detruire_copieur_si_besoin
  *     - inserer_copie
- *   @param array $fonction_base_inserer
+ *   param array $fonction_base_inserer
  *     fonction d'insertion en base. Par defaut "inserer_copie" qui fait un insertq a l'identique.
  *     Attention, la fonction appelee est prefixee par $racine_fonctions_dest via un charger_fonction()
  *     Peut etre personalisee pour filtrer, renumeroter....
- *   @param array $desc_tables_dest
+ *   param array $desc_tables_dest
  *     description des tables de destination a utiliser de preference a la description de la table source
- *   @param int data_pool
+ *   param int data_pool
  *     nombre de lignes de la table a envoyer d'un coup en insertion dans la table cible (par defaut 1)
  *     permet des envois groupes pour plus de rapidite, notamment si l'insertion est distante
  *
- * @return <type>
+ * @return bool
  */
 function base_copier_tables($status_file, $tables, $serveur_source, $serveur_dest, $options=array()){
 
