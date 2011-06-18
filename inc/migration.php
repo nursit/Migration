@@ -291,7 +291,7 @@ function migration_type_fichier_autorise($file, $strict=true){
 	// type supplementaire utilise dans les squelettes
 	if (!$strict
 	    AND in_array($extension,
-		      array('js','ttf','otf','eot','svg')
+		      array('js','ttf','otf','eot','svg','woff')
 		  ))
 		return $extension;
 

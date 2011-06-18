@@ -127,8 +127,8 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		if (!$res AND $redirect)
 			echo migrer_vers_relance($redirect);
 		echo (install_fin_html());
-		while (ob_get_level())
-			ob_end_flush();
+		#while (ob_get_level())
+		#	ob_end_flush();
 		flush();
 
 		return $res;
