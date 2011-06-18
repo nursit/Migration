@@ -2,7 +2,7 @@
 	<nom>Migration</nom>
 	<auteur>[Cedric->http://nursit.net]</auteur>
 	<icon>prive/themes/spip/images/migration-32.png</icon>
-	<version>0.9.3</version>
+	<version>0.9.4</version>
 	<etat>stable</etat>
 	<description>Assistant de migration d'un site SPIP</description>
 	<prefix>migration</prefix>
@@ -33,3 +33,4 @@
 	</bouton>
 	<utilise id="dump" version="[;]" />
 </plugin>
+http://anextraleveladaykeepsthegirlaway.net/IMG/mp3/0/c/2/01_Mirror_s_Image_-_copie.mp3

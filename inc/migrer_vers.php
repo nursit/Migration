@@ -23,6 +23,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		$timeout = ini_get('max_execution_time');
 		// valeur conservatrice si on a pas reussi a lire le max_execution_time
 		if (!$timeout) $timeout=30; // parions sur une valeur tellement courante ...
+		$timeout = min($timeout,30); // ne prolongeons pas plus que 30s car cela peut produire des erreur 500 et bloque le refresh
 		$max_time = time()+$timeout/2;
 
 		include_spip('inc/minipres');
