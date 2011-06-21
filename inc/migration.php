@@ -279,19 +279,19 @@ function migration_restore_base_si_possible(){
  */
 function migration_type_fichier_autorise($file, $strict=true){
 	// pas de bras, pas de chocolat
-	if (!preg_match(',\.([a-z0-9]+)$,', $file, $rext))
+	if (!preg_match(',\.([a-z0-9]+)$,i', $file, $rext))
 		return false;
 
-	$extension = $rext[1];
+	$extension = strtolower($rext[1]);
 
 	// type autorise dans les documents de SPIP ? ok
 	if (sql_fetsel("extension", "spip_types_documents", "extension=" . sql_quote($extension)))
 		return $extension;
 
-	// type supplementaire utilise dans les squelettes
+	// type supplementaire utilise et autorise dans les squelettes
 	if (!$strict
 	    AND in_array($extension,
-		      array('js','ttf','otf','eot','svg','woff')
+		      array('js','ttf','otf','eot','svg','woff','ico')
 		  ))
 		return $extension;
 
