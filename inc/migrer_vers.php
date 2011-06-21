@@ -106,6 +106,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 					'max_time' => $max_time,
 					'racine_fonctions_dest' =>'migration/envoi',
 					'data_pool' => 100*1024,
+					'etape_suivante' => 'squelettescopie',
 				);
 				$res = true;
 				if ($dir_sources = migration_determiner_dossier_squelette()
