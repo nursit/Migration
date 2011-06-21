@@ -46,6 +46,9 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'explications_direction_vers' => 'Transférer des données de ce site vers un autre site SPIP. Le site SPIP distant doit être accessible par Internet depuis ce site.',
 	'explication_connexion_vers' => 'Sur le site de destination, lancez l\'assistant de migration et sélectionnez la migration <i>Depuis un autre site SPIP</i>.
 	Renseignez ci-dessous l\'URL et la clé de migration qui vous sont indiquées.',
+	'explications_dossier_squelettes' => 'Si le squelette du site est dans un dossier qui n\'apparaît pas ci-dessus,
+	ajoutez le à la variable <tt>$dossier_squelettes</tt> dans votre fichier <tt>mes_options.php</tt>
+	<a class="spip_out" href="http://www.spip.net/fr_article1825.html#doss_squel">comme indiqué dans la documentation de SPIP</a>.',
 	'label_quoi_base' => 'Envoyer la base de données',
 	'label_quoi_fichiers' => 'Envoyer les documents de <tt>@dir@</tt>',
 	'label_quoi_squelettes' => 'Envoyer les squelettes de <tt>@dir@</tt>',
