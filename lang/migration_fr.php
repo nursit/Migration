@@ -38,11 +38,11 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'resultat_fichiers_ignores' => 'Les fichiers suivants ont été refusés&nbsp;:',
 	'resultat_backup_retabli' => 'Votre base de données a été rétablie dans son état avant la tentative de migration.',
 
-	'label_direction_depuis' => 'Depuis un autre site SPIP',
+	'label_direction_depuis' => 'Importer depuis un autre site SPIP',
 	'label_url_cible' => 'URL de migration du site cible',
 	'label_migration_key' => 'Clé de migration',
 	'explications_direction_depuis' => 'Transférer sur ce site des données provenant d\'un site SPIP distant. Ce site doit être accessible par Internet depuis le site distant.',
-	'label_direction_vers' => 'Vers un autre site SPIP',
+	'label_direction_vers' => 'Exporter vers un autre site SPIP',
 	'explications_direction_vers' => 'Transférer des données de ce site vers un autre site SPIP. Le site SPIP distant doit être accessible par Internet depuis ce site.',
 	'explication_connexion_vers' => 'Sur le site de destination, lancez l\'assistant de migration et sélectionnez la migration <i>Depuis un autre site SPIP</i>.
 	Renseignez ci-dessous l\'URL et la clé de migration qui vous sont indiquées.',
