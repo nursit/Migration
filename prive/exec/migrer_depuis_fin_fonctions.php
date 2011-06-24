@@ -11,6 +11,9 @@ function verifier_auteur_session(){
 		OR $row['nom']!==$GLOBALS['visiteur_session']['nom'])
 		return '';
 
+	if ($row['webmestre']!=='oui')
+	        return '';
+
 	return ' ';
 }
 ?>
