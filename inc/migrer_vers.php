@@ -242,12 +242,15 @@ function migrer_vers_end($status_file, $action=''){
 		return;
 
 	$s = lire_migration_vers_status();
-	// signifier la fin au site distant
-	$end = charger_fonction('end','migration/envoi');
-	// passer l'id_auteur qui a fait la migration,
-	// il faut s'assurer qu'il est bien webmestre a la fin de la migration ! 
-	$s['distant'] = $end($s['status'],$GLOBALS['visiteur_session']['id_auteur'],isset($status['errors'])?$status['errors']:array());
-	ecrire_migration_status('vers',$s);
+	if ($s['status']!=='end'){
+		// signifier la fin au site distant
+		$end = charger_fonction('end','migration/envoi');
+		// passer l'id_auteur qui a fait la migration,
+		// il faut s'assurer qu'il est bien webmestre a la fin de la migration !
+		$s['distant'] = $end($s['status'],$GLOBALS['visiteur_session']['id_auteur'],isset($status['errors'])?$status['errors']:array());
+		$s['status'] = 'end';
+		ecrire_migration_status('vers',$s);
+	}
 
 	$status['etape'] = 'fini';
 	ecrire_fichier(_DIR_TMP.basename($status_file).".txt", serialize($status));
