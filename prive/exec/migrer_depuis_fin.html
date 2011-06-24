@@ -1,4 +1,4 @@
-#SET{status,#REM|lire_migration_depuis_status{finished}}
+#SET{status,#VAL{finished}|lire_migration_depuis_status}
 
 [(#GET{status}|table_valeur{status}|=={aborted}|oui)
 <h1><:migration:titre_echec_migration:></h1>
@@ -52,6 +52,12 @@
 		]
 	]
 </div>
+]
+
+[(#REM|verifier_auteur_session|non)
+	<div class="notice">
+		<p><:migration:attention_session_perimee_deconnecter:></p>
+	</div>
 ]
 <style type="text/css">
 .error,.success,.notice {

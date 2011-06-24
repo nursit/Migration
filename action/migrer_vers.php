@@ -50,6 +50,8 @@ function action_migrer_vers_dist($arg=null){
 		echo redirige_formulaire(generer_url_ecrire("migrer_vers_fin",'status='.$status_file,'',true, true));
 	}
 
+	while (ob_get_level())
+		ob_end_flush();
 }
 
 ?>

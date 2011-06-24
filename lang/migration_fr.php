@@ -3,6 +3,7 @@
 if (!defined("_ECRIRE_INC_VERSION")) return;
 
 $GLOBALS[$GLOBALS['idx_lang']] = array(
+	'attention_session_perimee_deconnecter' => 'Attention : le login avec lequel vous êtes connecté n\'existe plus. Vous devez vous deconnecter puis vous identifier à nouveau avec le login présent dans le site que vous venez d\'importer.',
 	'bouton_continuer' => 'Continuer',
 	'bouton_revenir' => 'Revenir',
 	'bouton_commencer_migration' => 'Commencer la migration',
