@@ -316,7 +316,7 @@ function migration_backup_base_si_possible(){
 	// conserveur le copieur tant qu'il est encore temps
 	// car apres les hits sont anonymes et ne permettent plus de le faire
 	include_spip('base/dump');
-	base_conserver_copieur();
+	base_conserver_copieur(false);
 
 	// si jamais la base est sqlite, faire une copie de backup
 	// au cas ou le transfert foire

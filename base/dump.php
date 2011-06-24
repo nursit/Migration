@@ -301,23 +301,31 @@ function base_vider_tables_destination_copie($tables, $exclure_tables = array(),
 	if ($serveur==''
 	  AND in_array('spip_auteurs',$tables)
 	  AND !in_array('spip_auteurs',$exclure_tables)) {
-		base_conserver_copieur($serveur);
+		base_conserver_copieur(true, $serveur);
 		sql_delete("spip_auteurs", "id_auteur!=0",$serveur);
 	}
 }
 
 /**
  * Conserver le copieur si besoin
+ * @param bool $move
  * @param string $serveur
  * @return void
  */
-function base_conserver_copieur($serveur=''){
+function base_conserver_copieur($move = true,$serveur=''){
 	// s'asurer qu'on a pas deja fait la manip !
 	if ($GLOBALS['visiteur_session']['id_auteur']>0 AND sql_countsel("spip_auteurs", "id_auteur<>0")) {
 		spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
 		sql_delete("spip_auteurs", "id_auteur=0",$serveur);
-		// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
-		sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_session']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_session']['id_auteur']),array(),$serveur);
+		if ($move){
+			// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
+			sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_session']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_session']['id_auteur']),array(),$serveur);
+		}
+		else {
+			$row = sql_fetsel('*','spip_auteurs','id_auteur='.$GLOBALS['visiteur_session']['id_auteur'],'','','','',$serveur);
+			$row['webmestre'] = $GLOBALS['visiteur_session']['id_auteur'];
+			sql_insertq('spip_auteurs',$row,array(),$serveur);
+		}
 	}
 }
 
