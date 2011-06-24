@@ -323,6 +323,7 @@ function base_conserver_copieur($move = true,$serveur=''){
 		}
 		else {
 			$row = sql_fetsel('*','spip_auteurs','id_auteur='.$GLOBALS['visiteur_session']['id_auteur'],'','','','',$serveur);
+			$row['id_auteur'] = 0;
 			$row['webmestre'] = $GLOBALS['visiteur_session']['id_auteur'];
 			sql_insertq('spip_auteurs',$row,array(),$serveur);
 		}
