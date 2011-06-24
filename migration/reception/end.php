@@ -12,6 +12,8 @@ include_spip('inc/migration');
  * fermer la connection depuis le site distant
  * quand on a fini
  *
+ * @param array $status
+ * @param array $data
  * @return bool
  */
 function migration_reception_end_dist($status, $data){
@@ -20,9 +22,7 @@ function migration_reception_end_dist($status, $data){
 	spip_log('fin de migration. Resultat:'.$data,'migration');
 	$status['status'] = 'end';
 	if ($data['status']=='abort'){
-		$status['status'] = 'aborted';
-		if (migration_restore_base_si_possible())
-			$status['status'] = 'basereverted';
+		$status = abandonner_migration_depuis($status);
 	}
 	else {
 		// s'assurer que l'auteur qui migre est bien webmestre a l'arrivee
@@ -54,6 +54,7 @@ function migration_reception_end_dist($status, $data){
 	}
 
 	update_migration_depuis($status);
+	finir_migration_status_depuis();
 
 	// si on a pas d'upgrade a suivre, vidons les cache
 	$version_installee = sql_getfetsel('valeur','spip_meta',"nom='version_installee'");

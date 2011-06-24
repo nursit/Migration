@@ -1,4 +1,4 @@
-#SET{status,#REM|lire_migration_depuis_status}
+#SET{status,#REM|lire_migration_depuis_status{finished}}
 
 [(#GET{status}|table_valeur{status}|=={aborted}|oui)
 <h1><:migration:titre_echec_migration:></h1>

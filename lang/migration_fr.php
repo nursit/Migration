@@ -26,6 +26,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'titre_migration_en_cours_fichiers' => 'Migration des documents en cours',
 	'titre_migration_en_cours_squelettes' => 'Migration des squelettes en cours',
 	'titre_echec_migration' => 'Echec de la migration',
+	'titre_abandon_migration' => 'Abandon de la migration',
 	'titre_fin_migration'=>'Migration terminée !',
 
 	'resultat_erreur_migration' => 'Une erreur est survenue lors de la migration.',

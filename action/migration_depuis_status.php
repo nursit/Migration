@@ -27,6 +27,12 @@ function action_migration_depuis_status_dist(){
 		$s = lire_migration_depuis_status();
 	}
 
+
+	// peut etre on a fini ?
+	if (!$s){
+		$s = lire_migration_depuis_status(true);
+	}
+
 	if (!$s)
 		ajax_retour("Echec : le site distant n'a pas réussi à se connecter, la migration a été abandonnée.");
 	else{

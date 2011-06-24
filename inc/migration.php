@@ -12,11 +12,17 @@
 if (!defined('_MIGRATION_KEY_PERSISTENCE'))
 	define('_MIGRATION_KEY_PERSISTENCE',600);
 
-function lire_migration_status($direction){
+/**
+ * Lire le status de migration
+ * @param string $direction
+ * @param bool $finished
+ * @return bool|array
+ */
+function lire_migration_status($direction, $finished=false){
 	if (!in_array($direction,array('depuis','vers')))
 		return false;
 	$meta = 'migration_'.$direction.'_status';
-	$file = _DIR_TMP.$meta.".txt";
+	$file = _DIR_TMP.$meta.($finished?".finished":"").".txt";
 	lire_fichier($file,$s);
 	if (!$s)
 		return false;
@@ -27,15 +33,33 @@ function lire_migration_status($direction){
 		OR !isset($s['key'])
     OR ($direction=='depuis' AND !isset($s['timestamp']))
 	  OR ($direction=='depuis' AND $s['timestamp']<time()-_MIGRATION_KEY_PERSISTENCE)){
-		spip_unlink($file);
-		return false;
+		if (!$finished){
+			finir_migration_status($direction);
+			return false;
+		}
 	}
 
 	return $s;
 }
-function lire_migration_depuis_status(){return lire_migration_status('depuis');}
+/**
+ * Lire le status de migration depuis
+ * @param bool $finished
+ * @return array
+ */
+function lire_migration_depuis_status($finished=false){return lire_migration_status('depuis',$finished);}
+/**
+ * Lire le status de migration vers
+ * @return array
+ */
 function lire_migration_vers_status(){return lire_migration_status('vers');}
 
+
+/**
+ * Ecrire le status de migration
+ * @param string $direction
+ * @param bool|array $raz
+ * @return array
+ */
 function ecrire_migration_status($direction, $raz = false){
 	if (!in_array($direction,array('depuis','vers')))
 		return false;
@@ -60,12 +84,66 @@ function ecrire_migration_status($direction, $raz = false){
 	}
 	return $s;
 }
-function initialiser_migration_depuis($raz = false){ecrire_migration_status('depuis',$raz?true:false);}
+
+/**
+ * Finir la migration en renommant le fichier de status avec un .finished.txt en extension
+ * @param string $direction
+ * @return bool
+ */
+function finir_migration_status($direction){
+	if (!in_array($direction,array('depuis','vers')))
+		return false;
+	$meta = 'migration_'.$direction.'_status';
+	$fileo = _DIR_TMP.$meta.".txt";
+	$filed = _DIR_TMP.$meta.".finished.txt";
+	if (!file_exists($fileo))
+		return false;
+
+	if (file_exists($filed))
+		spip_unlink($filed);
+
+	rename($fileo,$filed);
+	
+	return file_exists($filed);
+}
+
+/**
+ * Finir la migration depuis
+ * @return bool
+ */
+function finir_migration_status_depuis(){return finir_migration_status('depuis');}
+
+/**
+ * Initialiser la migration depuis
+ * @param bool $raz
+ * @return void
+ */
+function initialiser_migration_depuis($raz = false){
+	ecrire_migration_status('depuis',$raz?true:false);
+	// conserveur le copieur tant qu'il est encore temps
+	// car apres les hits sont anonymes et ne permettent plus de le faire
+	include_spip('base/dump');
+	base_conserver_copieur();
+}
+
+/**
+ * Mise a jour du status migration
+ * @param array $status
+ * @return void
+ */
 function update_migration_depuis($status){
 	// mettre a jour le timestamp pour la continuite
 	$status['timestamp'] = time();
 	ecrire_migration_status('depuis',$status);
 }
+
+/**
+ * Initialiser la migration vers
+ * @param string $url
+ * @param string $key
+ * @param array $quoi
+ * @return void
+ */
 function initialiser_migration_vers($url,$key,$quoi=array('base','fichiers','squelettes')){
 	ecrire_migration_status('vers',
 		array(
@@ -75,6 +153,25 @@ function initialiser_migration_vers($url,$key,$quoi=array('base','fichiers','squ
 			'quoi'=>$quoi
 		)
 	);
+}
+
+/**
+ * Abandon de la migration sur erreur ou demande d'abandon
+ * @param array $status
+ * @return array
+ */
+function abandonner_migration_depuis($status=null){
+	if (is_null($status))
+		$status = lire_migration_depuis_status();
+	$status['status'] = 'aborted';
+	if (migration_restore_base_si_possible())
+		$status['status'] = 'basereverted';
+	else {
+		include_spip('base/dump');
+		base_detruire_copieur_si_besoin();
+	}
+	update_migration_depuis($status);
+	return $status;
 }
 
 

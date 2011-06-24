@@ -132,6 +132,14 @@ function formulaires_assistant_migration_verifier_3_dist(){
 
 
 function formulaires_assistant_migration_traiter_dist(){
+	// en cas d'abandon sur une migration "depuis", annuler
+	if (_request('cancel') AND _request('direction')=='depuis'){
+		include_spip('inc/migration');
+		$status = abandonner_migration_depuis();
+		finir_migration_status_depuis();
+		return array('message_erreur'=>_T('migration:titre_abandon_migration'),'redirect'=>generer_url_ecrire('migrer_depuis_fin'));
+	}
+
 	$s = lire_migration_vers_status();
 	include_spip('base/dump');
 	$status_file = base_dump_meta_name(substr(md5($s['target']),0,8));
