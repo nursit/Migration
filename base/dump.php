@@ -302,7 +302,7 @@ function base_vider_tables_destination_copie($tables, $exclure_tables = array(),
 	  AND in_array('spip_auteurs',$tables)
 	  AND !in_array('spip_auteurs',$exclure_tables)) {
 		base_conserver_copieur(true, $serveur);
-		sql_delete("spip_auteurs", "id_auteur!=0",$serveur);
+		sql_delete("spip_auteurs", "id_auteur>0",$serveur);
 	}
 }
 
