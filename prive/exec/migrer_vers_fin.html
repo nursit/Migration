@@ -1,5 +1,7 @@
 #SET{status,#REM|lire_migration_vers_status}
-[(#GET{status}|table_valeur{status}|=={abort}|oui)
+
+#SET{echec,#GET{status}|table_valeur{status}|=={abort}|ou{#GET{status}|table_valeur{distant}|non}|ou{#GET**{status}|table_valeur{debug}|=={FAIL}}}
+[(#GET{echec}|oui)
 <h1><:migration:titre_echec_migration:></h1>
 <div class="error">
 	<p>
@@ -9,7 +11,7 @@
 	[(#GET**{status}|table_valeur{debug})]
 </div>
 ]
-[(#GET{status}|table_valeur{status}|=={abort}|non)
+[(#GET{echec}|non)
 <h1><:migration:titre_fin_migration:></h1>
 ]
 [
@@ -25,7 +27,7 @@
 </div>
 ]
 
-[(#GET{status}|table_valeur{status}|=={abort}|non)
+[(#GET{echec}|non)
 <div class="success">
 	<p><:migration:resultat_succes_migration_vers:></p>
 	[(#GET{status}|table_valeur{distant}|table_valeur{progress}|table_valeur{tables}|oui)
