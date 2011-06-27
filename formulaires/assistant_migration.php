@@ -78,8 +78,10 @@ function formulaires_assistant_migration_verifier_2_dist(){
 	// initialiser la cle de migration si on importe depuis un autre site
 	elseif ($direction=='depuis') {
 		if (verifier_auth_depuis()){
-			initialiser_migration_depuis();
-			migration_backup_base_si_possible();
+			if (!_request('canceldepuis')){
+				initialiser_migration_depuis();
+				migration_backup_base_si_possible();
+			}
 		}
 		else {
 			// hack ?
