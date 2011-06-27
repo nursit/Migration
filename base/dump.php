@@ -314,17 +314,15 @@ function base_vider_tables_destination_copie($tables, $exclure_tables = array(),
  */
 function base_conserver_copieur($move = true,$serveur=''){
 	// s'asurer qu'on a pas deja fait la manip !
-	if ($GLOBALS['visiteur_session']['id_auteur']>0 AND sql_countsel("spip_auteurs", "id_auteur<>0")) {
-		spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
-		sql_delete("spip_auteurs", "id_auteur=0",$serveur);
+	if ($GLOBALS['visiteur_session']['id_auteur']>0 AND sql_countsel("spip_auteurs", "id_auteur>0")) {
+		spip_log('Conserver copieur '.$GLOBALS['visiteur_statut']['id_auteur'] . " dans id_auteur=".$GLOBALS['visiteur_statut']['id_auteur']." pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
+		sql_delete("spip_auteurs", "id_auteur<0",$serveur);
 		if ($move){
-			// utiliser le champ webmestre pour stocker l'ancien id ne marchera pas si l'id comporte plus de 3 chiffres...
-			sql_updateq('spip_auteurs', array('id_auteur'=>0, 'webmestre'=>$GLOBALS['visiteur_session']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_session']['id_auteur']),array(),$serveur);
+			sql_updateq('spip_auteurs', array('id_auteur'=>-$GLOBALS['visiteur_session']['id_auteur']), "id_auteur=".intval($GLOBALS['visiteur_session']['id_auteur']),array(),$serveur);
 		}
 		else {
 			$row = sql_fetsel('*','spip_auteurs','id_auteur='.$GLOBALS['visiteur_session']['id_auteur'],'','','','',$serveur);
-			$row['id_auteur'] = 0;
-			$row['webmestre'] = $GLOBALS['visiteur_session']['id_auteur'];
+			$row['id_auteur'] = -$GLOBALS['visiteur_session']['id_auteur'];
 			sql_insertq('spip_auteurs',$row,array(),$serveur);
 		}
 	}
@@ -345,13 +343,13 @@ function base_detruire_copieur_si_besoin($serveur='')
 {
 	// rien a faire si ce n'est pas le serveur principal !
 	if ($serveur=='') {
-		if (sql_countsel("spip_auteurs", "id_auteur<>0")) {
-			spip_log("Detruire copieur id_auteur=0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
-			sql_delete("spip_auteurs", "id_auteur=0", $serveur);
+		if (sql_countsel("spip_auteurs", "id_auteur>0")) {
+			spip_log("Detruire copieur id_auteur<0 pour le serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
+			sql_delete("spip_auteurs", "id_auteur<0", $serveur);
 		}
 		else {
-			spip_log( "Restaurer copieur id_auteur=0 pour le serveur '$serveur' (aucun autre auteur en base)",'dump.'._LOG_INFO_IMPORTANTE);
-			sql_update('spip_auteurs', array('id_auteur'=>'webmestre', 'webmestre'=>"'oui'"), "id_auteur=0");
+			spip_log( "Restaurer copieur id_auteur<0 pour le serveur '$serveur' (aucun autre auteur en base)",'dump.'._LOG_INFO_IMPORTANTE);
+			sql_update('spip_auteurs', array('id_auteur'=>'-id_auteur'), "id_auteur<0");
 		}
 	}
 }
