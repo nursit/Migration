@@ -102,9 +102,19 @@ function formulaires_assistant_migration_verifier_3_dist(){
 
 	$erreurs = array();
 	if (_request('direction')=='depuis'){
-		$s = lire_migration_depuis_status();
-		if ($s AND $s['status']!=='ended')
-			$erreurs['waiting'] = ' ';
+		// en cas d'abandon sur une migration "depuis", annuler
+		if (_request('canceldepuis')){
+			include_spip('inc/migration');
+			$status = abandonner_migration_depuis();
+			finir_migration_status_depuis();
+			include_spip('inc/headers');
+			$erreurs['message_erreur'] = _T('migration:titre_abandon_migration') . redirige_formulaire(generer_url_ecrire('migrer_depuis_fin'));
+		}
+		else {
+			$s = lire_migration_depuis_status();
+			if ($s AND $s['status']!=='ended')
+				$erreurs['waiting'] = ' ';
+		}
 	}
 	else {
 		foreach(array('url_cible') as $obli)
@@ -132,13 +142,6 @@ function formulaires_assistant_migration_verifier_3_dist(){
 
 
 function formulaires_assistant_migration_traiter_dist(){
-	// en cas d'abandon sur une migration "depuis", annuler
-	if (_request('cancel') AND _request('direction')=='depuis'){
-		include_spip('inc/migration');
-		$status = abandonner_migration_depuis();
-		finir_migration_status_depuis();
-		return array('message_erreur'=>_T('migration:titre_abandon_migration'),'redirect'=>generer_url_ecrire('migrer_depuis_fin'));
-	}
 
 	$s = lire_migration_vers_status();
 	include_spip('base/dump');

@@ -162,10 +162,7 @@ function abandonner_migration_depuis($status=null){
 	$status['status'] = 'aborted';
 	if (migration_restore_base_si_possible())
 		$status['status'] = 'basereverted';
-	else {
-		include_spip('base/dump');
-		base_detruire_copieur_si_besoin();
-	}
+
 	update_migration_depuis($status);
 	return $status;
 }
@@ -309,15 +306,13 @@ function migration_xor($message, $key){
 /**
  * Si le site local est sqlite, faisons une copie de la base
  * avant la migration, ca peut toujours servir
+ * ainsi qu'une copie de l'auteur connecte, et on lui change sa session a la volee
+ * pour qu'il ne perde pas la connexion
  * 
  * @return bool
  */
 function migration_backup_base_si_possible(){
-	// conserveur le copieur tant qu'il est encore temps
-	// car apres les hits sont anonymes et ne permettent plus de le faire
-	include_spip('base/dump');
-	base_conserver_copieur(false);
-
+	$res = false;
 	// si jamais la base est sqlite, faire une copie de backup
 	// au cas ou le transfert foire
 	include_spip('base/abstract_sql');
@@ -331,11 +326,25 @@ function migration_backup_base_si_possible(){
 				$s['backup'] = $g;
 				ecrire_migration_status('depuis',$s);
 				spip_log("base $f copiee dans $g avant migration",'migration');
-				return true;
+				$res = true;
 			}
 		}
 	}
-	return false;
+
+	// conserveur le copieur tant qu'il est encore temps
+	// car apres les hits sont anonymes et ne permettent plus de le faire
+	include_spip('base/dump');
+	if ($GLOBALS['visiteur_session']['id_auteur']>0){
+		$id_old = $GLOBALS['visiteur_session']['id_auteur'];
+		base_conserver_copieur();
+		$auteur = sql_fetsel('*','spip_auteurs','id_auteur='.intval(-$id_old));
+		$session = charger_fonction('session','inc');
+		$session($auteur); // creer la nouvelle session avec -id_auteur
+		$session(); // la charger dans $GLOBALS['visiteur_session']
+		$session($id_old); // supprimer l'ancinne session
+	}
+
+	return $res;
 }
 
 /**
@@ -345,6 +354,8 @@ function migration_backup_base_si_possible(){
  * @return bool
  */
 function migration_restore_base_si_possible(){
+	$res = false;
+
 	spip_log("tentative de restauration de la base",'migration');
 	// si jamais la base est sqlite, et qu'on a un backup
 	// le restaurer
@@ -359,11 +370,24 @@ function migration_restore_base_si_possible(){
 				AND @file_exists(_DIR_DB.$g)){
 				spip_log("base $g restauree dans $f suite a l'echec de la migration",'migration');
 				@copy(_DIR_DB.$g,$f);
-				return true;
+				$res = true;
 			}
 		}
 	}
-	return false;
+
+	// securite, dans tous les cas
+	sql_update('spip_auteurs', array('id_auteur'=>'-id_auteur'), "id_auteur<0");
+
+	if ($GLOBALS['visiteur_session']['id_auteur']<0){
+		$id_old = $GLOBALS['visiteur_session']['id_auteur'];
+		$auteur = sql_fetsel('*','spip_auteurs','id_auteur='.intval(-$id_old));
+		$session = charger_fonction('session','inc');
+		$session($auteur); // creer la nouvelle session avec -id_auteur
+		$session(); // la charger dans $GLOBALS['visiteur_session']
+		$session($id_old); // supprimer l'ancienne session
+	}
+
+	return $res;
 }
 
 /**

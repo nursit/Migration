@@ -6,7 +6,7 @@
 	<h4 style='padding:10px;'>Etape #ENV{_etape}/#ENV{_etapes}</h4>
 	[<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
 	[<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
-	[(#ENV{editable})
+	[(#ENV{editable}|et{#ENV*{message_erreur}|non})
 	<form method='post' action='#ENV{action}' enctype='multipart/form-data'><div>
 		[(#REM) declarer les hidden qui declencheront le service du formulaire
 		parametre : url d'action ]
@@ -27,7 +27,7 @@
 
 		<!--extra-->
 	  <p class='boutons'>
-			<input type='submit' class='submit' name='cancel' value='<:bouton_annuler:>' />
+			<input type='submit' class='submit' name='canceldepuis' value='<:bouton_annuler:>' />
 		</p>
 	</div></form>
 	]
