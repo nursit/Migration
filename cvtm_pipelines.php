@@ -120,7 +120,7 @@ function migration_formulaire_charger($flux){
 	#var_dump($flux['data']['_etapes']);
 	if (isset($flux['data']['_etapes'])){
 		$form = $flux['args']['form'];
-		$je_suis_poste = $flux['args']['je_suis_poste'];
+		$je_suis_poste = (isset($flux['args']['je_suis_poste'])?$flux['args']['je_suis_poste']:true);
 		$nb_etapes = $flux['data']['_etapes'];
 		$etape = _request('_etape');
 		$etape = min(max($etape,1),$nb_etapes);
