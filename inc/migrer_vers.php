@@ -46,8 +46,8 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 				$titre = _T('migration:titre_migration_en_cours_squelettes') . " (".array_sum(array_map('count',$status['squelettes'])).") ";
 				break;
 		}
-		$balise_img = chercher_filtre('balise_img');
-		$titre .= $balise_img(chemin_image('searching.gif'));
+
+		$titre .= "<img src=\"".chemin_image('searching.gif')."\" />";
 		echo ( install_debut_html($titre));
 		// script de rechargement auto sur timeout
 		echo http_script("window.setTimeout('location.href=\"".$redirect."\";',".($timeout*1000).")");
