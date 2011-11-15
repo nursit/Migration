@@ -31,13 +31,13 @@ function action_migration_envoi_dist($action, $data=''){
 		return migration_envoi_fail('echec de l\'encodage');
 	}
 
-	include_spip('inc/distant');
+	include_spip('inc/migration_distant');
 	// eviter une detection de boundary en la passant directement
 	$boundary = substr(md5(rand().'spip'), 0, 8);
-	$result = recuperer_page($s['target'],false,false,null,array('action'=>'migration_reception','data'=>$data),$boundary);
+	$result = migration_recuperer_page($s['target'],false,false,null,array('action'=>'migration_reception','data'=>$data),$boundary, true);
 
 	$result = trim($result);
-	spip_log("envoi : action $action resultat ".$result,'migration');
+	spip_log("envoi : action $action resultat =|".$result.'|=','migration');
 
 	$GLOBALS['debug_migration'] = $result;
 	if ($result==='FAIL')
