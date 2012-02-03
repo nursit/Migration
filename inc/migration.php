@@ -400,14 +400,27 @@ function migration_restore_base_si_possible(){
  * @return bool
  */
 function migration_type_fichier_autorise($file, $strict=true){
+	global $tables_images, $tables_sequences, $tables_documents, $tables_mime
+	if (!$GLOBALS['tables_mime']){
+		include_spip('base/typedoc');
+	}
+
 	// pas de bras, pas de chocolat
 	if (!preg_match(',\.([a-z0-9]+)$,i', $file, $rext))
 		return false;
 
 	$extension = strtolower($rext[1]);
 
+
 	// type autorise dans les documents de SPIP ? ok
-	if (sql_fetsel("extension", "spip_types_documents", "extension=" . sql_quote($extension)))
+	// on n'utilise pas la base dont l'etat est ici incertain
+	#if (sql_fetsel("extension", "spip_types_documents", "extension=" . sql_quote($extension)))
+	#	return $extension;
+	// mais la globale
+	if (isset($GLOBALS['tables_mime'][$extension])
+	  OR isset($GLOBALS['tables_images'][$extension])
+		OR isset($GLOBALS['tables_sequences'][$extension])
+		OR isset($GLOBALS['tables_documents'][$extension]))
 		return $extension;
 
 	// type supplementaire utilise et autorise dans les squelettes
