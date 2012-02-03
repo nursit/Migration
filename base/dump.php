@@ -450,7 +450,7 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
  *   param array $desc_tables_dest
  *     description des tables de destination a utiliser de preference a la description de la table source
  *   param int data_pool
- *     nombre de lignes de la table a envoyer d'un coup en insertion dans la table cible (par defaut 1)
+ *     nombre de ko de donnees a envoyer d'un coup en insertion dans la table cible (par defaut 1)
  *     permet des envois groupes pour plus de rapidite, notamment si l'insertion est distante
  *
  * @return bool
@@ -465,7 +465,7 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	$fonction_base_inserer = isset($options['fonction_base_inserer'])?$options['fonction_base_inserer']:'inserer_copie';
 	$desc_tables_dest = isset($options['desc_tables_dest'])?$options['desc_tables_dest']:array();
 	$racine_fonctions = (isset($options['racine_fonctions_dest'])?$options['racine_fonctions_dest']:'base');
-	$data_pool = (isset($options['data_pool'])?$options['data_pool']:50);
+	$data_pool = (isset($options['data_pool'])?$options['data_pool']:50*1024);
 
 	spip_log( "Copier ".count($tables)." tables de '$serveur_source' vers '$serveur_dest'",'dump.'._LOG_INFO_IMPORTANTE);
 
@@ -542,10 +542,12 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 						$rows = array($row);
 						// lire un groupe de donnees si demande en option
 						// (permet un envoi par lot vers la destination)
-						if ($data_pool>1){
-							$i = $data_pool-1;
-							while ($i-- AND $row = sql_fetch($res,$serveur_source))
+						if ($data_pool>0){
+							$s = strlen(serialize($row));
+							while ($s<$data_pool AND $row = sql_fetch($res,$serveur_source)){
+								$s += strlen(serialize($row));
 								$rows[]= $row;
+							}
 						}
 						// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 						// mais si ca renvoie false c'est une erreur fatale => abandon

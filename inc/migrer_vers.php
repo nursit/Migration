@@ -75,7 +75,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 					'no_erase_dest' => lister_tables_noerase(),
 					'where' => $status['where']?$status['where']:array(),
 					'racine_fonctions_dest' =>'migration/envoi',
-					'data_pool' => 200,
+					'data_pool' => 200*1024,
 				);
 				$res = base_copier_tables($status_file, $status['tables'], '', '', $options);
 				if ($res) {
@@ -96,7 +96,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 					'callback_progression' => 'migrer_vers_afficher_progres',
 					'max_time' => $max_time,
 					'racine_fonctions_dest' =>'migration/envoi',
-					'data_pool' => 100*1024,
+					'data_pool' => 200*1024,
 				);
 				$res = base_copier_files($status_file, $status['files'],_DIR_IMG,_DIR_IMG, $options);
 				if ($res) {
@@ -110,7 +110,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 					'callback_progression' => 'migrer_vers_afficher_progres',
 					'max_time' => $max_time,
 					'racine_fonctions_dest' =>'migration/envoi',
-					'data_pool' => 100*1024,
+					'data_pool' => 200*1024,
 					'etape_suivante' => 'squelettescopie',
 				);
 				$res = true;
