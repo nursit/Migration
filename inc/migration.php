@@ -400,7 +400,6 @@ function migration_restore_base_si_possible(){
  * @return bool
  */
 function migration_type_fichier_autorise($file, $strict=true){
-	global $tables_images, $tables_sequences, $tables_documents, $tables_mime
 	if (!$GLOBALS['tables_mime']){
 		include_spip('base/typedoc');
 	}
@@ -420,7 +419,8 @@ function migration_type_fichier_autorise($file, $strict=true){
 	if (isset($GLOBALS['tables_mime'][$extension])
 	  OR isset($GLOBALS['tables_images'][$extension])
 		OR isset($GLOBALS['tables_sequences'][$extension])
-		OR isset($GLOBALS['tables_documents'][$extension]))
+		OR isset($GLOBALS['tables_documents'][$extension])
+		)
 		return $extension;
 
 	// type supplementaire utilise et autorise dans les squelettes
