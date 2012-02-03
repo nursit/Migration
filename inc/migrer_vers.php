@@ -27,7 +27,11 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		$max_time = time()+$timeout/2;
 
 		include_spip('inc/minipres');
+		@apache_setenv('no-gzip', 1);
 		@ini_set("zlib.output_compression","0"); // pour permettre l'affichage au fur et a mesure
+		@ini_set("output_buffering","off");
+		@ini_set('implicit_flush', 1);
+		@ob_implicit_flush(1);
 
 		switch ($status['etape']){
 			case 'init':
@@ -50,7 +54,8 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		$titre .= "<img src=\"".chemin_image('searching.gif')."\" />";
 		echo ( install_debut_html($titre));
 		// script de rechargement auto sur timeout
-		echo http_script("window.setTimeout('location.href=\"".$redirect."\";',".($timeout*1000).")");
+		echo "<meta http-equiv='Refresh' content='$timeout'>";
+		@flush();
 		echo "<div style='text-align: left'>\n";
 
 		include_spip('inc/migration');
@@ -226,8 +231,15 @@ function migrer_vers_afficher_progres($courant,$total,$table) {
  * @return string
  */
 function migrer_vers_relance($redirect){
+	if (!headers_sent()){
+		include_spip('inc/headers');
+		redirige_par_entete(str_replace('&amp;','&',$redirect), $equiv);
+	}
 	// si Javascript est dispo, anticiper le Time-out
-	return "<script language=\"JavaScript\" type=\"text/javascript\">window.setTimeout('location.href=\"$redirect\";',300);</script>\n";
+	return "<script type='text/javascript'>document.location.replace(\"$redirect\");</script>"
+		. str_repeat(" ", 256)."<pre></pre>"
+		. '<br />'
+		. '<a href="'.quote_amp($redirect).'">'._T('navigateur_pas_redirige')."</a><br />\r\n";
 }
 
 
