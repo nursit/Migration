@@ -411,7 +411,7 @@ function migration_type_fichier_autorise($file, $strict=true){
 		return $extension;
 
 	// type supplementaire utilise et autorise dans les squelettes
-	$allowed = array('js','ttf','otf','eot','svg','woff','ico','vcf');
+	$allowed = array('js','ttf','otf','eot','svg','woff','ico','vcf','less');
 	// php autorise sauf si une constante dit que non
 	if (!defined('_MIGRATION_INTERDIRE_PHP')){
 		$allowed[] = 'php';
