@@ -214,8 +214,10 @@ function migrer_vers_afficher_progres($courant,$total,$table) {
 			$etape++;
 			return;
 		}
-		else
+		else{
+			echo(str_repeat("<span></span>\r\n",256));
 			echo "<br /><strong>".$etape. '. '."$table</strong> ".($courant?" <i>($courant)</i> ":"");
+		}
 		$etape++;
 	}
 	if (is_numeric($total) AND $total>=0)
