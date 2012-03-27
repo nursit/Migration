@@ -3,7 +3,7 @@
 /***************************************************************************\
  *  SPIP, Systeme de publication pour l'internet                           *
  *                                                                         *
- *  Copyright (c) 2001-2011                                                *
+ *  Copyright (c) 2001-2012                                                *
  *  Arnaud Martin, Antoine Pitrou, Philippe Riviere, Emmanuel Saint-James  *
  *                                                                         *
  *  Ce programme est un logiciel libre distribue sous licence GNU/GPL.     *
@@ -57,9 +57,10 @@ function base_dump_dir($meta){
  * @param string $serveur
  * @param array $tables
  * @param array $exclude
+ * @param bool $affiche_vrai_prefixe
  * @return array
  */
-function base_lister_toutes_tables($serveur='', $tables=array(), $exclude = array()) {
+function base_lister_toutes_tables($serveur='', $tables=array(), $exclude = array(),$affiche_vrai_prefixe=false) {
 	spip_connect($serveur);
 	$connexion = $GLOBALS['connexions'][$serveur ? $serveur : 0];
 	$prefixe = $connexion['prefixe'];
@@ -68,8 +69,9 @@ function base_lister_toutes_tables($serveur='', $tables=array(), $exclude = arra
 	$res = $tables;
 	foreach(sql_alltable(null,$serveur) as $t) {
 		if (preg_match($p, $t)) {
-			$t = preg_replace($p, 'spip', $t);
-			if (!in_array($t, $tables) AND !in_array($t, $exclude)) $res[]= $t;
+			$t1 = preg_replace($p, 'spip', $t);
+			if (!in_array($t1, $tables) AND !in_array($t1, $exclude))
+				$res[]= ($affiche_vrai_prefixe?$t:$t1);
 		}
 	}
 	sort($res);
@@ -81,8 +83,11 @@ function base_lister_toutes_tables($serveur='', $tables=array(), $exclude = arra
  * Fabrique la liste a cocher des tables a traiter (copie, delete, sauvegarde)
  *
  * @param string $name
- * @param bool $check
- * @return string
+ * @param array $tables
+ * @param array $exclude
+ * @param array|null $post
+ * @param string $serveur
+ * @return array
  */
 function base_saisie_tables($name, $tables, $exclude = array(), $post=null, $serveur='') {
 	include_spip('inc/filtres');
@@ -132,12 +137,13 @@ function lister_tables_noexport(){
 		#'spip_versions_fragments'
 		);
 
+	$EXPORT_tables_noexport = pipeline('lister_tables_noexport',$EXPORT_tables_noexport);
 	return $EXPORT_tables_noexport;
 }
 
 /**
  * Lister les tables non importables par defaut
- * (liste completable par le pipeline lister_tables_noexport
+ * (liste completable par le pipeline lister_tables_noimport
  *
  * @staticvar array $IMPORT_tables_noimport
  * @return array
@@ -352,6 +358,8 @@ function base_detruire_copieur_si_besoin($serveur='')
 			sql_update('spip_auteurs', array('id_auteur'=>'-id_auteur'), "id_auteur<0");
 		}
 	}
+	else
+		spip_log("Pas de destruction copieur sur serveur '$serveur'",'dump.'._LOG_INFO_IMPORTANTE);
 }
 
 /**
@@ -368,7 +376,7 @@ function base_detruire_copieur_si_besoin($serveur='')
 function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 	$upgrade = false;
 	// si la table existe et qu'on est a l'init, la dropper
-	if ($desc_dest=sql_showtable($table,false,$serveur_dest) AND $init) {
+	if ($desc_dest=sql_showtable($table,true,$serveur_dest) AND $init) {
 		if ($serveur_dest=='' AND in_array($table,array('spip_meta','spip_auteurs'))) {
 			// ne pas dropper auteurs et meta sur le serveur principal
 			// faire un simple upgrade a la place
@@ -379,6 +387,7 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 			if ($table=='spip_meta'){
 				// virer les version base qui vont venir avec l'import
 				sql_delete($table, "nom like '%_base_version'",$serveur_dest);
+				// hum casse la base si pas version_installee a l'import ...
 				sql_delete($table, "nom='version_installee'",$serveur_dest);
 			}
 		}
@@ -607,6 +616,7 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 	else {
 		spip_log( "Fonction '{$racine_fonctions}_detruire_copieur_si_besoin' inconnue.",'dump.'._LOG_INFO_IMPORTANTE);
 	}
+
 	// OK, copie complete
 	return true;
 }
@@ -621,8 +631,19 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
  * @return int/bool
  */
 function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
+
+	// verifier le nombre d'insertion
+	$nb1 = sql_countsel($table);
 	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
-	return sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
+	$r = sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
+	$nb = sql_countsel($table);
+	if ($nb-$nb1<count($rows)){
+		foreach($rows as $row){
+			// si l'enregistrement est deja en base, ca fera un echec ou un doublon
+			$r = sql_insertq($table,$row,$desc_dest,$serveur_dest);
+		}
+	}
+	return $r;
 }
 
 
@@ -716,7 +737,7 @@ function base_copier_files($status_file, $files, $dir_source, $dir_dest, $option
 						if ($n)
 							fseek($h,$n);
 						while ($d=fread($h, $data_pool)){
-							// si l'enregistrement est deja en base, ca fera un echec ou un doublon
+	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 							// mais si ca renvoie false c'est une erreur fatale => abandon
 							if ($fichier_ecrire($file,$d,$dir_dest)===false) {
 								// forcer la sortie, charge a l'appelant de gerer l'echec
