@@ -1,10 +1,11 @@
 <plugin>
 	<nom>Migration</nom>
-	<auteur>[Cedric->http://nursit.net]</auteur>
+	<auteur>[Cedric->http://nursit.com]</auteur>
 	<icon>prive/themes/spip/images/migration-32.png</icon>
 	<version>0.11.6</version>
 	<etat>stable</etat>
 	<description>Assistant de migration d'un site SPIP</description>
+	<lien>http://blog.nursit.net/Le-plugin-migration-pour-SPIP.html</lien>
 	<prefix>migration</prefix>
 	<categorie>outil</categorie>
 
