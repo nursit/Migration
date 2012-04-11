@@ -5,7 +5,7 @@
 	<version>0.11.6</version>
 	<etat>stable</etat>
 	<description>Assistant de migration d'un site SPIP</description>
-	<lien>http://blog.nursit.net/Le-plugin-migration-pour-SPIP.html</lien>
+	<lien>http://www.nursit.com/Le-plugin-migration-pour-SPIP</lien>
 	<prefix>migration</prefix>
 	<categorie>outil</categorie>
 
