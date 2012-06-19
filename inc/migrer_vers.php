@@ -27,7 +27,7 @@ function inc_migrer_vers_dist($status_file, $redirect='') {
 		$max_time = time()+$timeout/2;
 
 		include_spip('inc/minipres');
-		@apache_setenv('no-gzip', 1);
+		//@apache_setenv('no-gzip', 1); // trop agressif, plante sur certains hebergements
 		@ini_set("zlib.output_compression","0"); // pour permettre l'affichage au fur et a mesure
 		@ini_set("output_buffering","off");
 		@ini_set('implicit_flush', 1);
