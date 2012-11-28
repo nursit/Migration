@@ -631,7 +631,6 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
  * @return int/bool
  */
 function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
-
 	// verifier le nombre d'insertion
 	$nb1 = sql_countsel($table);
 	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
@@ -640,7 +639,8 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 	if ($nb-$nb1<count($rows)){
 		foreach($rows as $row){
 			// si l'enregistrement est deja en base, ca fera un echec ou un doublon
-			$r = sql_insertq($table,$row,$desc_dest,$serveur_dest);
+			if ($r2 = sql_insertq($table,$row,$desc_dest,$serveur_dest))
+				$r = $r2;
 		}
 	}
 	return $r;
