@@ -19,7 +19,7 @@ include_spip('inc/migration');
 function migration_reception_end_dist($status, $data){
 
 
-	spip_log('fin de migration. Resultat:'.$data,'migration');
+	spip_log('fin de migration. Resultat:'.var_export($data,1),'migration');
 	$status['status'] = 'end';
 	if ($data['status']=='abort'){
 		$status = abandonner_migration_depuis($status);

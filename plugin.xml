@@ -2,7 +2,7 @@
 	<nom>Migration</nom>
 	<auteur>[Cedric->http://nursit.com]</auteur>
 	<icon>prive/themes/spip/images/migration-32.png</icon>
-	<version>0.11.8</version>
+	<version>0.11.9</version>
 	<etat>stable</etat>
 	<description>Assistant de migration d'un site SPIP</description>
 	<lien>http://www.nursit.com/Le-plugin-migration-pour-SPIP</lien>
