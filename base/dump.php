@@ -594,12 +594,15 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 			}
 		}
 		else {
-			// noter qu'on a fait cette table car sinon provoque un abandon en fin de migration
-			$status['tables_copiees'][$table] = "zero";
-			// noter l'erreur
-			$status['errors'][] = "Impossible de lire la description de la table $table";
-			ecrire_fichier($status_file,serialize($status));
-			spip_log("Impossible de lire la description de la table $table","dump."._LOG_ERREUR);
+			// ne loger l'erreur qu'une seule fois !
+			if (!isset($status['tables_copiees'][$table])){
+				// noter qu'on a fait cette table car sinon provoque un abandon en fin de migration
+				$status['tables_copiees'][$table] = "zero";
+				// noter l'erreur
+				$status['errors'][] = "Impossible de lire la description de la table $table";
+				ecrire_fichier($status_file,serialize($status));
+				spip_log("Impossible de lire la description de la table $table","dump."._LOG_ERREUR);
+			}
 		}
 	}
 
