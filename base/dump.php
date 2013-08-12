@@ -415,6 +415,13 @@ function base_preparer_table_dest($table, $desc, $serveur_dest, $init=false) {
 		}
 		creer_ou_upgrader_table($table, $desc, $autoinc, $upgrade,$serveur_dest);
 		$desc_dest = sql_showtable($table,false,$serveur_dest);
+
+		// si c'est une table de liens ancienne mode il faut aussi vider xx_liens si elle existe
+		// (migration d'un SPIP 2 vers un SPIP 3 peuple)
+		if (preg_match(",^spip_(auteurs|documents|mots)_(\w+)$,",$table,$m)
+		  AND $m[2]!="liens"){
+			base_vider_tables_destination_copie(array("spip_".$m[1]."_liens"),array(),$serveur_dest);
+		}
 	}
 	if (!$desc_dest){
 		spip_log( "Erreur creation '$table' sur serveur '$serveur_dest'".var_export($desc,1),'dump.'._LOG_ERREUR);
