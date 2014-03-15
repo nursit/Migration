@@ -2,9 +2,18 @@
 	<nom>Migration</nom>
 	<auteur>[Cedric->http://nursit.com]</auteur>
 	<icon>prive/themes/spip/images/migration-32.png</icon>
-	<version>0.11.11</version>
+	<version>0.11.12</version>
 	<etat>stable</etat>
-	<description>Assistant de migration d'un site SPIP</description>
+	<slogan>Assistant de migration d'un site SPIP</slogan>
+	<description>
+Le plugin migration permet de recopier facilement d’un site SPIP source vers un site SPIP destination :
+
+-* base de données;
+-* images et documents de IMG/;
+-* dossier squelettes.
+
+Le plugin ne prend pas en charge le transfert des plugins (il faut que les plugins soient disponibles sur le site destination).
+	</description>
 	<lien>http://www.nursit.com/Le-plugin-migration-pour-SPIP</lien>
 	<prefix>migration</prefix>
 	<categorie>outil</categorie>
@@ -22,15 +31,16 @@
 		<inclure>cvtm_pipelines.php</inclure>
 	</pipeline>
 
-	<bouton id='migration2' parent='configuration'>
+	<bouton id="migration2" parent="configuration">
 		<icone>prive/themes/spip/images/migration-24.png</icone>
 		<titre>migration:titre_assistant_migration</titre>
 		<url>configurer_migration</url>
 	</bouton>
-	<bouton id='migration' parent='bando_administration'>
+	<bouton id="migration" parent="bando_administration">
 		<icone>images/migration-16.png</icone>
 		<titre>migration:titre_assistant_migration</titre>
 		<url>configurer_migration</url>
 	</bouton>
+	<necessite id="SPIP" version="[2.0.0;3.0.99]" />
 	<utilise id="dump" version="[;]" />
 </plugin>
