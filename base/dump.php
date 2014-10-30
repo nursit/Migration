@@ -3,7 +3,7 @@
 /***************************************************************************\
  *  SPIP, Systeme de publication pour l'internet                           *
  *                                                                         *
- *  Copyright (c) 2001-2012                                                *
+ *  Copyright (c) 2001-2014                                                *
  *  Arnaud Martin, Antoine Pitrou, Philippe Riviere, Emmanuel Saint-James  *
  *                                                                         *
  *  Ce programme est un logiciel libre distribue sous licence GNU/GPL.     *
@@ -11,10 +11,9 @@
 \***************************************************************************/
 
 /**
- *
  * Fonctions de base pour la sauvegarde
- * Boite a outil commune, sans prejuger de la methode de sauvegarde
  *
+ * Boîte à outil commune, sans préjuger de la méthode de sauvegarde
  */
 
 if (!defined('_ECRIRE_INC_VERSION')) return;
@@ -37,9 +36,30 @@ if (@is_readable(_CACHE_PLUGINS_FCT)){
 	include_once(_CACHE_PLUGINS_FCT);
 }
 
+/**
+ * Retourne un nom de meta pour une rubrique et l'auteur connecté.
+ *
+ * Ce nom servira pour le stockage dans un fichier temporaire des informations
+ * sérialisées sur le statut de l'export.
+ *
+ * @param int $rub
+ * @return string
+ **/
 function base_dump_meta_name($rub){
-	return $meta = "status_dump_{$rub}_"  . $GLOBALS['visiteur_session']['id_auteur'];
+	return $meta = "status_dump_{$rub}_"  . abs($GLOBALS['visiteur_session']['id_auteur']);
 }
+
+/**
+ * Crée un répertoire recevant la sauvegarde de la base de données
+ * et retourne son chemin.
+ *
+ * @note
+ *   Utilisé uniquement dans l'ancienne sauvegarde XML (plugin dump_xml)
+ *   À supprimer ?
+ *
+ * @param string $meta
+ * @return string
+**/
 function base_dump_dir($meta){
 	include_spip('inc/documents');
 	// determine upload va aussi initialiser l'index "restreint"
@@ -76,6 +96,18 @@ function base_lister_toutes_tables($serveur='', $tables=array(), $exclude = arra
 	}
 	sort($res);
 	return $res;
+}
+
+/**
+ * Retrouver le prefixe des tables
+ * @param string $serveur
+ * @return string
+ */
+function base_prefixe_tables($serveur=''){
+	spip_connect($serveur);
+	$connexion = $GLOBALS['connexions'][$serveur ? $serveur : 0];
+	$prefixe = $connexion['prefixe'];
+	return $prefixe;
 }
 
 
@@ -569,8 +601,11 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 						// mais si ca renvoie false c'est une erreur fatale => abandon
 						if ($inserer_copie($table,$rows,$desc_dest,$serveur_dest)===false) {
 							// forcer la sortie, charge a l'appelant de gerer l'echec
+							spip_log("Erreur fatale dans $inserer_copie table $table","dump"._LOG_ERREUR);
+							$status['errors'][] = "Erreur fatale  lors de la copie de la table $table";
+							ecrire_fichier($status_file,serialize($status));
 							// copie finie
-							return true;
+							return "abort";
 						}
 						$status['tables_copiees'][$table]+=count($rows);
 						if ($max_time AND time()>$max_time)
@@ -644,16 +679,24 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
  * @return int/bool
  */
 function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
+
 	// verifier le nombre d'insertion
-	$nb1 = sql_countsel($table);
+	$nb1 = sql_countsel($table,'','','',$serveur_dest);
 	// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 	$r = sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
-	$nb = sql_countsel($table);
+	$nb = sql_countsel($table,'','','',$serveur_dest);
 	if ($nb-$nb1<count($rows)){
+		spip_log("base_inserer_copie : ".($nb-$nb1)." insertions au lieu de ".count($rows).". On retente 1 par 1","dump"._LOG_INFO_IMPORTANTE);
 		foreach($rows as $row){
 			// si l'enregistrement est deja en base, ca fera un echec ou un doublon
-			if ($r2 = sql_insertq($table,$row,$desc_dest,$serveur_dest))
-				$r = $r2;
+			$r = sql_insertq($table,$row,$desc_dest,$serveur_dest);
+		}
+		// on reverifie le total
+		$r = 0;
+		$nb = sql_countsel($table,'','','',$serveur_dest);
+		if ($nb-$nb1<count($rows)){
+			spip_log("base_inserer_copie : ".($nb-$nb1)." insertions au lieu de ".count($rows)." apres insertion 1 par 1","dump"._LOG_ERREUR);
+			$r = false;
 		}
 	}
 	return $r;
