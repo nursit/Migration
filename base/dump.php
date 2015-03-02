@@ -604,8 +604,10 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 							spip_log("Erreur fatale dans $inserer_copie table $table","dump"._LOG_ERREUR);
 							$status['errors'][] = "Erreur fatale  lors de la copie de la table $table";
 							ecrire_fichier($status_file,serialize($status));
-							// copie finie si on est sur spip_meta, abandon sinon (mais trop severe ?)
-							return (($table=="spip_meta")?true:"abort");
+							// abandon si pas sur spip_meta (mais trop severe ?)
+							if ($table!="spip_meta") return "abort";
+							// sur spip_meta on ignore l'erreur car on a deliberement garde des infos en table
+							// ce qui introduit une difference dans le sql_insert pour cause de cles existantes
 						}
 						$status['tables_copiees'][$table]+=count($rows);
 						if ($max_time AND time()>$max_time)
