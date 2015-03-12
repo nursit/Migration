@@ -688,7 +688,7 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 	$r = sql_insertq_multi($table,$rows,$desc_dest,$serveur_dest);
 	$nb = sql_countsel($table,'','','',$serveur_dest);
 	if ($nb-$nb1<count($rows)){
-		spip_log("base_inserer_copie : ".($nb-$nb1)." insertions au lieu de ".count($rows).". On retente 1 par 1","dump"._LOG_INFO_IMPORTANTE);
+		spip_log("base_inserer_copie $table : ".($nb-$nb1)." insertions au lieu de ".count($rows).". On retente 1 par 1","dump"._LOG_INFO_IMPORTANTE);
 		foreach($rows as $row){
 			// si l'enregistrement est deja en base, ca fera un echec ou un doublon
 			$r = sql_insertq($table,$row,$desc_dest,$serveur_dest);
@@ -697,9 +697,12 @@ function base_inserer_copie($table,$rows,$desc_dest,$serveur_dest){
 		$r = 0;
 		$nb = sql_countsel($table,'','','',$serveur_dest);
 		if ($nb-$nb1<count($rows)){
-			spip_log("base_inserer_copie : ".($nb-$nb1)." insertions au lieu de ".count($rows)." apres insertion 1 par 1","dump"._LOG_ERREUR);
+			spip_log("base_inserer_copie $table : ".($nb-$nb1)." insertions au lieu de ".count($rows)." apres insertion 1 par 1","dump"._LOG_ERREUR);
 			$r = false;
 		}
+		// dans le cas de spip_meta on ignore l'erreur de copie
+		if ($r===false AND $table="spip_meta")
+			$r = 0;
 	}
 	return $r;
 }
