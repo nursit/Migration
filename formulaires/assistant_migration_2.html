@@ -13,8 +13,8 @@
 		#ACTION_FORMULAIRE{#ENV{action},#FORM}
 
 		#SET{name,direction}#SET{obli,''}#SET{erreurs,#ENV**{erreurs}|table_valeur{#GET{name}}}
-		<ul>
-			<li class="editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
+		<ul class="editer-groupe">
+			<li class="editer editer_[(#GET{name})][ (#GET{obli})][ (#GET{erreurs}|oui)erreur]">
 				<p>Comment voulez-vous transférer vos données ?</p>[
 				<span class='erreur_message'>(#GET{erreurs})</span>
 				]
