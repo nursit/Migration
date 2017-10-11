@@ -21,7 +21,7 @@
 				#SET{val,depuis}
 				<div class="choix"[(#ENV{_auth_depuis}|?{'',' '})style='visibility:hidden;']>
 					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"]
-					onchange="if (jQuery(this).attr('checked')) jQuery(this).parents('form').find('.editer_quoi').hide('fast');"
+					onchange="if (jQuery(this).prop('checked')) jQuery(this).parents('form').find('.editer_quoi').hide('fast');"
 					[(#ENV{_auth_depuis}|?{'',' '})disabled='disabled']
 					/>
 					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
@@ -30,7 +30,7 @@
 				#SET{val,vers}
 				<div class="choix">
 					<input type="radio" class="radio" name="#GET{name}" id="#GET{name}_#GET{val}" value="#GET{val}"[(#ENV{#GET{name}}|=={#GET{val}}|oui)checked="checked"]
-					onchange="if (jQuery(this).attr('checked')) jQuery(this).parents('form').find('.editer_quoi').show('fast');"
+					onchange="if (jQuery(this).prop('checked')) jQuery(this).parents('form').find('.editer_quoi').show('fast');"
 					/>
 					<label for="#GET{name}_#GET{val}">[(#GET{fl}|concat{':label_',#GET{name},'_',#GET{val}}|_T)]</label>
 					<p><:migration:explications_direction_vers:></p>

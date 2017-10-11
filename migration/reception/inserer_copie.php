@@ -21,6 +21,7 @@ function migration_reception_inserer_copie_dist($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'copier';
+
 	if (!isset($status['compteurs'])) {
 		$status['compteurs'] = array();
 	}
@@ -36,6 +37,7 @@ function migration_reception_inserer_copie_dist($status, $data) {
 	if (!isset($status['progress']['tables'])) {
 		$status['progress']['tables'] = array();
 	}
+
 	$status['compteurs']['table'][$data['table']] += count($data['rows']);
 	$status['progress']['tables'][$data['table']] = $status['compteurs']['table'][$data['table']];
 

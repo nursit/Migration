@@ -420,7 +420,7 @@ function migration_restore_base_si_possible() {
  * @return bool
  */
 function migration_type_fichier_autorise($file, $strict = true) {
-	if (!$GLOBALS['tables_mime']) {
+	if (empty($GLOBALS['tables_mime'])) {
 		include_spip('base/typedoc');
 	}
 
@@ -437,11 +437,12 @@ function migration_type_fichier_autorise($file, $strict = true) {
 	#if (sql_fetsel("extension", "spip_types_documents", "extension=" . sql_quote($extension)))
 	#	return $extension;
 	// mais la globale
-	if (isset($GLOBALS['tables_mime'][$extension])
-	  or isset($GLOBALS['tables_images'][$extension])
+	if (
+		isset($GLOBALS['tables_mime'][$extension])
+		or isset($GLOBALS['tables_images'][$extension])
 		or isset($GLOBALS['tables_sequences'][$extension])
 		or isset($GLOBALS['tables_documents'][$extension])
-		) {
+	) {
 		return $extension;
 	}
 

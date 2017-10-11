@@ -902,7 +902,7 @@ function base_stat_file_dest_dist($file, $size, $md5, $dir_dest, $init) {
  * @return bool
  */
 function base_fichier_ecrire_dist($file, $d, $dir_dest) {
-	if ($h = fopen($f = $dir_dest.$file, 'ab')) {
+	if ($h = @fopen($f = $dir_dest.$file, 'ab')) {
 		fwrite($h, $d);
 		fclose($h);
 		return @filesize($f);
