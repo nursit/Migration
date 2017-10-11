@@ -67,7 +67,8 @@ function migration_recuperer_page(
 
 	if ($taille_max == 0) {
 		$get = 'HEAD';
-	} else { $get = 'GET';
+	} else {
+		$get = 'GET';
 	}
 
 	if (!empty($datas)) {
@@ -84,7 +85,8 @@ function migration_recuperer_page(
 		if (is_array($url)) {
 			list($headers, $result) = $url;
 			return ($get_headers ? $headers."\n" : '').$result;
-		} else { spip_log("recuperer page recommence sur $url");
+		} else {
+			spip_log("recuperer page recommence sur $url");
 		}
 	}
 }
@@ -126,7 +128,8 @@ function migration_recuperer_lapage($url, $trans = false, $get = 'GET', $taille_
 				return false;
 			} elseif ($result = @file_get_contents($url)) {
 				return array('', $result);
-			} else { return false;
+			} else {
+				return false;
 			}
 		}
 		if (!is_array($headers)) { // cas Location
@@ -182,7 +185,8 @@ function migration_recuperer_body($f, $taille_max = 1048576, $fichier = '') {
 		if ($fp) {
 			fwrite($fp, $res);
 			$result = $taille;
-		} else { 			$result .= $res;
+		} else {
+			$result .= $res;
 		}
 	}
 	if ($fp) {
@@ -269,7 +273,8 @@ $noproxy = $scheme.'://';
 			$f = @fopen($url, 'rb');
 			spip_log("connexion vers $url par simple fopen");
 			$fopen = true;
-		} else { $f = false;// echec total
+		} else {
+			$f = false;// echec total
 		}
 	}
 
@@ -295,7 +300,8 @@ function migration_lance_requete($method, $scheme, $user, $host, $path, $port, $
 		if ($t2['user']) {
 			$proxy_user = base64_encode($t2['user'] . ':' . $t2['pass']);
 		}
-	} else { $first_host = $noproxy.$host;
+	} else {
+		$first_host = $noproxy.$host;
 	}
 
 	$f = @fsockopen($first_host, $port);

@@ -238,7 +238,8 @@ function migration_afficher_status_files($files) {
 	foreach ($files as $f => $size) {
 		if (is_numeric($size)) {
 			$s[] = _T('migration:status_nom_fichier', array('fichier'=>$f)).taille_en_octets($size);
-		} else { $s[] = _T('migration:status_nom_fichier_refuse', array('fichier'=>$f));
+		} else {
+			$s[] = _T('migration:status_nom_fichier_refuse', array('fichier'=>$f));
 		}
 	}
 	return implode('<br />', $s);
@@ -256,7 +257,8 @@ function migration_afficher_status_files($files) {
 function migration_signer_data($action, $key) {
 	if (function_exists('sha1')) {
 		return sha1($action . $key);
-	} else { return md5($action . $key);
+	} else {
+		return md5($action . $key);
 	}
 }
 
@@ -500,7 +502,8 @@ function migration_determiner_dossier_squelette() {
 		}
 		if (is_dir($s)) {
 			$skels[$k] = rtrim($s, '/').'/';
-		} else { unset($skels[$k]);
+		} else {
+			unset($skels[$k]);
 		}
 	}
 	return count($skels)?implode(':', $skels):'';

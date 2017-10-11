@@ -230,7 +230,8 @@ function migrer_vers_afficher_progres($courant, $total, $table) {
 	}
 	if (is_numeric($total) and $total>=0) {
 		echo '. ';
-	} else { echo '('. (-intval($total)).')';
+	} else {
+		echo '('. (-intval($total)).')';
 	}
 	flush();
 }

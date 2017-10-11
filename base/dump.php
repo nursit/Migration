@@ -131,7 +131,8 @@ function base_saisie_tables($name, $tables, $exclude = array(), $post = null, $s
 		if (is_null($post)) {
 			$check = (in_array($t, $exclude)?false:true);
 		} // mais si on a poste une selection, la reprendre
-		else { 			$check = in_array($t, $post);
+		else {
+			$check = in_array($t, $post);
 		}
 
 		$res[$k] = "<input type='checkbox' value='$t' name='$name"
@@ -398,7 +399,8 @@ function base_detruire_copieur_si_besoin($serveur = '') {
 			spip_log("Restaurer copieur id_auteur<0 pour le serveur '$serveur' (aucun autre auteur en base)", 'dump.'._LOG_INFO_IMPORTANTE);
 			sql_update('spip_auteurs', array('id_auteur'=>'-id_auteur'), 'id_auteur<0');
 		}
-	} else { 		spip_log("Pas de destruction copieur sur serveur '$serveur'", 'dump.'._LOG_INFO_IMPORTANTE);
+	} else {
+		spip_log("Pas de destruction copieur sur serveur '$serveur'", 'dump.'._LOG_INFO_IMPORTANTE);
 	}
 }
 
@@ -616,7 +618,8 @@ function base_copier_tables($status_file, $tables, $serveur_source, $serveur_des
 							$status['errors'][] = "Erreur fatale  lors de la copie de la table $table";
 							ecrire_fichier($status_file, serialize($status));
 							// abandon si pas sur spip_meta (mais trop severe ?)
-							if ($table!='spip_meta') { return 'abort';
+							if ($table!='spip_meta') {
+								return 'abort';
 							}
 							// sur spip_meta on ignore l'erreur car on a deliberement garde des infos en table
 							// ce qui introduit une difference dans le sql_insert pour cause de cles existantes

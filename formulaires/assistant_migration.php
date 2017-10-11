@@ -162,6 +162,7 @@ function formulaires_assistant_migration_traiter_dist() {
 		include_spip('inc/actions');
 		$redirect = generer_action_auteur('migrer_vers', $status_file);
 		return array('message_ok'=>_T('migration:message_connexion_ok'),'redirect'=>$redirect);
-	} else { 		return array('message_erreur'=>$res);
+	} else {
+		return array('message_erreur'=>$res);
 	}
 }

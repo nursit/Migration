@@ -42,7 +42,8 @@ function action_migration_envoi_dist($action, $data = '') {
 	$GLOBALS['debug_migration'] = $result;
 	if ($result==='FAIL') {
 		return false;
-	} else { return unserialize($result);
+	} else {
+		return unserialize($result);
 	}
 }
 
