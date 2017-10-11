@@ -14,7 +14,7 @@ include_spip('inc/migration');
  *
  * @return bool
  */
-function migration_reception_connect_dist($status, $data){
+function migration_reception_connect_dist($status, $data) {
 
 	// inutile de checker une data :
 	// si on est arrive jusque la c'est que la connexion marche
@@ -25,7 +25,7 @@ function migration_reception_connect_dist($status, $data){
 	// verifier que la version du site distant est acceptable
 	// si la version de la base distante est superieure a la version actuelle
 	// on ne saura pas gerer
-	if (!isset($data['spip_version_base']) OR $data['spip_version_base']>$GLOBALS['spip_version_base']){
+	if (!isset($data['spip_version_base']) or $data['spip_version_base']>$GLOBALS['spip_version_base']) {
 		return 'migration:erreur_echec_connexion_version';
 	}
 

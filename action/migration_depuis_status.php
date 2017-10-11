@@ -9,37 +9,36 @@
 include_spip('inc/migration');
 include_spip('inc/actions');
 
-function action_migration_depuis_status_dist(){
+function action_migration_depuis_status_dist() {
 	#$securiser_action = charger_fonction('securiser_action','inc');
 	#$securiser_action();
 
 	$s = lire_migration_depuis_status();
 	// verifier qu'un verrou n'etait pas sur le fichier
 	// et qu'on arrive pas a le lire en attendant un peu
-	if (!$s){
+	if (!$s) {
 		usleep(333);
 		$s = lire_migration_depuis_status();
 	}
 	// verifier qu'un verrou n'etait pas sur le fichier
 	// et qu'on arrive pas a le lire en attendant un peu
-	if (!$s){
+	if (!$s) {
 		usleep(333);
 		$s = lire_migration_depuis_status();
 	}
 
 
 	// peut etre on a fini ?
-	if (!$s){
+	if (!$s) {
 		$s = lire_migration_depuis_status(true);
 	}
 
-	if (!$s)
+	if (!$s) {
 		ajax_retour("Echec : le site distant n'a pas réussi à se connecter, la migration a été abandonnée.");
-	else{
-		if ($s['key']!=_request('key')){
+	} else {
+		if ($s['key']!=_request('key')) {
 			ajax_retour("La clé de migration n'est plus valable, recommmencez la migration");
-		}
-		else {
+		} else {
 			ajax_retour(migration_afficher_status($s));
 		}
 	}

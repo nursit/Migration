@@ -15,13 +15,13 @@ include_spip('inc/migration');
  * @param array $tables
  * @param string $serveur
  */
-function migration_reception_vider_tables_destination_copie($status, $data){
+function migration_reception_vider_tables_destination_copie($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'vider';
 
-	$status['progress']['vider'] = "X Suppression des tables";
-	base_vider_tables_destination_copie($data['tables'],$data['exlure_tables'],'');
+	$status['progress']['vider'] = 'X Suppression des tables';
+	base_vider_tables_destination_copie($data['tables'], $data['exlure_tables'], '');
 	update_migration_depuis($status);
 	return true;
 }

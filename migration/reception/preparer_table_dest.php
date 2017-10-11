@@ -24,10 +24,11 @@ function migration_reception_preparer_table_dest_dist($status, $data) {
 
 	$status['status'] = 'preparer';
 	// initialiser le compteur de progression
-	if (!isset($status['progress']['tables'][$data['table']]))
+	if (!isset($status['progress']['tables'][$data['table']])) {
 		$status['progress']['tables'][$data['table']] = '0';
+	}
 
-	$res = base_preparer_table_dest($data['table'],$data['desc'],'',$data['init']);
+	$res = base_preparer_table_dest($data['table'], $data['desc'], '', $data['init']);
 	update_migration_depuis($status);
 	return $res;
 }

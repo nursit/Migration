@@ -14,9 +14,9 @@ include_spip('inc/migration');
  *
  * @return bool
  */
-function migration_envoi_connect_dist($url_site_source){
+function migration_envoi_connect_dist($url_site_source) {
 
-	$migration_envoi = charger_fonction('migration_envoi','action');
+	$migration_envoi = charger_fonction('migration_envoi', 'action');
 	$res = $migration_envoi('connect',
 			array(
 				'url_site_source'=>$url_site_source,

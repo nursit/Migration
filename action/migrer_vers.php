@@ -10,7 +10,8 @@
  *  Pour plus de details voir le fichier COPYING.txt ou l'aide en ligne.   *
 \***************************************************************************/
 
-if (!defined("_ECRIRE_INC_VERSION")) return;
+if (!defined('_ECRIRE_INC_VERSION')) { return;
+}
 
 /**
  *
@@ -31,32 +32,30 @@ include_spip('inc/migrer_vers');
  *
  * @param string $arg
  */
-function action_migrer_vers_dist($arg=null){
+function action_migrer_vers_dist($arg = null) {
 	if (!$arg) {
 		$securiser_action = charger_fonction('securiser_action', 'inc');
 		$arg = $securiser_action();
 	}
 
 	$status_file = $arg;
-	$redirect = parametre_url(generer_action_auteur('migrer_vers',$status_file),"step",intval(_request('step')+1),'&');
+	$redirect = parametre_url(generer_action_auteur('migrer_vers', $status_file), 'step', intval(_request('step')+1), '&');
 
 	// lancer la migration qui va se relancer jusqu'a sa fin
 	$migrer_vers = charger_fonction('migrer_vers', 'inc');
 	utiliser_langue_visiteur();
 	// quand on sort de $export avec true c'est qu'on a fini
-	if ($migrer_vers($status_file,$redirect)) {
-		migrer_vers_end($status_file,'migrer_vers');
+	if ($migrer_vers($status_file, $redirect)) {
+		migrer_vers_end($status_file, 'migrer_vers');
 		include_spip('inc/headers');
-		echo redirige_formulaire(generer_url_ecrire("migrer_vers_fin",'status='.$status_file,'',true, true));
+		echo redirige_formulaire(generer_url_ecrire('migrer_vers_fin', 'status='.$status_file, '', true, true));
 	}
 
 	// forcer l'envoi du buffer par tous les moyens !
-	echo(str_repeat("<br />\r\n",256));
-	while (@ob_get_level()){
+	echo(str_repeat("<br />\r\n", 256));
+	while (@ob_get_level()) {
 		@ob_flush();
 		@flush();
 		@ob_end_flush();
 	}
 }
-
-?>

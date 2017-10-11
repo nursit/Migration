@@ -8,12 +8,12 @@
  */
 include_spip('inc/migration');
 
-function formulaires_assistant_migration_charger_dist(){
+function formulaires_assistant_migration_charger_dist() {
 
 	if ($squelette = migration_determiner_dossier_squelette()) {
-		$squelette = explode(':',$squelette);
-		$squelette = array_map('joli_repertoire',$squelette);
-		$squelette = implode(', ',$squelette);
+		$squelette = explode(':', $squelette);
+		$squelette = array_map('joli_repertoire', $squelette);
+		$squelette = implode(', ', $squelette);
 	}
 
 	$valeurs = array(
@@ -29,111 +29,109 @@ function formulaires_assistant_migration_charger_dist(){
 		'_dir_skel' => $squelette,
 	);
 
-	if (_request('direction')=='depuis'){
+	if (_request('direction')=='depuis') {
 		$valeurs['_depuis_status'] = lire_migration_depuis_status();
-	}
-	else {
+	} else {
 		initialiser_migration_depuis(true);
 	}
 
 	return $valeurs;
 }
 
-function verifier_auth_depuis(){
+function verifier_auth_depuis() {
 	// verifier la version de SPIP pour autoriser la migration depuis un autre
 	// reserve a SPIP>= 2.1.x
 	$_auth_depuis = false;
-	if (!isset($GLOBALS['spip_version_branche']))
+	if (!isset($GLOBALS['spip_version_branche'])) {
 		return false;
-	$v = explode('.',$GLOBALS['spip_version_branche']);
-	if ($v[0]>2 OR ($v[0]==2 AND $v[1]>0))
+	}
+	$v = explode('.', $GLOBALS['spip_version_branche']);
+	if ($v[0]>2 or ($v[0]==2 and $v[1]>0)) {
 		$_auth_depuis = true;
+	}
 	return $_auth_depuis;
 }
 
-function formulaires_assistant_migration_verifier_1_dist(){
+function formulaires_assistant_migration_verifier_1_dist() {
 
 	$erreurs = array();
-	if (!autoriser('webmestre')){
+	if (!autoriser('webmestre')) {
 		$erreurs['message_erreur'] = _T('migration:erreur_droits_webmestre');
 	}
 	// si on fait annuler a un moment :
 	// on revient a l'etape 1 en reinitialisant tout
-	if (_request('cancel')){
+	if (_request('cancel')) {
 		initialiser_migration_depuis(true);
 		$erreurs['cancel'] = ' ';
 	}
 
 	return $erreurs;
-
 }
 
-function formulaires_assistant_migration_verifier_2_dist(){
+function formulaires_assistant_migration_verifier_2_dist() {
 
 	$erreurs = array();
 	if (!$direction=_request('direction')
-	  OR !in_array($direction,array('depuis','vers'))){
+	  or !in_array($direction, array('depuis','vers'))) {
 		$erreurs['message_erreur'] = _T('migration:erreur_direction_obligatoire');
-	}
-	// initialiser la cle de migration si on importe depuis un autre site
+	} // initialiser la cle de migration si on importe depuis un autre site
 	elseif ($direction=='depuis') {
-		if (verifier_auth_depuis()){
-			if (!_request('canceldepuis')){
+		if (verifier_auth_depuis()) {
+			if (!_request('canceldepuis')) {
 				initialiser_migration_depuis();
 				migration_backup_base_si_possible();
 			}
-		}
-		else {
+		} else {
 			// hack ?
 			$erreurs['message_erreur'] = _T('migration:erreur_direction_depuis_interdite');
 		}
-	}
-	elseif ($direction=='vers') {
+	} elseif ($direction=='vers') {
 		if (!$quoi=_request('quoi')
-		  OR !is_array($quoi)
-			OR (!in_array('base',$quoi) AND !in_array('fichiers',$quoi) AND !in_array('squelettes',$quoi))){
+		  or !is_array($quoi)
+			or (!in_array('base', $quoi) and !in_array('fichiers', $quoi) and !in_array('squelettes', $quoi))) {
 			$erreurs['quoi'] = _T('migration:erreur_choisissez_quoi');
 		}
 	}
 
 	return $erreurs;
-
 }
 
-function formulaires_assistant_migration_verifier_3_dist(){
+function formulaires_assistant_migration_verifier_3_dist() {
 
 	$erreurs = array();
-	if (_request('direction')=='depuis'){
+	if (_request('direction')=='depuis') {
 		// en cas d'abandon sur une migration "depuis", annuler
-		if (_request('canceldepuis')){
+		if (_request('canceldepuis')) {
 			include_spip('inc/migration');
 			$status = abandonner_migration_depuis();
 			finir_migration_status_depuis();
 			include_spip('inc/headers');
 			$erreurs['message_erreur'] = _T('migration:titre_abandon_migration') . redirige_formulaire(generer_url_ecrire('migrer_depuis_fin'));
-		}
-		else {
+		} else {
 			$s = lire_migration_depuis_status();
-			if ($s AND $s['status']!=='ended')
+			if ($s and $s['status']!=='ended') {
 				$erreurs['waiting'] = ' ';
+			}
 		}
-	}
-	else {
-		foreach(array('url_cible') as $obli)
-			if (!_request($obli))
+	} else {
+		foreach (array('url_cible') as $obli) {
+			if (!_request($obli)) {
 				$erreurs[$obli] = _T('info_obligatoire');
-		if (strpos(_request('url_cible'),'+')===false)
+			}
+		}
+		if (strpos(_request('url_cible'), '+')===false) {
 			$erreurs['url_cible'] = _T('migration:erreur_url_incorrecte');
-		if (!count($erreurs)){
+		}
+		if (!count($erreurs)) {
 			$url_cible = _request('url_cible');
-			$url_cible = explode('+',$url_cible);
+			$url_cible = explode('+', $url_cible);
 			$migration_key = array_pop($url_cible);
-			$url_cible = implode('+',$url_cible);
+			$url_cible = implode('+', $url_cible);
 
-			initialiser_migration_vers($url_cible,$migration_key,_request('quoi'));
-			$connect = charger_fonction('connect','migration/envoi');
+			initialiser_migration_vers($url_cible, $migration_key, _request('quoi'));
+			$connect = charger_fonction('connect', 'migration/envoi');
 			$res = $connect($GLOBALS['meta']['adresse_site']);
-			if ($res!==true){
+			if ($res!==true) {
 				$erreurs['message_erreur'] = _T(is_string($res)?$res:'migration:erreur_echec_connexion_init');
 			}
 		}
@@ -143,17 +141,17 @@ function formulaires_assistant_migration_verifier_3_dist(){
 }
 
 
-function formulaires_assistant_migration_traiter_dist(){
+function formulaires_assistant_migration_traiter_dist() {
 
 	$s = lire_migration_vers_status();
 	include_spip('base/dump');
-	$status_file = base_dump_meta_name(substr(md5($s['target']),0,8));
+	$status_file = base_dump_meta_name(substr(md5($s['target']), 0, 8));
 
 	// ici on prend toutes les tables sauf celles exclues par defaut
 	// (tables de cache en pratique)
 	$exclude = lister_tables_noexport();
 	list($tables,) = base_liste_table_for_dump($exclude);
-	$tables = base_lister_toutes_tables('',$tables,$exclude);
+	$tables = base_lister_toutes_tables('', $tables, $exclude);
 
 	include_spip('inc/migrer_vers');
 	$res = migrer_vers_init($status_file, $tables);
@@ -164,8 +162,6 @@ function formulaires_assistant_migration_traiter_dist(){
 		include_spip('inc/actions');
 		$redirect = generer_action_auteur('migrer_vers', $status_file);
 		return array('message_ok'=>_T('migration:message_connexion_ok'),'redirect'=>$redirect);
+	} else { 		return array('message_erreur'=>$res);
 	}
-	else
-		return array('message_erreur'=>$res);
 }
-

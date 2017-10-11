@@ -16,37 +16,37 @@ include_spip('inc/migration');
  *
  * @return void
  */
-function action_migration_envoi_dist($action, $data=''){
+function action_migration_envoi_dist($action, $data = '') {
 
-	if (!$s = lire_migration_vers_status()){
+	if (!$s = lire_migration_vers_status()) {
 		return migration_envoi_fail('pas de migration initialisee');
 	}
 
-	if (!isset($s['target']) OR !isset($s['key'])){
+	if (!isset($s['target']) or !isset($s['key'])) {
 		return migration_envoi_fail('migration mal definie (pas de target ou de key)');
 	}
 
 	$data = array('action'=>$action,'data'=>$data);
-	if (!$data = migration_encoder_data($data,$s['key'])){
+	if (!$data = migration_encoder_data($data, $s['key'])) {
 		return migration_envoi_fail('echec de l\'encodage');
 	}
 
 	include_spip('inc/migration_distant');
 	// eviter une detection de boundary en la passant directement
 	$boundary = substr(md5(rand().'spip'), 0, 8);
-	$result = migration_recuperer_page($s['target'],false,false,null,array('action'=>'migration_reception','data'=>$data),$boundary, true);
+	$result = migration_recuperer_page($s['target'], false, false, null, array('action'=>'migration_reception','data'=>$data), $boundary, true);
 
 	$result = trim($result);
-	spip_log("envoi : action $action resultat =|".$result.'|=','migration');
+	spip_log("envoi : action $action resultat =|".$result.'|=', 'migration');
 
 	$GLOBALS['debug_migration'] = $result;
-	if ($result==='FAIL')
+	if ($result==='FAIL') {
 		return false;
-	else
-		return unserialize($result);
+	} else { return unserialize($result);
+	}
 }
 
-function migration_envoi_fail($raison){
-	spip_log($raison,'migration');
+function migration_envoi_fail($raison) {
+	spip_log($raison, 'migration');
 	return false;
 }
