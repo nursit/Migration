@@ -62,12 +62,22 @@ function migration_recuperer_post_precedents($form) {
 		# toutes les saisies dans un seul tableau
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$store = &$_POST;
-		} else { $store = &$_GET;
+		} else {
+			$store = &$_GET;
 		}
 
 		foreach ($c as $k => $v) {
 			if (!isset($store[$k])) { // on ecrase pas si saisi a nouveau !
 				$_REQUEST[$k] = $store[$k] = $v;
+			} // mais si tableau des deux cotes, on merge avec priorite a la derniere saisie
+			elseif (is_array($store[$k])
+				and is_array($v)
+				and $z = array_keys($v)
+				and !is_numeric(reset($z))
+				and $z = array_keys($store[$k])
+				and !is_numeric(reset($z))
+			) {
+				$_REQUEST[$k] = $store[$k] = array_merge($v, $store[$k]);
 			}
 		}
 
@@ -148,31 +158,33 @@ function migration_formulaire_charger($flux) {
 function migration_formulaire_verifier($flux) {
 	#var_dump('Pipe verifier');
 
-	if ($form = $flux['args']['form']
-		and ($e = migration_recuperer_post_precedents($form)) !== false) {
+	if (
+		$form = $flux['args']['form']
+		and ($e = migration_recuperer_post_precedents($form)) !== false
+	) {
 		// recuperer l'etape saisie et le nombre d'etapes total
 		list($etape, $etapes) = $e;
 		$etape_demandee = _request('aller_a_etape'); // possibilite de poster en entier dans aller_a_etape
 
 		// lancer les verifs pour chaque etape deja saisie de 1 a $etape
-		$erreurs = array();
+		$erreurs_etapes = array();
 		$derniere_etape_ok = 0;
 		$e = 0;
 		while ($e < $etape and $e < $etapes) {
 			$e++;
-			$erreurs[$e] = array();
+			$erreurs_etapes[$e] = array();
 			if ($verifier = charger_fonction("verifier_$e", "formulaires/$form/", true)) {
-				$erreurs[$e] = call_user_func_array($verifier, $flux['args']['args']);
+				$erreurs_etapes[$e] = call_user_func_array($verifier, $flux['args']['args']);
 			} elseif ($verifier = charger_fonction('verifier_etape', "formulaires/$form/", true)) {
 				$args = $flux['args']['args'];
 				array_unshift($args, $e);
-				$erreurs[$e] = call_user_func_array($verifier, $args);
+				$erreurs_etapes[$e] = call_user_func_array($verifier, $args);
 			}
-			if ($derniere_etape_ok == $e - 1 and !count($erreurs[$e])) {
+			if ($derniere_etape_ok == $e - 1 and !count($erreurs_etapes[$e])) {
 				$derniere_etape_ok = $e;
 			}
 			// possibilite de poster dans _retour_etape_x
-			if (_request("_retour_etape_$e")) {
+			if (!is_null(_request("_retour_etape_$e"))) {
 				$etape_demandee = $e;
 			}
 		}
@@ -189,7 +201,14 @@ function migration_formulaire_verifier($flux) {
 			$etape = min($etape, $etapes);
 			#var_dump("prochaine etape $etape");
 			// retourner les erreurs de l'etape ciblee
-			$flux['data'] = $erreurs[$etape];
+			$erreurs= isset($erreurs_etapes[$etape]) ? $erreurs_etapes[$etape] : array();
+			// Ne pas se tromper dans le texte du message d'erreur : la clé '_etapes' n'est pas une erreur !
+			if ($erreurs) {
+				$erreurs['message_erreur'] = singulier_ou_pluriel(count($erreurs), 'avis_1_erreur_saisie', 'avis_nb_erreurs_saisie');
+			} else {
+				$erreurs['message_erreur'] = "";
+			}
+			$flux['data'] = $erreurs;
 			$flux['data']['_etapes'] = "etape suivante $etape";
 			set_request('_etape', $etape);
 		}
