@@ -21,6 +21,21 @@ function migration_reception_inserer_copie_dist($status, $data) {
 	include_spip('base/dump');
 
 	$status['status'] = 'copier';
+	if (!isset($status['compteurs'])) {
+		$status['compteurs'] = array();
+	}
+	if (!isset($status['compteurs']['table'])) {
+		$status['compteurs']['table'] = array();
+	}
+	if (!isset($status['compteurs']['table'][$data['table']])) {
+		$status['compteurs']['table'][$data['table']] = 0;
+	}
+	if (!isset($status['progress'])) {
+		$status['progress'] = array();
+	}
+	if (!isset($status['progress']['tables'])) {
+		$status['progress']['tables'] = array();
+	}
 	$status['compteurs']['table'][$data['table']] += count($data['rows']);
 	$status['progress']['tables'][$data['table']] = $status['compteurs']['table'][$data['table']];
 
