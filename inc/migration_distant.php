@@ -86,7 +86,7 @@ function migration_recuperer_page(
 			list($headers, $result) = $url;
 			return ($get_headers ? $headers."\n" : '').$result;
 		} else {
-			spip_log("recuperer page recommence sur $url");
+			spip_log("recuperer page recommence sur $url", 'migration');
 		}
 	}
 }
@@ -109,7 +109,7 @@ function migration_recuperer_lapage($url, $trans = false, $get = 'GET', $taille_
 	// ouvrir la connexion et envoyer la requete et ses en-tetes
 	list($f, $fopen) = migration_init_http($get, $url, $refuser_gz, $uri_referer, $datas, _INC_DISTANT_VERSION_HTTP, $date_verif);
 	if (!$f) {
-		spip_log("ECHEC migration_init_http $url");
+		spip_log("ECHEC migration_init_http $url", 'migration');
 		return false;
 	}
 
@@ -124,7 +124,7 @@ function migration_recuperer_lapage($url, $trans = false, $get = 'GET', $taille_
 			// Chinoisierie inexplicable pour contrer
 			// les actions liberticides de l'empire du milieu
 			if ($headers) {
-				spip_log("HTTP status $headers pour $url");
+				spip_log("HTTP status $headers pour $url", 'migration');
 				return false;
 			} elseif ($result = @file_get_contents($url)) {
 				return array('', $result);
@@ -149,7 +149,7 @@ function migration_recuperer_lapage($url, $trans = false, $get = 'GET', $taille_
 	$gz = preg_match(",\bContent-Encoding: .*gzip,is", $headers) ?
 		(_DIR_TMP.md5(uniqid(mt_rand())).'.tmp.gz') : '';
 
-#	spip_log("entete ($trans $copy $gz)\n$headers");
+#	spip_log("entete ($trans $copy $gz)\n$headers", 'migration');
 	$result = migration_recuperer_body($f, $taille_max, $gz ? $gz : ($copy ? $trans : ''));
 	fclose($f);
 	if (!$result) { return array($headers, $result);
@@ -271,7 +271,7 @@ $noproxy = $scheme.'://';
 	  // fallback : fopen
 		if (!_request('tester_proxy')) {
 			$f = @fopen($url, 'rb');
-			spip_log("connexion vers $url par simple fopen");
+			spip_log("connexion vers $url par simple fopen", 'migration');
 			$fopen = true;
 		} else {
 			$f = false;// echec total
@@ -305,7 +305,7 @@ function migration_lance_requete($method, $scheme, $user, $host, $path, $port, $
 	}
 
 	$f = @fsockopen($first_host, $port);
-	spip_log("Recuperer $path sur $first_host:$port par $f");
+	spip_log("Recuperer $path sur $first_host:$port par $f", 'migration');
 	if (!$f) { return false;
 	}
 
@@ -321,7 +321,7 @@ function migration_lance_requete($method, $scheme, $user, $host, $path, $port, $
 	. (!$proxy_user ? '' : "Proxy-Authorization: Basic $proxy_user\r\n")
 	. (!strpos($vers, '1.1') ? '' : "Keep-Alive: 300\r\nConnection: keep-alive\r\n");
 
-#	spip_log("Requete\n$req");
+#	spip_log("Requete\n$req", 'migration');
 	fputs($f, $req);
 	fputs($f, $datas ? $datas : "\r\n");
 	return $f;
