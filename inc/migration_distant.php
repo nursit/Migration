@@ -359,9 +359,13 @@ function migration_lance_requete(
 		$first_host = $noproxy . $host;
 	}
 
-	$f = @fsockopen($first_host, $port);
+	$errno = 0;
+	$errstr = "";
+	// connexion avec un timeout de 5s
+	$f = @fsockopen($first_host, $port, $errno, $errstr, 5);
 	spip_log("Recuperer $path sur $first_host:$port par $f", 'migration');
 	if (!$f) {
+		spip_log("Echec fsockopen : Erreur $errno $errstr", 'migration');
 		return false;
 	}
 
